@@ -52,22 +52,29 @@ function MagicHome(log, config = {}, api)
 
 	server.addPage('/set-device', (response, params) => {
 		
-		if(params.power)
+		if(params.mac)
 		{
-			var html = '';
-			/*
 			for(var i = 0; i < this.lights.length; i++)
 			{
-				html += 
-			}*/
+				if(this.lights[i].ip == params.ip)
+				{
+					if(params.power)
+					{
+						this.lights[i].setPowerState(params.power == 'true' ? true : false, () => {});
+					}
 
-			this.lights[0].setPowerState(params.power == 'true' ? true : false, () => {});
+					if(params.hue)
+					{
+						this.lights[i].setHue(params.hue, () => {});
+					}
+				}
+			}
 
-			response.write(JSON.stringify(this.lights));
+			response.write('Success');
 		}
 		else
 		{
-			response.write('Keine ID!');
+			response.write('Keine Mac!');
 		}
 		
 		response.end();
