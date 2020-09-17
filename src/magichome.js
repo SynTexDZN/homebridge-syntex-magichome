@@ -38,7 +38,15 @@ function MagicHome(log, config = {}, api)
 
 	server.addPage('/test2', (response, params) => {
 		
-		response.write(JSON.stringify(params));
+		if(params.id)
+		{
+			response.write('Deine ID lautet: ' + params.id);
+		}
+		else
+		{
+			response.write('Keine ID!');
+		}
+		
 		response.end();
 	});
 	
