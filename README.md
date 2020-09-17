@@ -1,12 +1,5 @@
 # homebridge-magichome-platform
 
-[![NPM](https://nodei.co/npm/homebridge-magichome-platform.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/homebridge-magichome-platform/)
-
-[![npm](https://img.shields.io/npm/dm/homebridge-magichome-platform.svg)](https://www.npmjs.com/package/homebridge-magichome-platform)
-[![npm](https://img.shields.io/npm/v/homebridge-magichome-platform.svg)](https://www.npmjs.com/package/homebridge-magichome-platform)
-[![CircleCI](https://circleci.com/gh/sahilchaddha/homebridge-magichome-platform.svg?style=svg)](https://circleci.com/gh/sahilchaddha/homebridge-magichome-platform)
-
-
 **A Homebridge plugin for devices running fade/strobe effects on the Magic Home Wi-Fi system.**
 
 ## Description
@@ -52,10 +45,6 @@ Edit config.json. Refer to `config-sample.json`.
 	white_strobe_flash
 	seven_color_jumping
 ```
-
-### Demo
-
-![Demo](https://raw.githubusercontent.com/sahilchaddha/homebridge-magichome-platform/master/demo.gif)
 
 ## Compatible Devices
 
@@ -142,23 +131,3 @@ Default Discovery Interval => 5 Minutes
 Default Device Status Update Interval => 1 Minute
 
 Setting Device `timeout` to 0, will disable polling device for status update.
-
-## Lint
-
-```shell
-    $ npm run lint
-```
-
-## Need Help ?
-
-Get Slack Invite => `https://slackin-znyruquwmv.now.sh/`
-
-Slack Channel => `https://homebridgeteam.slack.com/messages/homebridge-magichome`
-
-Slack User => `@sahilchaddha`
-
-### Author
-
-Sahil Chaddha
-
-mail@sahilchaddha.com
