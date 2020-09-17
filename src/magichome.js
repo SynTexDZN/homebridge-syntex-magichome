@@ -31,16 +31,16 @@ function MagicHome(log, config = {}, api)
 
 	server.addPage('/test', (response, params) => {
 		
-		response.write('<h1>Hallo Welt!!!</h1>');
-		response.write(JSON.stringify(params));
-		response.end();
-	});
-
-	server.addPage('/test2', (response, params) => {
-		
 		if(params.id)
 		{
-			response.write('Deine ID lautet: ' + params.id);
+			if(Array.isArray(params.id))
+			{
+				response.write('Mehrere IDs!');
+			}
+			else
+			{
+				response.write('Deine ID lautet: ' + params.id);
+			}
 		}
 		else
 		{
