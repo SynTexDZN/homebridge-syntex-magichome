@@ -29,7 +29,11 @@ function MagicHome(log, config = {}, api)
 
 	server.SETUP('SynTexMagicHome', logger, this.port);
 
-	server.addPage('/test', '<h1>Hallo Welt</h1>', () => { logger.debug(this) });
+	server.addPage('/test', '<h1>Hallo Welt</h1>', (response) => {
+		
+		response.write('<h1>Hallo Welt!!!</h1>');
+		response.end();
+	});
 	
 	lightAgent.setLogger(logger);
 
