@@ -24,7 +24,7 @@ server.SETUP = function(prefix, log, port)
         {
             if(urlPath == pages[i].path)
             {
-                pages[i].callback();
+                pages[i].callback().bind(response);
 
                 response.write(pages[i].html);
                 response.end();
