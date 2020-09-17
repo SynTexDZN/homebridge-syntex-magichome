@@ -1,0 +1,54 @@
+{
+  "name": "homebridge-syntex-magichome",
+  "version": "1.0.0",
+  "description": "Homebridge Plugin for MagicHome LED Strips with preset scenes",
+  "main": "index.js",
+  "author": {
+    "name": "SynTexDZN"
+  },
+  "engines": {
+    "homebridge": ">=0.4.30",
+    "node": ">=9.11.2"
+  },
+  "dependencies": {
+    "babel-eslint": "^8.2.6",
+    "color-convert": "^1.5.0",
+    "node-persist": "^3.0.1"
+  },
+  "keywords": [
+    "syntex",
+    "homebridge",
+    "homebridge-plugin",
+    "plugin",
+    "http",
+    "homekit",
+    "smarthome",
+    "siri",
+    "Flux",
+    "magic",
+    "home",
+    "wifi",
+    "zengge",
+    "led",
+    "strips",
+    "lighbulb",
+    "blub",
+    "preset",
+    "magichome",
+    "scene",
+    "automation",
+    "fade",
+    "strobe",
+    "party",
+    "color-cycle"
+  ],
+  "homepage": "https://github.com/SynTexDZN/homebridge-syntex-webhooks#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/SynTexDZN/homebridge-syntex-magichome.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SynTexDZN/homebridge-syntex-magichome/issues"
+  },
+  "license": "ISC"
+}
