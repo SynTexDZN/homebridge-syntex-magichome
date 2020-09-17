@@ -108,7 +108,7 @@ function MagicHome(log, config = {}, api)
 				}
 			}
 
-			response.write(found != null ? found : 'Error');
+			response.write(found != null ? JSON.stringify(found) : 'Error');
 		}
 		else
 		{
