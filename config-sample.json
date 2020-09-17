@@ -1,7 +1,7 @@
 {
     "platforms": [
         {
-            "platform": "SynTexMagicHome",
+            "platform": "MagicHome-Platform",
             "debug": true,
             "disableDiscovery": false,
             "lights": [

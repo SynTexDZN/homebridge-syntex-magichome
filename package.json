@@ -3,27 +3,19 @@
   "version": "1.0.0-b10",
   "description": "Homebridge Plugin for MagicHome LED Strips with preset scenes",
   "main": "index.js",
-  "author": {
-    "name": "SynTexDZN"
+  "preferGlobal": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint .",
+    "ci": "npm install && npm run lint"
   },
-  "engines": {
-    "homebridge": ">=0.4.30",
-    "node": ">=9.11.2"
-  },
-  "dependencies": {
-    "babel-eslint": "^8.2.6",
-    "color-convert": "^1.5.0",
-    "node-persist": "^3.0.1"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SynTexDZN/homebridge-syntex-magichome.git"
   },
   "keywords": [
-    "syntex",
     "homebridge",
     "homebridge-plugin",
-    "plugin",
-    "http",
-    "homekit",
-    "smarthome",
-    "siri",
     "Flux",
     "magic",
     "home",
@@ -42,24 +34,23 @@
     "party",
     "color-cycle"
   ],
-  "homepage": "https://github.com/SynTexDZN/homebridge-syntex-webhooks#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/SynTexDZN/homebridge-syntex-magichome.git"
+  "engines": {
+    "homebridge": ">=0.4.30"
   },
-  "bugs": {
-    "url": "https://github.com/SynTexDZN/homebridge-syntex-magichome/issues"
-  },
+  "author": "SynTexDZN",
   "license": "ISC",
-  "preferGlobal": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "./node_modules/.bin/eslint .",
-    "ci": "npm install && npm run lint"
+  "bugs": {
+    "url": "https://github.com/sahilchaddha/homebridge-syntex-magichome/issues"
   },
+  "homepage": "https://github.com/sahilchaddha/homebridge-syntex-magichome#readme",
   "devDependencies": {
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0"
+  },
+  "dependencies": {
+    "babel-eslint": "^8.2.6",
+    "color-convert": "^1.5.0",
+    "node-persist": "^3.0.1"
   }
 }
