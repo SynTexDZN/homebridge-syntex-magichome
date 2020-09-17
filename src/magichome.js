@@ -54,10 +54,14 @@ function MagicHome(log, config = {}, api)
 		
 		if(params.ip)
 		{
+			var found = false;
+
 			for(var i = 0; i < this.lights.length; i++)
 			{
 				if(this.lights[i].ip == params.ip)
 				{
+					found = true;
+
 					if(params.power)
 					{
 						this.lights[i].setPowerState(params.power == 'true' ? true : false, () => {});
@@ -80,11 +84,35 @@ function MagicHome(log, config = {}, api)
 				}
 			}
 
-			response.write('Success');
+			response.write(found ? 'Success' : 'Error');
 		}
 		else
 		{
-			response.write('Keine Mac!');
+			response.write('Keine IP angegeben!');
+		}
+		
+		response.end();
+	});
+
+	server.addPage('/get-device', (response, params) => {
+		
+		if(params.ip)
+		{
+			var found = null;
+
+			for(var i = 0; i < this.lights.length; i++)
+			{
+				if(this.lights[i].ip == params.ip)
+				{
+					found = this.lights[i].color;
+				}
+			}
+
+			response.write(found != null ? found : 'Error');
+		}
+		else
+		{
+			response.write('Keine IP angegeben!');
 		}
 		
 		response.end();
