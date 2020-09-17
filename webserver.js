@@ -44,7 +44,7 @@ server.SETUP = function(prefix, log, port)
     logger.log('info', 'bridge', 'Bridge', prefix + ' Server läuft auf Port [' + port + ']');
 };
 
-server.addPage() = function(path, html, callback)
+server.addPage = function(path, html, callback)
 {
     pages.push({ path : path, html : html, callback : callback });
 
