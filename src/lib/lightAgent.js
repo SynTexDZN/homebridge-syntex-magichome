@@ -9,7 +9,7 @@
 const cp = require('child_process')
 const path = require('path')
 
-const cacheKey = 'magicHome_cache'
+const cacheKey = 'magicHomeSynTex_cache'
 const spawn = cp.spawn
 
 const LightAgent = class {
