@@ -52,7 +52,7 @@ MagicHome.prototype = {
 			{
 				var newLightConfig = lightConfig;
 
-				newLightConfig.debug = this.config.debug || false;
+				newLightConfig.debug = /*this.config.debug || */false;
 
 				this.lights.push(new LightBulb(newLightConfig, this.log, homebridge));
 			})
