@@ -37,8 +37,9 @@ server.SETUP = function(prefix, log, port)
                     {
                         var json = post != '' ? JSON.parse(post) : null;
                         
-                        pages[i].callback(response, urlParams, json);
-                    });
+                        this.page.callback(response, urlParams, json);
+                        
+                    }.bind({ page : pages[i] }));
                 }
                 else
                 {
