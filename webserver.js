@@ -35,9 +35,7 @@ server.SETUP = function(prefix, log, port)
 
                     request.on('end', async function()
                     {
-                        console.log(post);
-
-                        var json = JSON.parse(post);
+                        var json = post != '' ? JSON.parse(post) : null;
                         
                         pages[i].callback(response, urlParams, json);
                     });
