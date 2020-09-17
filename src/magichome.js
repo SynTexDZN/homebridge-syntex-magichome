@@ -7,6 +7,7 @@ const pluginName = 'homebridge-syntex-magichome';
 const platformName = 'SynTexMagicHome';
 
 var logger = require('../logger');
+var server = require('../webserver');
 
 var homebridge;
 
@@ -25,6 +26,8 @@ function MagicHome(log, config = {}, api)
     this.port = config['port'] || 1712;
     
 	logger.create('SynTexMagicHome', this.logDirectory, api.user.storagePath());
+
+	server.SETUP(logger, this.port);
 	
 	lightAgent.setLogger(logger);
 
