@@ -30,7 +30,7 @@ const PresetSwitch = class extends Accessory {
 
   bindEmitter() {
     const self = this
-    emitter.on('MagicHomePresetTurnedOn', (presetName) => {
+    emitter.on('MagicHomeSynTexPresetTurnedOn', (presetName) => {
       if (presetName !== self.name) {
         self.updateState(false)
       }
@@ -55,7 +55,7 @@ const PresetSwitch = class extends Accessory {
     const self = this
     if (newState === true) {
       // Turn Off Other Running Scenes
-      emitter.emit('MagicHomePresetTurnedOn', self.name)
+      emitter.emit('MagicHomeSynTexPresetTurnedOn', self.name)
       self.sendCommand('--on', () => {
         setTimeout(() => {
           self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {

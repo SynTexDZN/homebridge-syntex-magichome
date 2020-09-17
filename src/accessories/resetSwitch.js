@@ -31,7 +31,7 @@ const ResetSwitch = class extends Accessory {
 
   switchStateChanged(newState, callback) {
     const self = this
-    emitter.emit('MagicHomePresetTurnedOn', self.name)
+    emitter.emit('MagicHomeSynTexPresetTurnedOn', self.name)
     var promiseArray = []
     Object.keys(self.config.ips).forEach((ip) => {
       const newPromise = new Promise((resolve) => {

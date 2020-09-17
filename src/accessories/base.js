@@ -27,7 +27,7 @@ const Accessory = class {
   getInformationService() {
     var informationService = new this.homebridge.Service.AccessoryInformation()
     informationService
-      .setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'MagicHome')
+      .setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'SynTex MagicHome')
       .setCharacteristic(this.homebridge.Characteristic.Model, this.getModelName())
       .setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.getSerialNumber())
     return informationService
