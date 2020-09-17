@@ -17,7 +17,7 @@ const LightBulb = class extends Accessory
 		setTimeout(function()
 		{
 			this.updateState();
-		}, 3000);
+		}.bind(this), 3000);
 	}
 
 	getAccessoryServices()
