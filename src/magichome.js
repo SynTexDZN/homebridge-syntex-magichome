@@ -52,7 +52,7 @@ function MagicHome(log, config = {}, api)
 
 	server.addPage('/set-device', (response, params) => {
 		
-		if(params.mac)
+		if(params.ip)
 		{
 			for(var i = 0; i < this.lights.length; i++)
 			{
@@ -66,6 +66,16 @@ function MagicHome(log, config = {}, api)
 					if(params.hue)
 					{
 						this.lights[i].setHue(params.hue, () => {});
+					}
+
+					if(params.saturation)
+					{
+						this.lights[i].setSaturation(params.saturation, () => {});
+					}
+
+					if(params.brightness)
+					{
+						this.lights[i].setBrightness(params.brightness, () => {});
 					}
 				}
 			}
