@@ -82,8 +82,8 @@ const LightBulb = class extends Accessory
 
 		this.logMessage('Polling Light', this.ip);
 
-		self.getState(function(settings)
-		{
+		self.getState((settings) => {
+			
 			self.isOn = settings.on;
 			self.color = settings.color;
 
@@ -102,7 +102,7 @@ const LightBulb = class extends Accessory
 				.updateValue(self.color.L);
 
 			this.startTimer();
-		})
+		});
 	}
 
 	getState(callback)
