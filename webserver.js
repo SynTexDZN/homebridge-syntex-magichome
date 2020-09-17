@@ -1,9 +1,9 @@
 var server = exports;
 var http = require('http');
 var url = require('url');
-var logger;
+var logger, pages = [];
 
-server.SETUP = function(log, port)
+server.SETUP = function(prefix, log, port)
 {
     logger = log;
 
@@ -20,15 +20,33 @@ server.SETUP = function(log, port)
         response.setHeader('Content-Type', 'application/json');
         response.setHeader('Access-Control-Allow-Origin', '*');
 
+        for(var i = 0; i < pages.length; i++)
+        {
+            if(urlPath == pages[i].path)
+            {
+                pages[i].callback();
+
+                response.write(pages[i].html);
+                response.end();
+            }
+        }
+/*
         if(urlPath == '/test')
         {
             response.write('Hello World');
             response.end();
         }
-
+*/
     }).bind(this);
 
     http.createServer(createServerCallback).listen(port, '0.0.0.0');
        
-    logger.log('info', 'bridge', 'Bridge', 'Data Link Server läuft auf Port [' + port + ']');
+    logger.log('info', 'bridge', 'Bridge', prefix + ' Server läuft auf Port [' + port + ']');
 };
+
+server.addPage() = function(path, html, callback)
+{
+    pages.push({ path : path, html : html, callback : callback });
+
+    logger.debug(JSON.stringify(pages));
+}

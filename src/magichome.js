@@ -27,7 +27,9 @@ function MagicHome(log, config = {}, api)
     
 	logger.create('SynTexMagicHome', this.logDirectory, api.user.storagePath());
 
-	server.SETUP(logger, this.port);
+	server.SETUP('SynTexMagicHome', logger, this.port);
+
+	server.addPage('/test', '<h1>Hallo Welt</h1>', () => { logger.debug('TEST') });
 	
 	lightAgent.setLogger(logger);
 
