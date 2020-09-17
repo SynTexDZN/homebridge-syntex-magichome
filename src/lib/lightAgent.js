@@ -43,7 +43,7 @@ const LightAgent = class {
 			}
 
 			this.log(' ** Fetched Lights from Cache **');
-			this.log(devices);
+			this.logger.debug(devices);
 			
 			return devices;
 		});
@@ -56,7 +56,7 @@ const LightAgent = class {
 			const data = JSON.stringify(res);
 
 			this.log('Saving Lights');
-			this.log(data);
+			this.logger.debug(data);
 
 			this.storage.setItem(cacheKey, data).then(() => {
 
@@ -189,13 +189,13 @@ const LightAgent = class {
 
 			const newData = '' + data;
 
-			self.log(newData);
+			self.logger.debug(newData);
 			self.cachedAddress = self.parseDevices(newData);
 		});
 
 		this.proc.stderr.on('data', (data) => {
 
-			self.log('Error : ' + data)
+			self.logger.log('error', 'bridge', 'Bridge', 'Error : ' + data)
 		});
 
 		this.proc.on('close', () => {
@@ -209,7 +209,7 @@ const LightAgent = class {
 	{
 		this.proc = null;
 
-		this.log(this.cachedAddress);
+		this.logger.debug(this.cachedAddress);
 
 		setTimeout(this.getDevices.bind(this), this.pollingInterval);
 	}
