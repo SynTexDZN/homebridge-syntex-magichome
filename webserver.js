@@ -24,7 +24,7 @@ server.SETUP = function(prefix, log, port)
         {
             if(urlPath == pages[i].path)
             {
-                pages[i].callback(response, params);
+                pages[i].callback(response, urlParams);
             }
         }
 
