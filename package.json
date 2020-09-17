@@ -1,6 +1,6 @@
 {
 	"name": "homebridge-syntex-magichome",
-	"version": "1.0.0-b34",
+	"version": "1.0.0-b35",
 	"description": "Homebridge Plugin for MagicHome LED Strips with preset scenes",
 	"main": "index.js",
 	"author": {
