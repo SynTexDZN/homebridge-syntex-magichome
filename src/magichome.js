@@ -61,7 +61,7 @@ function MagicHome(log, config = {}, api)
 				html += 
 			}*/
 
-			this.lights[0].setPowerState(false, () => {});
+			this.lights[0].setPowerState(params.power == 'true' ? true : false, () => {});
 
 			response.write(JSON.stringify(this.lights));
 		}
