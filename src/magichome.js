@@ -10,7 +10,7 @@ var logger = require('../logger');
 
 var homebridge;
 
-function MagicHome(log, config = {})
+function MagicHome(log, config = {}, api)
 {
 	this.log = log;
 	this.config = config;
