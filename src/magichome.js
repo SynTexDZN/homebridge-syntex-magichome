@@ -6,6 +6,8 @@ const lightAgent = require('./lib/lightAgent');
 const pluginName = 'homebridge-syntex-magichome';
 const platformName = 'SynTexMagicHome';
 
+var logger = require('../logger');
+
 var homebridge;
 
 function MagicHome(log, config = {})
@@ -16,6 +18,14 @@ function MagicHome(log, config = {})
 	this.presetSwitches = [];
 	this.resetSwitches = [];
 	lightAgent.setLogger(log);
+
+	this.devices = config['accessories'] || [];
+    
+    this.cacheDirectory = config['cache_directory'] || './SynTex';
+    this.logDirectory = config['log_directory'] || './SynTex/log';
+    this.port = config['port'] || 1712;
+    
+    logger.create('SynTexMagicHome', this.logDirectory, api.user.storagePath());
 
 	// Set Cache Storage Path
 	if(homebridge)
@@ -32,12 +42,19 @@ function MagicHome(log, config = {})
 		}
 		if(config.disableDiscovery)
 		{
-			log('** DISABLED DISCOVERY **');
+			logger.log('info', 'bridge', 'Bridge', '** DISABLED DISCOVERY **');
 			lightAgent.disableDiscovery();
 		}
 	}
 
 	lightAgent.startDiscovery();
+	/*
+    DeviceManager.SETUP(logger, this.cacheDirectory);
+    Automations.SETUP(logger, this.cacheDirectory, DeviceManager).then(function () {
+
+        restart = false;
+	});
+	*/
 }
 
 MagicHome.prototype = {
