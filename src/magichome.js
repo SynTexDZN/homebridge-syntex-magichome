@@ -49,6 +49,27 @@ function MagicHome(log, config = {}, api)
 		
 		response.end();
 	});
+
+	server.addPage('/set-device', (response, params) => {
+		
+		if(params.power)
+		{
+			var html = '';
+			/*
+			for(var i = 0; i < this.lights.length; i++)
+			{
+				html += 
+			}*/
+
+			response.write(JSON.stringify(this.lights));
+		}
+		else
+		{
+			response.write('Keine ID!');
+		}
+		
+		response.end();
+	});
 	
 	lightAgent.setLogger(logger);
 

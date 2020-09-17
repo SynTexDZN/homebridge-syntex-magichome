@@ -24,7 +24,26 @@ server.SETUP = function(prefix, log, port)
         {
             if(urlPath == pages[i].path)
             {
-                pages[i].callback(response, urlParams);
+                if(request.method == 'POST')
+                {
+                    var post = '';
+
+                    request.on('data', function(data)
+                    {
+                        post += data;
+                    });
+
+                    request.on('end', async function()
+                    {
+                        var json = JSON.parse(post);
+                        
+                        pages[i].callback(response, urlParams, json);
+                    });
+                }
+                else
+                {
+                    pages[i].callback(response, urlParams, null);
+                }
             }
         }
 
