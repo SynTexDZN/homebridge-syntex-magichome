@@ -744,7 +744,7 @@ class  BulbScanner():
 
 	def scan(self, timeout=10):
 
-		DISCOVERY_PORT = 48899
+		DISCOVERY_PORT = 48900
 
 		sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 		sock.bind(('', DISCOVERY_PORT))
