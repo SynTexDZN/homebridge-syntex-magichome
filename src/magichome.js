@@ -104,11 +104,11 @@ function MagicHome(log, config = {}, api)
 			{
 				if(this.lights[i].ip == params.ip)
 				{
-					found = this.lights[i].color;
+					found = this.lights[i].isOn + ':' + this.lights[i].color.H + ':' + this.lights[i].color.S + ':' + this.lights[i].color.L + ':';
 				}
 			}
 
-			response.write(found != null ? JSON.stringify(found) : 'Error');
+			response.write(found != null ? found : 'Error');
 		}
 		else
 		{
