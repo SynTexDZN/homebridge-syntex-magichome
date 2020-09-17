@@ -1,3 +1,11 @@
+//
+//  lightAgent.js
+//  Sahil Chaddha
+//
+//  Created by Sahil Chaddha on 22/10/2018.
+//  Copyright © 2018 sahilchaddha.com. All rights reserved.
+//
+
 const cp = require('child_process')
 const path = require('path')
 

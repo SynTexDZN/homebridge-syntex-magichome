@@ -1,140 +1,113 @@
+//
+//  presetSwitch.js
+//  Sahil Chaddha
+//
+//  Created by Sahil Chaddha on 13/10/2018.
+//  Copyright © 2018 sahilchaddha.com. All rights reserved.
+//
+
 const Accessory = require('./base')
 const preset = require('../presets')
 const emitter = require('../lib/emitter')
 
-const PresetSwitch = class extends Accessory
-{
-	constructor(config, log, homebridge)
-	{
-		super(config, log, homebridge);
+const PresetSwitch = class extends Accessory {
+  constructor(config, log, homebridge) {
+    super(config, log, homebridge)
+    this.isOn = false
+    this.name = config.name || 'LED Controller Presets'
+    this.ips = Object.keys(config.ips)
+    this.preset = config.preset || 'seven_color_cross_fade'
+    this.sceneValue = preset[this.preset]
+    if (this.sceneValue == null) {
+      log('Present Not Found... Try Different Preset')
+      this.sceneValue = 37
+    }
+    this.speed = config.speed || 40
+    // Should Turn Off Light When Turn Off Preset
+    this.shouldTurnOff = config.shouldTurnOff || true
+    this.bindEmitter()
+  }
 
-		this.isOn = false;
-		this.name = config.name || 'LED Controller Presets';
-		this.ips = Object.keys(config.ips);
-		this.preset = config.preset || 'seven_color_cross_fade';
-		this.sceneValue = preset[this.preset];
+  bindEmitter() {
+    const self = this
+    emitter.on('MagicHomePresetTurnedOn', (presetName) => {
+      if (presetName !== self.name) {
+        self.updateState(false)
+      }
+    })
+  }
 
-		if(this.sceneValue == null)
-		{
-			log('Present Not Found... Try Different Preset');
-			this.sceneValue = 37;
-		}
+  getAccessoryServices() {
+    const switchService = new this.homebridge.Service.Switch(this.name)
+    switchService
+      .getCharacteristic(this.homebridge.Characteristic.On)
+      .on('get', this.getState.bind(this))
+      .on('set', this.switchStateChanged.bind(this))
+    return [switchService]
+  }
 
-		this.speed = config.speed || 40;
-		// Should Turn Off Light When Turn Off Preset
-		this.shouldTurnOff = config.shouldTurnOff || true;
-		this.bindEmitter();
-	}
+  sendCommand(command, callback) {
+    this.executeCommand(this.ips, command, callback)
+  }
 
-	bindEmitter()
-	{
-		const self = this;
+  switchStateChanged(newState, callback) {
+    this.isOn = newState
+    const self = this
+    if (newState === true) {
+      // Turn Off Other Running Scenes
+      emitter.emit('MagicHomePresetTurnedOn', self.name)
+      self.sendCommand('--on', () => {
+        setTimeout(() => {
+          self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
+            callback()
+          })
+        }, 3000)
+      })
+    } else {
+      // Turning OFF
+      var promiseArray = []
+      Object.keys(self.config.ips).forEach((ip) => {
+        const newPromise = new Promise((resolve) => {
+          self.executeCommand(ip, ' -c ' + self.config.ips[ip], () => {
+            resolve()
+          })
+        })
+        promiseArray.push(newPromise)
+      })
 
-		emitter.on('MagicHomePresetTurnedOn', function(presetName)
-		{
-			if(presetName !== self.name)
-			{
-				self.updateState(false);
-			}
-		});
-	}
+      Promise.all(promiseArray)
+        .then(() => {
+          if (self.shouldTurnOff) {
+            setTimeout(() => {
+              self.sendCommand('--off', () => {
+                callback()
+              })
+            }, 3000)
+          } else {
+            callback()
+          }
+        })
+    }
+  }
 
-	getAccessoryServices()
-	{
-		const switchService = new this.homebridge.Service.Switch(this.name);
+  updateState(newValue) {
+    this.isOn = newValue
+    this.services[0]
+      .getCharacteristic(this.homebridge.Characteristic.On)
+      .updateValue(this.isOn)
+  }
 
-		switchService.getCharacteristic(this.homebridge.Characteristic.On)
-			.on('get', this.getState.bind(this))
-			.on('set', this.switchStateChanged.bind(this));
+  getState(callback) {
+    callback(null, this.isOn)
+  }
 
-		return [switchService];
-	}
+  getModelName() {
+    return 'Preset Switch'
+  }
 
-	sendCommand(command, callback)
-	{
-		this.executeCommand(this.ips, command, callback);
-	}
-
-	switchStateChanged(newState, callback)
-	{
-		this.isOn = newState;
-		const self = this;
-
-		if(newState === true)
-		{
-			// Turn Off Other Running Scenes
-			emitter.emit('MagicHomePresetTurnedOn', self.name);
-
-			self.sendCommand('--on', function()
-			{
-				setTimeout(function()
-				{
-					self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, function()
-					{
-						callback();
-					});
-				}, 3000);
-			});
-		}
-		else
-		{
-			// Turning OFF
-			var promiseArray = [];
-
-			Object.keys(self.config.ips).forEach(function(ip)
-			{
-				const newPromise = new Promise(function(resolve)
-				{
-					self.executeCommand(ip, ' -c ' + self.config.ips[ip], function()
-					{
-						resolve();
-					});
-				});
-
-				promiseArray.push(newPromise);
-			});
-
-			Promise.all(promiseArray).then(function()
-			{
-				if(self.shouldTurnOff)
-				{
-					setTimeout(function()
-					{
-						self.sendCommand('--off', function()
-						{
-							callback();
-						});
-					}, 3000);
-				}
-				else
-				{
-					callback();
-				}
-			})
-		}
-	}
-
-	updateState(newValue)
-	{
-		this.isOn = newValue;
-		this.services[0].getCharacteristic(this.homebridge.Characteristic.On)
-			.updateValue(this.isOn);
-	}
-
-	getState(callback)
-	{
-		callback(null, this.isOn);
-	}
-
-	getModelName()
-	{
-		return 'Preset Switch';
-	}
-
-	getSerialNumber()
-	{
-		return '00-001-PresetSwitch';
-	}
+  getSerialNumber() {
+    return '00-001-PresetSwitch'
+  }
 }
 
-module.exports = PresetSwitch;
+module.exports = PresetSwitch
