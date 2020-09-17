@@ -17,7 +17,6 @@ function MagicHome(log, config = {}, api)
 	this.lights = [];
 	this.presetSwitches = [];
 	this.resetSwitches = [];
-	lightAgent.setLogger(log);
 
 	this.devices = config['accessories'] || [];
     
@@ -25,7 +24,9 @@ function MagicHome(log, config = {}, api)
     this.logDirectory = config['log_directory'] || './SynTex/log';
     this.port = config['port'] || 1712;
     
-    logger.create('SynTexMagicHome', this.logDirectory, api.user.storagePath());
+	logger.create('SynTexMagicHome', this.logDirectory, api.user.storagePath());
+	
+	lightAgent.setLogger(logger);
 
 	// Set Cache Storage Path
 	if(homebridge)

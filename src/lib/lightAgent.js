@@ -112,7 +112,8 @@ const LightAgent = class {
 	{
 		if(this.logger && this.isVerbose)
 		{
-			this.logger(message);
+			//this.logger(message);
+			this.logger.log('info', 'bridge', 'Bridge', message);
 		}
 	}
 
