@@ -24,16 +24,10 @@ server.SETUP = function(prefix, log, port)
         {
             if(urlPath == pages[i].path)
             {
-                pages[i].callback(response);
+                pages[i].callback(response, params);
             }
         }
-/*
-        if(urlPath == '/test')
-        {
-            response.write('Hello World');
-            response.end();
-        }
-*/
+
     }).bind(this);
 
     http.createServer(createServerCallback).listen(port, '0.0.0.0');
@@ -41,9 +35,7 @@ server.SETUP = function(prefix, log, port)
     logger.log('info', 'bridge', 'Bridge', prefix + ' Server läuft auf Port [' + port + ']');
 };
 
-server.addPage = function(path, html, callback)
+server.addPage = function(path, callback)
 {
-    pages.push({ path : path, html : html, callback : callback });
-
-    logger.debug(JSON.stringify(pages));
+    pages.push({ path : path, callback : callback });
 }

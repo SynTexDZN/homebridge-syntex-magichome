@@ -29,9 +29,16 @@ function MagicHome(log, config = {}, api)
 
 	server.SETUP('SynTexMagicHome', logger, this.port);
 
-	server.addPage('/test', '<h1>Hallo Welt</h1>', (response) => {
+	server.addPage('/test', (response, params) => {
 		
 		response.write('<h1>Hallo Welt!!!</h1>');
+		response.write(JSON.stringify(params));
+		response.end();
+	});
+
+	server.addPage('/test2', (response, params) => {
+		
+		response.write(JSON.stringify(params));
 		response.end();
 	});
 	
