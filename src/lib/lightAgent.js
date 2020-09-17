@@ -140,27 +140,21 @@ const LightAgent = class {
     const self = this
     const cmd = path.join(__dirname, '../flux_led.py')
     self.log('Discovering Devices')
-    try{
-      this.proc = spawn(cmd, ['-s'])
-      this.proc.stdout.on('data', (data) => {
-        const newData = '' + data
-        self.log(newData)
-        self.cachedAddress = self.parseDevices(newData)
-      })
+    this.proc = spawn(cmd, ['-s'])
+    this.proc.stdout.on('data', (data) => {
+      const newData = '' + data
+      self.log(newData)
+      self.cachedAddress = self.parseDevices(newData)
+    })
 
-      this.proc.stderr.on('data', (data) => {
-        self.log('Error : ' + data)
-      })
+    this.proc.stderr.on('data', (data) => {
+      self.log('Error : ' + data)
+    })
 
-      this.proc.on('close', () => {
-        self.log('Discovery Finished');
-        self.rediscoverLights()
-      })
-    }
-    catch(e)
-    {
-      console.log(e);
-    }
+    this.proc.on('close', () => {
+      self.log('Discovery Finished');
+      self.rediscoverLights()
+    })
   }
 
   rediscoverLights() {
