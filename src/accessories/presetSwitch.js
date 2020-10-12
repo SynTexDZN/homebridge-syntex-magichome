@@ -2,11 +2,15 @@ const Accessory = require('./base');
 const preset = require('../presets');
 const emitter = require('../lib/emitter');
 
+var logger = null;
+
 const PresetSwitch = class extends Accessory
 {
 	constructor(config, log, homebridge)
 	{
 		super(config, log, homebridge);
+
+		logger = log;
 
 		this.isOn = false;
 		this.name = config.name || 'LED Controller Presets';
