@@ -16,7 +16,7 @@ const PresetSwitch = class extends Accessory
 
 		if(this.sceneValue == null)
 		{
-			log('Present Not Found... Try Different Preset');
+			log.log('warn', 'bridge', 'Bridge', 'Present Not Found... Try Different Preset');
 			this.sceneValue = 37;
 		}
 

@@ -13,7 +13,6 @@ var homebridge;
 
 function MagicHome(log, config = {}, api)
 {
-	this.log = log;
 	this.config = config;
 	this.lights = [];
 	this.presetSwitches = [];
@@ -164,7 +163,7 @@ MagicHome.prototype = {
 
 				newLightConfig.debug = this.config.debug || false;
 
-				this.lights.push(new LightBulb(newLightConfig, this.log, homebridge));
+				this.lights.push(new LightBulb(newLightConfig, logger, homebridge));
 			});
 		}
 
@@ -172,13 +171,13 @@ MagicHome.prototype = {
 		{
 			this.config.presetSwitches.forEach((switchConfig) => {
 
-				this.presetSwitches.push(new PresetSwitch(switchConfig, this.log, homebridge));
+				this.presetSwitches.push(new PresetSwitch(switchConfig, logger, homebridge));
 			});
 		}
 
 		if(this.config.resetSwitch != null)
 		{
-			this.resetSwitches.push(new ResetSwitch(this.config.resetSwitch, this.log, homebridge));
+			this.resetSwitches.push(new ResetSwitch(this.config.resetSwitch, logger, homebridge));
 		}
 
 		const lightsSwitches = this.lights.concat(this.presetSwitches);

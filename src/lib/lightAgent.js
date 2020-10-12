@@ -4,13 +4,14 @@ const path = require('path')
 const cacheKey = 'magicHomeSynTex_cache'
 const spawn = cp.spawn
 
+var logger = null;
+
 const LightAgent = class {
 
 	constructor()
 	{
 		this.cachedAddress = {};
 		this.pollingInterval = 300 * 1000;
-		this.logger = null;
 		this.storage = null;
 		this.hasDiscoveryStarted = false;
 		this.isVerbose = false;
@@ -24,7 +25,7 @@ const LightAgent = class {
 			return {};
 		}
 
-		this.log('Getting Bulbs from Cache');
+		logger.debug('Getting Bulbs from Cache');
 
 		return this.storage.getItem(cacheKey).then((data) => {
 
@@ -42,8 +43,8 @@ const LightAgent = class {
 				}
 			}
 
-			this.log(' ** Fetched Lights from Cache **');
-			this.logger.debug(devices);
+			logger.debug(' ** Fetched Lights from Cache **');
+			logger.debug(devices);
 			
 			return devices;
 		});
@@ -55,12 +56,12 @@ const LightAgent = class {
 		{
 			const data = JSON.stringify(res);
 
-			this.log('Saving Lights');
-			this.logger.debug(data);
+			logger.debug('Saving Lights');
+			logger.debug(data);
 
 			this.storage.setItem(cacheKey, data).then(() => {
 
-				this.log('Lights Saved.');
+				logger.debug('Lights Saved.');
 			});
 		}
 	}
@@ -79,9 +80,9 @@ const LightAgent = class {
 		}
 	}
 
-	setLogger(logger)
+	setLogger(log)
 	{
-		this.logger = logger;
+		logger = log;
 	}
 
 	setVerbose()
@@ -105,15 +106,6 @@ const LightAgent = class {
 
 				self.cachedAddress = devices;
 			});
-		}
-	}
-
-	log(message)
-	{
-		if(this.logger && this.isVerbose)
-		{
-			//this.logger(message);
-			this.logger.log('info', 'bridge', 'Bridge', message);
 		}
 	}
 
@@ -182,25 +174,25 @@ const LightAgent = class {
 		const self = this;
 		const cmd = path.join(__dirname, '../flux_led.py');
 
-		self.log('Discovering Devices');
+		logger.debug('Discovering Devices');
 
 		this.proc = spawn(cmd, ['-s']);
 		this.proc.stdout.on('data', (data) => {
 
 			const newData = '' + data;
 
-			self.logger.debug(newData);
+			logger.debug(newData);
 			self.cachedAddress = self.parseDevices(newData);
 		});
 
 		this.proc.stderr.on('data', (data) => {
 
-			self.logger.log('error', 'bridge', 'Bridge', 'Error : ' + data)
+			logger.log('error', 'bridge', 'Bridge', 'Error : ' + data)
 		});
 
 		this.proc.on('close', () => {
 
-			self.log('Discovery Finished');
+			logger.debug('Discovery Finished');
 			self.rediscoverLights();
 		});
 	}
@@ -209,7 +201,7 @@ const LightAgent = class {
 	{
 		this.proc = null;
 
-		this.logger.debug(this.cachedAddress);
+		logger.debug(this.cachedAddress);
 
 		setTimeout(this.getDevices.bind(this), this.pollingInterval);
 	}

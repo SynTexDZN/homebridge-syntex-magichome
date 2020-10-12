@@ -63,7 +63,7 @@ const LightBulb = class extends Accessory
 	{
 		if(this.config.debug)
 		{
-			this.log(args);
+			logger.debug(args);
 		}
 	}
 

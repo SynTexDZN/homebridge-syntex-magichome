@@ -2,12 +2,15 @@ const cp = require('child_process');
 const path = require('path');
 const lightAgent = require('../lib/lightAgent');
 
+var logger = null;
+
 const Accessory = class
 {
 	constructor(config, log, homebridge)
 	{
+		logger = log;
+		
 		this.homebridge = homebridge;
-		this.log = log;
 		this.config = config;
 		this.name = config.name;
 		this.services = this.getAccessoryServices();
@@ -39,14 +42,14 @@ const Accessory = class
 
 		if(self.homebridge.debug)
 		{
-			self.log(cmd);
+			logger.debug(cmd);
 		}
 
 		exec(cmd, (err, stdOut) => {
 
 			if(self.homebridge.debug)
 			{
-				self.log(stdOut);
+				logger.debug(stdOut);
 			}
 			if(callback)
 			{
