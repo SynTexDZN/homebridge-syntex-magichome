@@ -173,7 +173,7 @@ const LightBulb = class extends Accessory
 
 		if(!this.isOn)
 		{
-			setPowerState(true, this.setToCurrentColor());
+			this.setPowerState(true, this.setToCurrentColor());
 		}
 		else
 		{
@@ -194,7 +194,7 @@ const LightBulb = class extends Accessory
 		
 		if(!this.isOn)
 		{
-			setPowerState(true, this.setToCurrentColor());
+			this.setPowerState(true, this.setToCurrentColor());
 		}
 		else
 		{
@@ -215,7 +215,7 @@ const LightBulb = class extends Accessory
 		
 		if(!this.isOn)
 		{
-			setPowerState(true, this.setToCurrentColor());
+			this.setPowerState(true, this.setToCurrentColor());
 		}
 		else
 		{
