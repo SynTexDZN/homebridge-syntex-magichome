@@ -173,7 +173,7 @@ const LightBulb = class extends Accessory
 
 		if(!this.isOn)
 		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 100));
 		}
 		else
 		{
@@ -194,7 +194,7 @@ const LightBulb = class extends Accessory
 		
 		if(!this.isOn)
 		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 100));
 		}
 		else
 		{
@@ -215,7 +215,7 @@ const LightBulb = class extends Accessory
 		
 		if(!this.isOn)
 		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 100));
 		}
 		else
 		{
