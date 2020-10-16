@@ -49,7 +49,7 @@ function MagicHome(log, config = {}, api)
 		response.end();
 	});
 
-	server.addPage('/set-device', (response, params) => {
+	server.addPage('/set-device', async (response, params) => {
 		
 		if(params.ip)
 		{
@@ -63,7 +63,7 @@ function MagicHome(log, config = {}, api)
 
 					if(params.power)
 					{
-						this.lights[i].setPowerState(params.power == 'true' ? true : false, () => {});
+						await this.lights[i].setPowerState(params.power == 'true' ? true : false, () => {});
 					}
 
 					if(params.hue)
