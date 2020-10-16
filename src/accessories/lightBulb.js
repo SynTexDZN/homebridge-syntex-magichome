@@ -173,7 +173,7 @@ const LightBulb = class extends Accessory
 
 		if(!this.isOn)
 		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 100));
+			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
 		}
 		else
 		{
@@ -194,7 +194,7 @@ const LightBulb = class extends Accessory
 		
 		if(!this.isOn)
 		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 100));
+			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
 		}
 		else
 		{
@@ -215,7 +215,7 @@ const LightBulb = class extends Accessory
 		
 		if(!this.isOn)
 		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 100));
+			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
 		}
 		else
 		{
@@ -241,7 +241,7 @@ const LightBulb = class extends Accessory
 		}
 
 		var converted = convert.hsv.rgb([color.H, color.S, color.L]);
-		logger.log('update', 'bridge', 'Bridge', 'Setting New Color From ' + this.ip + ' ' + color + ' ' + converted);
+		logger.log('update', 'bridge', 'Bridge', 'Setting New Color Of ' + this.ip + ' To ' + converted);
 
 		var base = '-x ' + this.setup + ' -c ';
 		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
