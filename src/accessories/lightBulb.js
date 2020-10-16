@@ -170,7 +170,16 @@ const LightBulb = class extends Accessory
 	setHue(value, callback)
 	{
 		this.color.H = value;
-		this.setToCurrentColor();
+
+		if(!this.isOn)
+		{
+			setPowerState(true, this.setToCurrentColor());
+		}
+		else
+		{
+			this.setToCurrentColor();
+		}
+
 		callback();
 	}
 
@@ -182,7 +191,16 @@ const LightBulb = class extends Accessory
 	setBrightness(value, callback)
 	{
 		this.color.L = value;
-		this.setToCurrentColor();
+		
+		if(!this.isOn)
+		{
+			setPowerState(true, this.setToCurrentColor());
+		}
+		else
+		{
+			this.setToCurrentColor();
+		}
+
 		callback();
 	}
 
@@ -194,7 +212,16 @@ const LightBulb = class extends Accessory
 	setSaturation(value, callback)
 	{
 		this.color.S = value;
-		this.setToCurrentColor();
+		
+		if(!this.isOn)
+		{
+			setPowerState(true, this.setToCurrentColor());
+		}
+		else
+		{
+			this.setToCurrentColor();
+		}
+
 		callback();
 	}
 
