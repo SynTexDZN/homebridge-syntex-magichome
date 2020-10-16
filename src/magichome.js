@@ -63,7 +63,7 @@ function MagicHome(log, config = {}, api)
 
 					if(params.power)
 					{
-						await this.lights[i].setPowerState(params.power == 'true' ? true : false, () => newTimeout(() => {}, 1000));
+						await this.lights[i].setPowerState(params.power == 'true' ? true : false, () => setTimeout(() => {}, 1000));
 					}
 
 					if(params.hue)
