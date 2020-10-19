@@ -31,6 +31,16 @@ const PresetSwitch = class extends Accessory
 		// Should Turn Off Light When Turn Off Preset
 		this.shouldTurnOff = config.shouldTurnOff || true;
 		this.bindEmitter();
+
+		this.changeHandler = (function(state)
+		{
+			logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
+
+			//this.service.getCharacteristic(this.homebridge.Characteristic.On).updateValue(state);
+
+			this.switchStateChanged(state, () => {});
+
+		}).bind(this);
 	}
 
 	bindEmitter()

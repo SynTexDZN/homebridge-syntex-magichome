@@ -25,7 +25,38 @@ const LightBulb = class extends Accessory
 
 			this.updateState();
 
-		}, 3000)
+		}, 3000);
+
+		this.changeHandler = (function(state)
+		{
+			logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
+
+			//this.service.getCharacteristic(this.homebridge.Characteristic.On).updateValue(state);
+
+			//this.switchStateChanged(state, () => {});
+
+			var power = state.split(':')[0];
+			var hue = state.split(':')[1];
+			var saturation = state.split(':')[2];
+			var brightness = state.split(':')[3];
+			/*
+			this.setPowerState(power, () => {});
+			this.setHue(hue, () => {});
+			this.setSaturation(saturation, () => {});
+			this.setBrightness(brightness, () => {});
+			*/
+			this.color = { H: hue, S: saturation, L: brightness };
+
+			if((!this.isOn && power) || (this.isOn && !power))
+			{
+				this.setPowerState(power == 'true' ? true : false, () => setTimeout(() => this.setToCurrentColor(), 1000));
+			}
+			else
+			{
+				this.setToCurrentColor();
+			}
+
+		}).bind(this);
 	}
 
 	getAccessoryServices()
