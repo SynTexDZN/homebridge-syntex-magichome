@@ -29,145 +29,6 @@ function MagicHome(log, config = {}, api)
 
 	server.SETUP('SynTexMagicHome', logger, this.port);
 
-	server.addPage('/set-device', async (response, urlParams) => {
-		
-		if(urlParams.mac && urlParams.type)
-		{
-			var found = false;
-
-			if(urlParams.type == 'rgb' || urlParams.type == 'rgbw')
-			{
-				for(var i = 0; i < this.lights.length; i++)
-				{
-					if(this.lights[i].mac == urlParams.mac)
-					{
-						found = true;
-
-						if(urlParams.power)
-						{
-							await this.lights[i].setPowerState(urlParams.power == 'true' ? true : false, () => {});
-						}
-
-						if(urlParams.hue)
-						{
-							this.lights[i].setHue(urlParams.hue, () => {});
-						}
-
-						if(urlParams.saturation)
-						{
-							this.lights[i].setSaturation(urlParams.saturation, () => {});
-						}
-
-						if(urlParams.brightness)
-						{
-							this.lights[i].setBrightness(urlParams.brightness, () => {});
-						}
-					}
-				}
-			}
-			else if(urlParams.type == 'preset-switch' || urlParams.type == 'reset-switch')
-			{
-				var switches = urlParams.type == 'preset-switch' ? this.presetSwitches : urlParams.type == 'reset-switch' ? this.resetSwitches : null;
-
-				for(var i = 0; i < switches.length; i++)
-				{
-					if(switches[i].mac == urlParams.mac)
-					{
-						found = true;
-
-						if(urlParams.power)
-						{
-							switches[i].switchStateChanged(urlParams.power == 'true' ? true : false, () => {});
-						}
-					}
-				}
-			}
-
-			response.write(found ? 'Success' : 'Error');
-		}
-		else
-		{
-			response.write('Keine Mac angegeben!');
-		}
-		
-		response.end();
-	});
-
-	server.addPage('/get-device', async (response, urlParams) => {
-		
-		var presets = {
-			lights : '3',
-			presetSwitches : '4',
-			resetSwitches : '4'
-		};
-
-		if(urlParams.mac && urlParams.type)
-		{
-			var state = await DeviceManager.getDevice(urlParams.mac, presets[urlParams.type] + '0');
-
-            response.write(state != null ? state.toString() : 'Error');
-		}
-		else
-		{
-			response.write('Keine Mac angegeben!');
-		}
-		
-		response.end();
-	});
-
-	server.addPage('/devices', async (response, urlParams) => {
-
-		if(urlParams.mac)
-		{
-			var accessory = null;
-
-			for(var i = 0; i < accessories.length; i++)
-			{
-				if(accessories[i].mac == urlParams.mac)
-				{
-					accessory = accessories[i];
-				}
-			}
-
-			if(accessory == null)
-			{
-				logger.log('error', urlParams.mac, '', 'Es wurde kein passendes Gerät in der Config gefunden! ( ' + urlParams.mac + ' )');
-
-				response.write('Error');
-			}
-			else if(urlParams.value)
-			{
-				var state = null;
-
-				if((state = validateUpdate(urlParams.mac, accessory.letters, urlParams.value)) != null)
-				{
-					//accessory.changeHandler(state);
-					logger.debug('FOUND');
-				}
-				else
-				{
-					logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
-				}
-
-				DeviceManager.setDevice(urlParams.mac, accessory.letters, urlParams.value);
-					
-				response.write(state != null ? 'Success' : 'Error');
-			}
-			else
-			{
-				var state = await DeviceManager.getDevice(urlParams.mac, accessory.letters);
-
-				response.write(state != null ? state.toString() : 'Error');
-			}
-		}
-		else
-		{
-			response.write('Error');
-		}
-
-		response.end();
-	});
-	
 	lightAgent.setLogger(logger);
 
 	if(homebridge)
@@ -237,6 +98,145 @@ MagicHome.prototype = {
 		const allSwitches = lightsSwitches.concat(this.resetSwitches);
 
 		callback(allSwitches);
+
+		server.addPage('/set-device', async (response, urlParams) => {
+		
+			if(urlParams.mac && urlParams.type)
+			{
+				var found = false;
+	
+				if(urlParams.type == 'rgb' || urlParams.type == 'rgbw')
+				{
+					for(var i = 0; i < this.lights.length; i++)
+					{
+						if(this.lights[i].mac == urlParams.mac)
+						{
+							found = true;
+	
+							if(urlParams.power)
+							{
+								await this.lights[i].setPowerState(urlParams.power == 'true' ? true : false, () => {});
+							}
+	
+							if(urlParams.hue)
+							{
+								this.lights[i].setHue(urlParams.hue, () => {});
+							}
+	
+							if(urlParams.saturation)
+							{
+								this.lights[i].setSaturation(urlParams.saturation, () => {});
+							}
+	
+							if(urlParams.brightness)
+							{
+								this.lights[i].setBrightness(urlParams.brightness, () => {});
+							}
+						}
+					}
+				}
+				else if(urlParams.type == 'preset-switch' || urlParams.type == 'reset-switch')
+				{
+					var switches = urlParams.type == 'preset-switch' ? this.presetSwitches : urlParams.type == 'reset-switch' ? this.resetSwitches : null;
+	
+					for(var i = 0; i < switches.length; i++)
+					{
+						if(switches[i].mac == urlParams.mac)
+						{
+							found = true;
+	
+							if(urlParams.power)
+							{
+								switches[i].switchStateChanged(urlParams.power == 'true' ? true : false, () => {});
+							}
+						}
+					}
+				}
+	
+				response.write(found ? 'Success' : 'Error');
+			}
+			else
+			{
+				response.write('Keine Mac angegeben!');
+			}
+			
+			response.end();
+		});
+	
+		server.addPage('/get-device', async (response, urlParams) => {
+			
+			var presets = {
+				lights : '3',
+				presetSwitches : '4',
+				resetSwitches : '4'
+			};
+	
+			if(urlParams.mac && urlParams.type)
+			{
+				var state = await DeviceManager.getDevice(urlParams.mac, presets[urlParams.type] + '0');
+	
+				response.write(state != null ? state.toString() : 'Error');
+			}
+			else
+			{
+				response.write('Keine Mac angegeben!');
+			}
+			
+			response.end();
+		});
+	
+		server.addPage('/devices', async (response, urlParams) => {
+	
+			if(urlParams.mac)
+			{
+				var accessory = null;
+	
+				for(var i = 0; i < accessories.length; i++)
+				{
+					if(accessories[i].mac == urlParams.mac)
+					{
+						accessory = accessories[i];
+					}
+				}
+	
+				if(accessory == null)
+				{
+					logger.log('error', urlParams.mac, '', 'Es wurde kein passendes Gerät in der Config gefunden! ( ' + urlParams.mac + ' )');
+	
+					response.write('Error');
+				}
+				else if(urlParams.value)
+				{
+					var state = null;
+	
+					if((state = validateUpdate(urlParams.mac, accessory.letters, urlParams.value)) != null)
+					{
+						//accessory.changeHandler(state);
+						logger.debug('FOUND');
+					}
+					else
+					{
+						logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
+					}
+	
+					DeviceManager.setDevice(urlParams.mac, accessory.letters, urlParams.value);
+						
+					response.write(state != null ? 'Success' : 'Error');
+				}
+				else
+				{
+					var state = await DeviceManager.getDevice(urlParams.mac, accessory.letters);
+	
+					response.write(state != null ? state.toString() : 'Error');
+				}
+			}
+			else
+			{
+				response.write('Error');
+			}
+	
+			response.end();
+		});
 	}
 }
 
