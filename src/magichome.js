@@ -67,6 +67,8 @@ MagicHome.prototype = {
 
 	accessories: function(callback)
 	{
+		var accessories = [];
+
 		homebridge.debug = this.config.debug || false;
 
 		if(this.config.lights != null && this.config.lights.length > 0)
@@ -94,10 +96,9 @@ MagicHome.prototype = {
 			this.resetSwitches.push(new ResetSwitch(this.config.resetSwitch, logger, homebridge, DeviceManager));
 		}
 
-		const lightsSwitches = this.lights.concat(this.presetSwitches);
-		const allSwitches = lightsSwitches.concat(this.resetSwitches);
+		accessories = this.lights.concat(this.presetSwitches).concat(this.resetSwitches);
 
-		callback(allSwitches);
+		callback(accessories);
 
 		server.addPage('/set-device', async (response, urlParams) => {
 		
