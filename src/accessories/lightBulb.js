@@ -1,11 +1,16 @@
 const convert = require('color-convert');
 const Accessory = require('./base');
 
+var logger = null, DeviceManager = null;
+
 const LightBulb = class extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
 		super(config, log, homebridge, manager);
+
+		logger = log;
+		DeviceManager = manager;
 
 		this.name = config.name || 'LED Controller';
 		this.ip = config.ip;
