@@ -28,57 +28,56 @@ function MagicHome(log, config = {}, api)
 
 	server.SETUP('SynTexMagicHome', logger, this.port);
 
-	server.addPage('/test', (response, params) => {
+	server.addPage('/set-device', async (response, urlParams) => {
 		
-		if(params.id)
-		{
-			if(Array.isArray(params.id))
-			{
-				response.write('Mehrere IDs!');
-			}
-			else
-			{
-				response.write('Deine ID lautet: ' + params.id);
-			}
-		}
-		else
-		{
-			response.write('Keine ID!');
-		}
-		
-		response.end();
-	});
-
-	server.addPage('/set-device', async (response, params) => {
-		
-		if(params.ip)
+		if(urlParams.mac && urlParams.type)
 		{
 			var found = false;
 
-			for(var i = 0; i < this.lights.length; i++)
+			if(urlParams.type == 'rgb' || urlParams.type == 'rgbw')
 			{
-				if(this.lights[i].ip == params.ip)
+				for(var i = 0; i < this.lights.length; i++)
 				{
-					found = true;
-
-					if(params.power)
+					if(this.lights[i].mac == urlParams.mac)
 					{
-						await this.lights[i].setPowerState(params.power == 'true' ? true : false, () => setTimeout(() => {}, 1000));
+						found = true;
+
+						if(urlParams.power)
+						{
+							await this.lights[i].setPowerState(urlParams.power == 'true' ? true : false, () => {});
+						}
+
+						if(urlParams.hue)
+						{
+							this.lights[i].setHue(urlParams.hue, () => {});
+						}
+
+						if(urlParams.saturation)
+						{
+							this.lights[i].setSaturation(urlParams.saturation, () => {});
+						}
+
+						if(urlParams.brightness)
+						{
+							this.lights[i].setBrightness(urlParams.brightness, () => {});
+						}
 					}
+				}
+			}
+			else if(urlParams.type == 'preset-switch' || urlParams.type == 'reset-switch')
+			{
+				var switches = urlParams.type == 'preset-switch' ? this.presetSwitches : urlParams.type == 'reset-switch' ? this.resetSwitches : null;
 
-					if(params.hue)
+				for(var i = 0; i < switches.length; i++)
+				{
+					if(switches[i].mac == urlParams.mac)
 					{
-						this.lights[i].setHue(params.hue, () => {});
-					}
+						found = true;
 
-					if(params.saturation)
-					{
-						this.lights[i].setSaturation(params.saturation, () => {});
-					}
-
-					if(params.brightness)
-					{
-						this.lights[i].setBrightness(params.brightness, () => {});
+						if(urlParams.power)
+						{
+							switches[i].switchStateChanged(urlParams.power == 'true' ? true : false, () => {});
+						}
 					}
 				}
 			}
@@ -87,51 +86,100 @@ function MagicHome(log, config = {}, api)
 		}
 		else
 		{
-			response.write('Keine IP angegeben!');
+			response.write('Keine Mac angegeben!');
 		}
 		
 		response.end();
 	});
 
-	server.addPage('/get-device', (response, params) => {
+	server.addPage('/get-device', async (response, urlParams) => {
 		
-		if(params.ip)
+		var presets = {
+			lights : '3',
+			presetSwitches : '4',
+			resetSwitches : '4'
+		};
+
+		if(urlParams.mac && urlParams.type)
 		{
-			var found = null;
+			var state = await DeviceManager.getDevice(urlParams.mac, presets[urlParams.type] + '0');
 
-			for(var i = 0; i < this.lights.length; i++)
-			{
-				if(this.lights[i].ip == params.ip)
-				{
-					found = this.lights[i].isOn + ':' + this.lights[i].color.H + ':' + this.lights[i].color.S + ':' + this.lights[i].color.L;
-				}
-			}
-
-			response.write(found != null ? found : 'Error');
+            response.write(state != null ? state.toString() : 'Error');
 		}
 		else
 		{
-			response.write('Keine IP angegeben!');
+			response.write('Keine Mac angegeben!');
 		}
 		
+		response.end();
+	});
+
+	server.addPage('devices', async (response, urlParams) => {
+
+		if(urlParams.mac)
+		{
+			var accessory = null;
+
+			for(var i = 0; i < accessories.length; i++)
+			{
+				if(accessories[i].mac == urlParams.mac)
+				{
+					accessory = accessories[i];
+				}
+			}
+
+			if(accessory == null)
+			{
+				logger.log('error', urlParams.mac, '', 'Es wurde kein passendes Gerät in der Config gefunden! ( ' + urlParams.mac + ' )');
+
+				response.write('Error');
+			}
+			else if(urlParams.value)
+			{
+				var state = null;
+
+				if((state = validateUpdate(urlParams.mac, accessory.letters, urlParams.value)) != null)
+				{
+					//accessory.changeHandler(state);
+				}
+				else
+				{
+					logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
+				}
+
+				DeviceManager.setDevice(urlParams.mac, accessory.letters, urlParams.value);
+					
+				response.write(state != null ? 'Success' : 'Error');
+			}
+			else
+			{
+				var state = await DeviceManager.getDevice(urlParams.mac, accessory.letters);
+
+				response.write(state != null ? state.toString() : 'Error');
+			}
+		}
+		else
+		{
+			response.write('Error');
+		}
+
 		response.end();
 	});
 	
 	lightAgent.setLogger(logger);
 
-	// Set Cache Storage Path
 	if(homebridge)
 	{
 		lightAgent.setPersistPath(homebridge.PersistPath);
 	}
 
-	// Configure LightAgent
 	if(config)
 	{
 		if(config.debug)
 		{
 			lightAgent.setVerbose();
 		}
+
 		if(config.disableDiscovery)
 		{
 			logger.log('info', 'bridge', 'Bridge', '** DISABLED DISCOVERY **');
@@ -140,8 +188,11 @@ function MagicHome(log, config = {}, api)
 	}
 
 	lightAgent.startDiscovery();
+	
+	DeviceManager.SETUP(logger, this.cacheDirectory);
+
+	restart = false;
 	/*
-    DeviceManager.SETUP(logger, this.cacheDirectory);
     Automations.SETUP(logger, this.cacheDirectory, DeviceManager).then(function () {
 
         restart = false;
@@ -163,7 +214,7 @@ MagicHome.prototype = {
 
 				newLightConfig.debug = this.config.debug || false;
 
-				this.lights.push(new LightBulb(newLightConfig, logger, homebridge));
+				this.lights.push(new LightBulb(newLightConfig, logger, homebridge, DeviceManager));
 			});
 		}
 
@@ -171,13 +222,13 @@ MagicHome.prototype = {
 		{
 			this.config.presetSwitches.forEach((switchConfig) => {
 
-				this.presetSwitches.push(new PresetSwitch(switchConfig, logger, homebridge));
+				this.presetSwitches.push(new PresetSwitch(switchConfig, logger, homebridge, DeviceManager));
 			});
 		}
 
 		if(this.config.resetSwitch != null)
 		{
-			this.resetSwitches.push(new ResetSwitch(this.config.resetSwitch, logger, homebridge));
+			this.resetSwitches.push(new ResetSwitch(this.config.resetSwitch, logger, homebridge, DeviceManager));
 		}
 
 		const lightsSwitches = this.lights.concat(this.presetSwitches);

@@ -1,18 +1,16 @@
 const Accessory = require('./base');
 const emitter = require('../lib/emitter');
 
-var logger = null;
-
 const ResetSwitch = class extends Accessory
 {
-	constructor(config, log, homebridge)
+	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge);
-
-		logger = log;
+		super(config, log, homebridge, manager);
 
 		this.name = config.name || 'Reset LED Controller Presets';
 		this.ips = Object.keys(config.ips);
+
+		this.letters = '40';
 	}
 
 	getAccessoryServices()

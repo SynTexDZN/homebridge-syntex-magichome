@@ -2,13 +2,14 @@ const cp = require('child_process');
 const path = require('path');
 const lightAgent = require('../lib/lightAgent');
 
-var logger = null;
+var logger = null, DeviceManager = null;
 
 const Accessory = class
 {
-	constructor(config, log, homebridge)
+	constructor(config, log, homebridge, manager)
 	{
 		logger = log;
+		DeviceManager = manager;
 		
 		this.homebridge = homebridge;
 		this.config = config;

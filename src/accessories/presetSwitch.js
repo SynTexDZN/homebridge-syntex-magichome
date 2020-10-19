@@ -2,21 +2,19 @@ const Accessory = require('./base');
 const preset = require('../presets');
 const emitter = require('../lib/emitter');
 
-var logger = null;
-
 const PresetSwitch = class extends Accessory
 {
-	constructor(config, log, homebridge)
+	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge);
-
-		logger = log;
+		super(config, log, homebridge, manager);
 
 		this.isOn = false;
 		this.name = config.name || 'LED Controller Presets';
 		this.ips = Object.keys(config.ips);
 		this.preset = config.preset || 'seven_color_cross_fade';
 		this.sceneValue = preset[this.preset];
+
+		this.letters = '40';
 
 		if(this.sceneValue == null)
 		{
@@ -123,11 +121,20 @@ const PresetSwitch = class extends Accessory
 	{
 		this.isOn = newValue;
 		this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
+
+		DeviceManager.setDevice(this.mac, '40', this.isOn);
 	}
 
 	getState(callback)
 	{
-		callback(null, this.isOn);
+		DeviceManager.getDevice(this.mac, '40').then(function(state) {
+
+			callback(null, state);
+	
+		}.bind(this)).catch(function(e) {
+	
+			logger.err(e);
+		});
 	}
 
 	getModelName()

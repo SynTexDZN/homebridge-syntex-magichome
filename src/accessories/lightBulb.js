@@ -1,15 +1,11 @@
 const convert = require('color-convert');
 const Accessory = require('./base');
 
-var logger = null;
-
 const LightBulb = class extends Accessory
 {
-	constructor(config, log, homebridge)
+	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge);
-
-		logger = log;
+		super(config, log, homebridge, manager);
 
 		this.name = config.name || 'LED Controller';
 		this.ip = config.ip;
@@ -17,6 +13,8 @@ const LightBulb = class extends Accessory
 		this.color = { H: 0, S: 0, L: 100 };
 		this.purewhite = config.purewhite || false;
 		this.timeout = config.timeout != null ? config.timeout : 60000;
+
+		this.letters = '30';
 		
 		setTimeout(() => {
 
