@@ -194,6 +194,8 @@ MagicHome.prototype = {
 	
 				for(var i = 0; i < accessories.length; i++)
 				{
+					logger.debug(accessories[i].mac + ' -> ' + urlParams.mac);
+
 					if(accessories[i].mac == urlParams.mac)
 					{
 						accessory = accessories[i];
