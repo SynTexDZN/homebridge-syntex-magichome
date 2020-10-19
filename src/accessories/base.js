@@ -13,6 +13,7 @@ const Accessory = class
 		
 		this.homebridge = homebridge;
 		this.config = config;
+		this.mac = config.mac;
 		this.name = config.name;
 		this.services = this.getAccessoryServices();
 
