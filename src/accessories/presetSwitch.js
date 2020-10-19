@@ -36,8 +36,6 @@ const PresetSwitch = class extends Accessory
 		{
 			logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
 
-			//this.service.getCharacteristic(this.homebridge.Characteristic.On).updateValue(state);
-
 			this.switchStateChanged(state, () => {});
 
 		}).bind(this);

@@ -213,7 +213,6 @@ MagicHome.prototype = {
 					if((state = validateUpdate(urlParams.mac, accessory.letters, urlParams.value)) != null)
 					{
 						accessory.changeHandler(state);
-						logger.debug('DEVICE CHANGED');
 					}
 					else
 					{
