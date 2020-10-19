@@ -6,6 +6,7 @@ const lightAgent = require('./lib/lightAgent');
 const pluginName = 'homebridge-syntex-magichome';
 const platformName = 'SynTexMagicHome';
 
+var DeviceManager = require('../device-manager');
 var logger = require('../logger');
 var server = require('../webserver');
 
