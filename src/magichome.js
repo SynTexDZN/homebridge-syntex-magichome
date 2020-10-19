@@ -194,7 +194,7 @@ MagicHome.prototype = {
 	
 				for(var i = 0; i < accessories.length; i++)
 				{
-					logger.debug(accessories[i]);
+					logger.debug(accessories[i].mac + ' -> ' + urlParams.mac);
 
 					if(accessories[i].mac == urlParams.mac)
 					{
@@ -241,6 +241,45 @@ MagicHome.prototype = {
 			response.end();
 		});
 	}
+}
+
+function validateUpdate(mac, letters, state)
+{
+    var type = letterToType(letters[0]);
+
+    if(type === 'motion' || type === 'rain' || type === 'smoke' || type === 'occupancy' || type === 'contact' || type == 'switch' || type == 'relais')
+    {
+        if(state != true && state != false && state != 'true' && state != 'false')
+        {
+            logger.log('warn', mac, '', 'Konvertierungsfehler: [' + state + '] ist keine boolsche Variable! ( ' + mac + ' )');
+
+            return null;
+        }
+
+        return (state == 'true' || state == true ? true : false);
+    }
+    else if(type === 'light' || type === 'temperature')
+    {
+        if(isNaN(state))
+        {
+            logger.log('warn', mac, '', 'Konvertierungsfehler: [' + state + '] ist keine numerische Variable! ( ' + mac + ' )');
+        }
+
+        return !isNaN(state) ? parseFloat(state) : null;
+    }
+    else if(type === 'humidity' || type === 'airquality')
+    {
+        if(isNaN(state))
+        {
+            logger.log('warn', mac, '', 'Konvertierungsfehler: [' + state + '] ist keine numerische Variable! ( ' + mac + ' )');
+        }
+
+        return !isNaN(state) ? parseInt(state) : null;
+    }
+    else
+    {
+        return state;
+    }
 }
 
 function MagicHomeGlobals() {}
