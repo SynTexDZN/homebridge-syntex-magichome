@@ -115,7 +115,7 @@ function MagicHome(log, config = {}, api)
 		response.end();
 	});
 
-	server.addPage('devices', async (response, urlParams) => {
+	server.addPage('/devices', async (response, urlParams) => {
 
 		if(urlParams.mac)
 		{
@@ -142,6 +142,7 @@ function MagicHome(log, config = {}, api)
 				if((state = validateUpdate(urlParams.mac, accessory.letters, urlParams.value)) != null)
 				{
 					//accessory.changeHandler(state);
+					logger.debug('FOUND');
 				}
 				else
 				{
