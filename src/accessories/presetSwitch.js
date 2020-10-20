@@ -33,8 +33,6 @@ const PresetSwitch = class extends Accessory
 
 		this.changeHandler = (function(state)
 		{
-			logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
-
 			this.switchStateChanged(state, () => {});
 
 		}).bind(this);
@@ -72,6 +70,8 @@ const PresetSwitch = class extends Accessory
 	switchStateChanged(newState, callback)
 	{
 		this.isOn = newState;
+
+		logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + newState + '] ( ' + this.mac + ' )');
 
 		const self = this;
 
@@ -142,6 +142,8 @@ const PresetSwitch = class extends Accessory
 	getState(callback)
 	{
 		DeviceManager.getDevice(this.mac, '40').then(function(state) {
+
+			logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
 
 			callback(null, state);
 	
