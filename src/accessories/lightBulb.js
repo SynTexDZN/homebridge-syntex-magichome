@@ -201,6 +201,11 @@ const LightBulb = class extends Accessory
 		this.sendCommand(value ? '--on' : '--off', () => {
 
 			self.isOn = value;
+
+			logger.log('update', self.mac, self.name, 'HomeKit Status für [' + self.name + '] geändert zu [' + self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L + '] ( ' + self.mac + ' )');
+
+			DeviceManager.setDevice(self.mac, self.letters, self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L);
+
 			callback();
 		});
 	}
