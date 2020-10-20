@@ -20,6 +20,31 @@ const LightBulb = class extends Accessory
 		this.timeout = config.timeout != null ? config.timeout : 60000;
 
 		this.letters = '30';
+
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+
+			if(state == null)
+			{
+				logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
+			}
+			else if((state = validateUpdate(this.mac, this.letters, state)) != null)
+			{
+				logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
+
+				this.isOn = state.split(':')[0];
+				this.color = {
+					H : state.split(':')[1],
+					S : state.split(':')[2],
+					L : state.split(':')[3]
+				};
+
+				this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
+				this.services[0].getCharacteristic(this.homebridge.Characteristic.Hue).updateValue(this.color.H);
+				this.services[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(this.color.S);
+				this.services[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(this.color.L);
+			}
+
+		}).bind(this);
 		
 		setTimeout(() => {
 
@@ -29,15 +54,12 @@ const LightBulb = class extends Accessory
 
 		this.changeHandler = (function(state)
 		{
-			logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
-
 			var temp = this.isOn;
 			
 			var power = state.split(':')[0];
 			var hue = state.split(':')[1];
 			var saturation = state.split(':')[2];
 			var brightness = state.split(':')[3];
-
 			
 			this.color = { H: hue, S: saturation, L: brightness };
 
@@ -262,10 +284,13 @@ const LightBulb = class extends Accessory
 		}
 
 		var converted = convert.hsv.rgb([color.H, color.S, color.L]);
-		logger.log('update', 'bridge', 'Bridge', 'Setting New Color Of ' + this.ip + ' To ' + converted);
+		//logger.log('update', 'bridge', 'Bridge', 'Setting New Color Of ' + this.ip + ' To ' + converted);
+		logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
 
 		var base = '-x ' + this.setup + ' -c ';
 		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
+
+		DeviceManager.setDevice(this.mac, this.letters, this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L);
 	}
 }
 
