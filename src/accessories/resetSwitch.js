@@ -7,7 +7,7 @@ const ResetSwitch = class extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge, manager);
+		super(config, log, homebridge);
 
 		logger = log;
 		DeviceManager = manager;
@@ -93,12 +93,12 @@ const ResetSwitch = class extends Accessory
 
 	getModelName()
 	{
-		return 'Reset Switch';
+		return 'Magic Home Reset Switch';
 	}
 
 	getSerialNumber()
 	{
-		return '00-001-ResetSwitch';
+		return this.mac;
 	}
 }
 

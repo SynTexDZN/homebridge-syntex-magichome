@@ -7,7 +7,7 @@ const LightBulb = class extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge, manager);
+		super(config, log, homebridge);
 
 		logger = log;
 		DeviceManager = manager;
@@ -105,12 +105,12 @@ const LightBulb = class extends Accessory
 
 	getModelName()
 	{
-		return 'Light Bulb';
+		return 'Magic Home Light Bulb';
 	}
 
 	getSerialNumber()
 	{
-		return '00-001-LightBulb';
+		return this.ip;
 	}
 
 	logMessage(...args)

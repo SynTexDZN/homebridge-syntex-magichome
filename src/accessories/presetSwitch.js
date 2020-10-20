@@ -8,7 +8,7 @@ const PresetSwitch = class extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge, manager);
+		super(config, log, homebridge);
 
 		logger = log;
 		DeviceManager = manager;
@@ -172,12 +172,12 @@ const PresetSwitch = class extends Accessory
 
 	getModelName()
 	{
-		return 'Preset Switch';
+		return 'Magic Home Preset Switch';
 	}
 
 	getSerialNumber()
 	{
-		return '00-001-PresetSwitch';
+		return this.mac;
 	}
 }
 

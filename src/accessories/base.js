@@ -2,14 +2,13 @@ const cp = require('child_process');
 const path = require('path');
 const lightAgent = require('../lib/lightAgent');
 
-var logger = null, DeviceManager = null;
+var logger = null;
 
 const Accessory = class
 {
-	constructor(config, log, homebridge, manager)
+	constructor(config, log, homebridge)
 	{
 		logger = log;
-		DeviceManager = manager;
 		
 		this.homebridge = homebridge;
 		this.config = config;
@@ -29,8 +28,9 @@ const Accessory = class
 	{
 		var informationService = new this.homebridge.Service.AccessoryInformation();
 
-		informationService.setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'MagicHome')
+		informationService.setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'SynTex')
 			.setCharacteristic(this.homebridge.Characteristic.Model, this.getModelName())
+			.setCharacteristic(this.homebridge.Characteristic.FirmwareRevision, '1.0.0')
 			.setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.getSerialNumber());
 
 		return informationService;
