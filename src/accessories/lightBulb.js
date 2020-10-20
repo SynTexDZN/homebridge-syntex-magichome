@@ -41,7 +41,7 @@ const LightBulb = class extends Accessory
 			
 			this.color = { H: hue, S: saturation, L: brightness };
 
-			this.setPowerState(power == 'true' ? true : false, setTimeout(() => this.setToCurrentColor(), temp ? 0 : 1000));
+			this.setPowerState(power == 'true' ? true : false, () => setTimeout(() => this.setToCurrentColor(), temp ? 0 : 1000));
 
 		}).bind(this);
 	}
