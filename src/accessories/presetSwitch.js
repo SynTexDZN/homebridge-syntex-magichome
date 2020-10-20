@@ -28,7 +28,6 @@ const PresetSwitch = class extends Accessory
 		}
 
 		this.speed = config.speed || 40;
-		// Should Turn Off Light When Turn Off Preset
 		this.shouldTurnOff = config.shouldTurnOff || true;
 		this.bindEmitter();
 
@@ -87,6 +86,8 @@ const PresetSwitch = class extends Accessory
 
 					self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
 
+						DeviceManager.setDevice(self.mac, '40', true);
+
 						callback();
 					});
 				}, 3000);
@@ -102,6 +103,8 @@ const PresetSwitch = class extends Accessory
 				const newPromise = new Promise((resolve) => {
 
 					self.executeCommand(ip, ' -c ' + self.config.ips[ip], () => {
+
+						DeviceManager.setDevice(self.mac, '40', false);
 
 						resolve();
 					});
@@ -134,8 +137,6 @@ const PresetSwitch = class extends Accessory
 	{
 		this.isOn = newValue;
 		this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
-
-		DeviceManager.setDevice(this.mac, '40', this.isOn);
 	}
 
 	getState(callback)
