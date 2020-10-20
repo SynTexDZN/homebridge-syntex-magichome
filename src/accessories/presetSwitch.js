@@ -36,6 +36,23 @@ const PresetSwitch = class extends Accessory
 			this.switchStateChanged(state, () => {});
 
 		}).bind(this);
+
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+
+			if(state == null)
+			{
+				logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
+			}
+			else if(state != null)
+			{
+				logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
+
+				this.isOn = state;
+
+				this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
+			}
+
+		}.bind(this));
 	}
 
 	bindEmitter()
