@@ -44,7 +44,7 @@ const LightBulb = class extends Accessory
 				this.services[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(this.color.L);
 			}
 
-		}).bind(this);
+		}.bind(this));
 		
 		setTimeout(() => {
 
@@ -65,7 +65,7 @@ const LightBulb = class extends Accessory
 
 			this.setPowerState(power == 'true' ? true : false, () => setTimeout(() => this.setToCurrentColor(), temp ? 0 : 1000));
 
-		}).bind(this);
+		}.bind(this));
 	}
 
 	getAccessoryServices()
