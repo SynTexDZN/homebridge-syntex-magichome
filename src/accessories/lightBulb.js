@@ -55,16 +55,23 @@ const LightBulb = class extends Accessory
 		this.changeHandler = (function(state)
 		{
 			var temp = this.isOn;
-			
-			var power = state.split(':')[0];
-			var hue = state.split(':')[1];
-			var saturation = state.split(':')[2];
-			var brightness = state.split(':')[3];
-			
-			this.color = { H: hue, S: saturation, L: brightness };
 
-			this.setPowerState(power == 'true' ? true : false, () => setTimeout(() => this.setToCurrentColor(), temp ? 0 : 1000));
+			if(state.includes(':'))
+			{
+				var power = state.split(':')[0];
+				var hue = state.split(':')[1];
+				var saturation = state.split(':')[2];
+				var brightness = state.split(':')[3];
+				
+				this.color = { H: hue, S: saturation, L: brightness };
 
+				this.setPowerState(power == 'true' ? true : false, () => setTimeout(() => this.setToCurrentColor(), temp ? 0 : 1000));
+			}
+			else
+			{
+				this.setPowerState(state == 'true' ? true : false, () => {});
+			}
+			
 		}.bind(this));
 	}
 
