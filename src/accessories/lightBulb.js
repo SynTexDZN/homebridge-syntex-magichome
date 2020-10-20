@@ -27,7 +27,7 @@ const LightBulb = class extends Accessory
 			{
 				logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
 			}
-			else if((state = validateUpdate(this.mac, this.letters, state)) != null)
+			else if(state != null)
 			{
 				logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
 
