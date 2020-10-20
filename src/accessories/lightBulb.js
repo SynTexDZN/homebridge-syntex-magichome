@@ -110,6 +110,8 @@ const LightBulb = class extends Accessory
 
 	getSerialNumber()
 	{
+		logger.debug(this.ip);
+
 		return this.ip;
 	}
 

@@ -30,7 +30,6 @@ const Accessory = class
 
 		informationService.setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'SynTex')
 			.setCharacteristic(this.homebridge.Characteristic.Model, this.getModelName())
-			.setCharacteristic(this.homebridge.Characteristic.FirmwareRevision, '1.0.0')
 			.setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.getSerialNumber());
 
 		return informationService;
