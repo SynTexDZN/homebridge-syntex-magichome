@@ -71,7 +71,7 @@ const Accessory = class
 
 	getSerialNumber()
 	{
-		throw new Error('The getSerialNumber method must be overridden.');
+		return this.mac;
 	}
 
 	getServices()

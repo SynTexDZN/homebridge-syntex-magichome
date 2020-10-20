@@ -174,11 +174,6 @@ const PresetSwitch = class extends Accessory
 	{
 		return 'Magic Home Preset Switch';
 	}
-
-	getSerialNumber()
-	{
-		return this.mac;
-	}
 }
 
 module.exports = PresetSwitch;

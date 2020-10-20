@@ -108,13 +108,6 @@ const LightBulb = class extends Accessory
 		return 'Magic Home Light Bulb';
 	}
 
-	getSerialNumber()
-	{
-		logger.debug(this.ip);
-
-		return this.ip;
-	}
-
 	logMessage(...args)
 	{
 		if(this.config.debug)

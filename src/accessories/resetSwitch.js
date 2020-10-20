@@ -95,11 +95,6 @@ const ResetSwitch = class extends Accessory
 	{
 		return 'Magic Home Reset Switch';
 	}
-
-	getSerialNumber()
-	{
-		return this.mac;
-	}
 }
 
 module.exports = ResetSwitch;
