@@ -44,7 +44,7 @@ const LightAgent = class {
 			}
 
 			logger.debug(' ** Fetched Lights from Cache **');
-			logger.debug(devices);
+			//logger.debug(devices);
 			
 			return devices;
 		});
