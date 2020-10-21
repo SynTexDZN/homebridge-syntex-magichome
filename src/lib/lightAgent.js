@@ -181,7 +181,7 @@ const LightAgent = class {
 
 			const newData = '' + data;
 
-			//logger.debug(newData);
+			logger.debug(newData);
 			self.cachedAddress = self.parseDevices(newData);
 		});
 
@@ -201,7 +201,7 @@ const LightAgent = class {
 	{
 		this.proc = null;
 
-		logger.debug(this.cachedAddress);
+		//logger.debug(this.cachedAddress);
 
 		setTimeout(this.getDevices.bind(this), this.pollingInterval);
 	}
