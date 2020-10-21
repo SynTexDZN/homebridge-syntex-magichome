@@ -23,7 +23,7 @@ const PresetSwitch = class extends Accessory
 
 		if(this.sceneValue == null)
 		{
-			log.log('warn', 'bridge', 'Bridge', 'Present Not Found... Try Different Preset');
+			logger.log('warn', 'bridge', 'Bridge', 'Das Preset [' + this.preset + '] wurde nicht gefunden. Es wird das Default-Preset [seven_color_cross_fade] verwendet!');
 			this.sceneValue = 37;
 		}
 
@@ -103,7 +103,7 @@ const PresetSwitch = class extends Accessory
 
 					self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
 
-						DeviceManager.setDevice(self.mac, '40', true);
+						DeviceManager.setDevice(self.mac, self.letters, true);
 
 						callback();
 					});
@@ -121,7 +121,7 @@ const PresetSwitch = class extends Accessory
 
 					self.executeCommand(ip, ' -c ' + self.config.ips[ip], () => {
 
-						DeviceManager.setDevice(self.mac, '40', false);
+						DeviceManager.setDevice(self.mac, self.letters, false);
 
 						resolve();
 					});
@@ -158,7 +158,7 @@ const PresetSwitch = class extends Accessory
 
 	getState(callback)
 	{
-		DeviceManager.getDevice(this.mac, '40').then(function(state) {
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
 

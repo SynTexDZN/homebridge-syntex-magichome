@@ -181,7 +181,7 @@ const LightAgent = class {
 
 			const newData = '' + data;
 
-			logger.debug(newData);
+			//logger.debug(newData);
 			self.cachedAddress = self.parseDevices(newData);
 		});
 

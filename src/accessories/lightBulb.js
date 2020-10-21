@@ -118,7 +118,7 @@ const LightBulb = class extends Accessory
 
 	startTimer()
 	{
-		if (this.timeout === 0) return;
+		if(this.timeout === 0) return;
 
 		setTimeout(() => {
 
@@ -193,7 +193,15 @@ const LightBulb = class extends Accessory
 
 	getPowerState(callback)
 	{
-		callback(null, this.isOn);
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+
+			callback(null, state != null ? (state.split(':')[0] || 0) : 0);
+	
+		}.bind(this)).catch(function(e) {
+	
+			logger.err(e);
+		});
+		//callback(null, this.isOn);
 	}
 
 	setPowerState(value, callback)
@@ -214,7 +222,15 @@ const LightBulb = class extends Accessory
 
 	getHue(callback)
 	{
-		callback(null, this.color.H);
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+
+			callback(null, state != null ? (state.split(':')[1] || 0) : 0);
+	
+		}.bind(this)).catch(function(e) {
+	
+			logger.err(e);
+		});
+		//callback(null, this.color.H);
 	}
 
 	setHue(value, callback)
@@ -235,7 +251,15 @@ const LightBulb = class extends Accessory
 
 	getBrightness(callback)
 	{
-		callback(null, this.color.L);
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+
+			callback(null, state != null ? (state.split(':')[2] || 0) : 0);
+	
+		}.bind(this)).catch(function(e) {
+	
+			logger.err(e);
+		});
+		//callback(null, this.color.L);
 	}
 
 	setBrightness(value, callback)
@@ -256,7 +280,15 @@ const LightBulb = class extends Accessory
 
 	getSaturation(callback)
 	{
-		callback(null, this.color.S);
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+
+			callback(null, state != null ? (state.split(':')[3] || 0) : 0);
+	
+		}.bind(this)).catch(function(e) {
+	
+			logger.err(e);
+		});
+		//callback(null, this.color.S);
 	}
 
 	setSaturation(value, callback)
@@ -291,7 +323,7 @@ const LightBulb = class extends Accessory
 		}
 
 		var converted = convert.hsv.rgb([color.H, color.S, color.L]);
-		//logger.log('update', 'bridge', 'Bridge', 'Setting New Color Of ' + this.ip + ' To ' + converted);
+		
 		logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
 
 		var base = '-x ' + this.setup + ' -c ';

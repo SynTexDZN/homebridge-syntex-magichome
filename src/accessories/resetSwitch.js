@@ -16,7 +16,7 @@ const ResetSwitch = class extends Accessory
 		this.ips = Object.keys(config.ips);
 
 		this.letters = '40';
-
+		/*
 		this.changeHandler = (function(state)
 		{
 			logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
@@ -24,6 +24,7 @@ const ResetSwitch = class extends Accessory
 			this.switchStateChanged(state, () => {});
 
 		}).bind(this);
+		*/
 	}
 
 	getAccessoryServices()

@@ -133,7 +133,7 @@ MagicHome.prototype = {
 						logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
 					}
 	
-					DeviceManager.setDevice(urlParams.mac, accessory.letters, urlParams.value);
+					DeviceManager.setDevice(urlParams.mac, accessory.letters, urlParams.value); // TODO : Concat RGB Light Services
 						
 					response.write(state != null ? 'Success' : 'Error');
 				}
@@ -151,6 +151,53 @@ MagicHome.prototype = {
 	
 			response.end();
 		});
+
+		server.addPage('/version', async (response, urlParams) => {
+
+			response.write(require('./package.json').version);
+            response.end();
+		});
+
+		server.addPage('/check-restart', async (response, urlParams) => {
+
+			response.write(restart.toString());
+            response.end();
+		});
+
+		server.addPage('/update', async (response, urlParams) => {
+
+			var version = urlParams.version ? urlParams.version : 'latest';
+
+			const { exec } = require('child_process');
+			
+			exec('sudo npm install homebridge-syntex-magichome@' + version + ' -g', (error, stdout, stderr) => {
+
+				try
+				{
+					if(error || stderr.includes('ERR!'))
+					{
+						logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge konnte nicht aktualisiert werden! ' + (error || stderr));
+					}
+					else
+					{
+						logger.log('success', 'bridge', 'Bridge', 'Die Homebridge wurde auf die Version [' + version + '] aktualisiert!');
+
+						restart = true;
+
+						logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge wird neu gestartet ..');
+
+						exec('sudo systemctl restart homebridge');
+					}
+
+					response.write(error || stderr.includes('ERR!') ? 'Error' : 'Success');
+					response.end();
+				}
+				catch(e)
+				{
+					logger.err(e);
+				}
+			});
+		});
 	}
 }
 
@@ -162,7 +209,7 @@ function validateUpdate(mac, letters, state)
     {
         if(state != true && state != false && state != 'true' && state != 'false')
         {
-            logger.log('warn', mac, '', 'Konvertierungsfehler: [' + state + '] ist keine boolsche Variable! ( ' + mac + ' )');
+            logger.log('warn', mac, letters, 'Konvertierungsfehler: [' + state + '] ist keine boolsche Variable! ( ' + mac + ' )');
 
             return null;
         }
@@ -173,7 +220,7 @@ function validateUpdate(mac, letters, state)
     {
         if(isNaN(state))
         {
-            logger.log('warn', mac, '', 'Konvertierungsfehler: [' + state + '] ist keine numerische Variable! ( ' + mac + ' )');
+            logger.log('warn', mac, letters, 'Konvertierungsfehler: [' + state + '] ist keine numerische Variable! ( ' + mac + ' )');
         }
 
         return !isNaN(state) ? parseFloat(state) : null;
@@ -182,7 +229,7 @@ function validateUpdate(mac, letters, state)
     {
         if(isNaN(state))
         {
-            logger.log('warn', mac, '', 'Konvertierungsfehler: [' + state + '] ist keine numerische Variable! ( ' + mac + ' )');
+            logger.log('warn', mac, letters, 'Konvertierungsfehler: [' + state + '] ist keine numerische Variable! ( ' + mac + ' )');
         }
 
         return !isNaN(state) ? parseInt(state) : null;
