@@ -66,36 +66,36 @@ module.exports = class DeviceManager
             resolve();
         });
     }
+}
 
-    readFS(mac, service)
-    {
-        return new Promise(resolve => {
+function readFS(mac, service)
+{
+    return new Promise(resolve => {
 
-            storage.load(mac + ':' + service, (err, device) => {    
+        storage.load(mac + ':' + service, (err, device) => {    
 
-                resolve(device && !err ? device.value : null);
-            });
+            resolve(device && !err ? device.value : null);
         });
-    }
+    });
+}
 
-    writeFS(mac, service, value)
-    {
-        return new Promise(resolve => {
-            
-            var device = {
-                id: mac + ':' + service,
-                value: value
-            };
-            
-            storage.add(device, (err) => {
+function writeFS(mac, service, value)
+{
+    return new Promise(resolve => {
+        
+        var device = {
+            id: mac + ':' + service,
+            value: value
+        };
+        
+        storage.add(device, (err) => {
 
-                if(err)
-                {
-                    logger.log('error', 'bridge', 'Bridge', mac + '.json konnte nicht aktualisiert werden! ' + err);
-                }
+            if(err)
+            {
+                logger.log('error', 'bridge', 'Bridge', mac + '.json konnte nicht aktualisiert werden! ' + err);
+            }
 
-                resolve(err ? false : true);
-            });
+            resolve(err ? false : true);
         });
-    }
+    });
 }
