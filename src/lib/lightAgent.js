@@ -44,7 +44,11 @@ const LightAgent = class {
 			}
 
 			logger.debug(' ** Fetched Lights from Cache **');
-			//logger.debug(devices);
+
+			if(this.isVerbose)
+			{
+				logger.debug(devices);
+			}
 			
 			return devices;
 		});
@@ -201,7 +205,10 @@ const LightAgent = class {
 	{
 		this.proc = null;
 
-		//logger.debug(this.cachedAddress);
+		if(this.isVerbose)
+		{
+			logger.debug(this.cachedAddress);
+		}
 
 		setTimeout(this.getDevices.bind(this), this.pollingInterval);
 	}
@@ -214,7 +221,7 @@ const LightAgent = class {
 		{
 			ips = this.getCachedDevice(address);
 		}
-		else if (address.length > 0)
+		else if(address.length > 0)
 		{
 			address.forEach((addr) => {
 

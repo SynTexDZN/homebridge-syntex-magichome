@@ -1,61 +1,66 @@
-var server = exports;
-var http = require('http');
-var url = require('url');
-var logger, pages = [];
+var http = require('http'), url = require('url');
+var pages = [];
 
-server.SETUP = function(prefix, log, port)
+class WebServer
 {
-    logger = log;
-
-    var createServerCallback = (async function(request, response)
+    constructor(prefix, log, port)
     {
-        var urlParts = url.parse(request.url, true);
-        var urlParams = urlParts.query;
-        var urlPath = urlParts.pathname;
-        var body = [];
-        
-        body = Buffer.concat(body).toString();
+        logger = log;
 
-        response.statusCode = 200;
-        response.setHeader('Content-Type', 'application/json');
-        response.setHeader('Access-Control-Allow-Origin', '*');
-
-        for(var i = 0; i < pages.length; i++)
+        var createServerCallback = (async function(request, response)
         {
-            if(urlPath == pages[i].path)
+            var urlParts = url.parse(request.url, true);
+            var urlParams = urlParts.query;
+            var urlPath = urlParts.pathname;
+            var body = [];
+            
+            body = Buffer.concat(body).toString();
+
+            response.statusCode = 200;
+            response.setHeader('Content-Type', 'application/json');
+            response.setHeader('Access-Control-Allow-Origin', '*');
+
+            for(var i = 0; i < pages.length; i++)
             {
-                if(request.method == 'POST')
+                if(urlPath == pages[i].path)
                 {
-                    var post = '';
-
-                    request.on('data', function(data)
+                    if(request.method == 'POST')
                     {
-                        post += data;
-                    });
+                        var post = '';
 
-                    request.on('end', async function()
+                        request.on('data', function(data)
+                        {
+                            post += data;
+                        });
+
+                        request.on('end', async function()
+                        {
+                            var json = post != '' ? JSON.parse(post) : null;
+                            
+                            this.page.callback(response, urlParams, json);
+                            
+                        }.bind({ page : pages[i] }));
+                    }
+                    else
                     {
-                        var json = post != '' ? JSON.parse(post) : null;
-                        
-                        this.page.callback(response, urlParams, json);
-                        
-                    }.bind({ page : pages[i] }));
-                }
-                else
-                {
-                    pages[i].callback(response, urlParams, null);
+                        pages[i].callback(response, urlParams, null);
+                    }
                 }
             }
-        }
 
-    }).bind(this);
+        }).bind(this);
 
-    http.createServer(createServerCallback).listen(port, '0.0.0.0');
-       
-    logger.log('info', 'bridge', 'Bridge', prefix + ' Server läuft auf Port [' + port + ']');
-};
+        http.createServer(createServerCallback).listen(port, '0.0.0.0');
+        
+        logger.log('info', 'bridge', 'Bridge', prefix + ' Server läuft auf Port [' + port + ']');
+    }
 
-server.addPage = function(path, callback)
-{
-    pages.push({ path : path, callback : callback });
+    addPage = function(path, callback)
+    {
+        pages.push({ path : path, callback : callback });
+    }
 }
+
+const server = new WebServer();
+
+module.exports = server;

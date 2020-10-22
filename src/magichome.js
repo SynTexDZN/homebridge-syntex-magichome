@@ -7,8 +7,8 @@ const pluginName = 'homebridge-syntex-magichome';
 const platformName = 'SynTexMagicHome';
 
 var DeviceManager = require('../device-manager');
+var WebServer = require('../webserver');
 var logger = require('../logger');
-var server = require('../webserver');
 
 var homebridge;
 
@@ -25,9 +25,9 @@ function MagicHome(log, config = {}, api)
     this.logDirectory = config['log_directory'] || './SynTex/log';
     this.port = config['port'] || 1712;
     
-	logger.create('SynTexMagicHome', this.logDirectory, api.user.storagePath());
-
-	server.SETUP('SynTexMagicHome', logger, this.port);
+	logger = new logger(platformName, this.logDirectory, api.user.storagePath());
+	WebServer = new WebServer(platformName, logger, this.port);
+	DeviceManager = new DeviceManager(logger, this.cacheDirectory);
 
 	lightAgent.setLogger(logger);
 
@@ -52,8 +52,6 @@ function MagicHome(log, config = {}, api)
 
 	lightAgent.startDiscovery();
 	
-	DeviceManager.SETUP(logger, this.cacheDirectory);
-
 	restart = false;
 	/*
     Automations.SETUP(logger, this.cacheDirectory, DeviceManager).then(function () {
@@ -100,7 +98,7 @@ MagicHome.prototype = {
 
 		callback(accessories);
 
-		server.addPage('/devices', async (response, urlParams) => {
+		WebServer.addPage('/devices', async (response, urlParams) => {
 	
 			if(urlParams.mac)
 			{
@@ -152,19 +150,19 @@ MagicHome.prototype = {
 			response.end();
 		});
 
-		server.addPage('/version', async (response, urlParams) => {
+		WebServer.addPage('/version', async (response, urlParams) => {
 
 			response.write(require('./package.json').version);
             response.end();
 		});
 
-		server.addPage('/check-restart', async (response, urlParams) => {
+		WebServer.addPage('/check-restart', async (response, urlParams) => {
 
 			response.write(restart.toString());
             response.end();
 		});
 
-		server.addPage('/update', async (response, urlParams) => {
+		WebServer.addPage('/update', async (response, urlParams) => {
 
 			var version = urlParams.version ? urlParams.version : 'latest';
 
