@@ -25,16 +25,7 @@ function MagicHome(log, config = {}, api)
     this.logDirectory = config['log_directory'] || './SynTex/log';
 	this.port = config['port'] || 1712;
 	
-	console.log('** LOGGER **');
-
-	console.log(new logger(platformName, this.logDirectory, api.user.storagePath()));
-    
 	logger = new logger(platformName, this.logDirectory, api.user.storagePath());
-
-	console.log(logger);
-
-	logger.debug('TEST');
-
 	WebServer = new WebServer(platformName, logger, this.port);
 	DeviceManager = new DeviceManager(logger, this.cacheDirectory);
 

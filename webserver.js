@@ -52,7 +52,7 @@ module.exports = class WebServer
 
         http.createServer(createServerCallback).listen(port, '0.0.0.0');
         
-        //logger.log('info', 'bridge', 'Bridge', prefix + ' Server läuft auf Port [' + port + ']');
+        logger.log('info', 'bridge', 'Bridge', prefix + ' Web-Server läuft auf Port [' + port + ']');
     }
 
     addPage = function(path, callback)
