@@ -1,5 +1,5 @@
 var http = require('http'), url = require('url');
-var pages = [];
+var logger, pages = [];
 
 class WebServer
 {
