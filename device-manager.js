@@ -1,7 +1,7 @@
 var logger, storage, accessories = [];
 var store = require('json-fs-store');
 
-class DeviceManager
+module.exports = class DeviceManager
 {
     constructor(log, storagePath)
     {
@@ -99,7 +99,3 @@ class DeviceManager
         });
     }
 }
-
-const manager = new DeviceManager();
-
-module.exports = manager;

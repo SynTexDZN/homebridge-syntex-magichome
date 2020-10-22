@@ -26,14 +26,14 @@ function MagicHome(log, config = {}, api)
 	this.port = config['port'] || 1712;
 	
 	console.log('** LOGGER **');
-	console.log(logger);
-	console.log(logger.Logger);
 
 	console.log(new logger(platformName, this.logDirectory, api.user.storagePath()));
     
 	logger = new logger(platformName, this.logDirectory, api.user.storagePath());
 
 	console.log(logger);
+
+	logger.debug('TEST');
 
 	WebServer = new WebServer(platformName, logger, this.port);
 	DeviceManager = new DeviceManager(logger, this.cacheDirectory);

@@ -1,7 +1,7 @@
 var http = require('http'), url = require('url');
 var logger, pages = [];
 
-class WebServer
+module.exports = class WebServer
 {
     constructor(prefix, log, port)
     {
@@ -60,7 +60,3 @@ class WebServer
         pages.push({ path : path, callback : callback });
     }
 }
-
-const server = new WebServer();
-
-module.exports = server;
