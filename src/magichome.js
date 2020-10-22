@@ -26,6 +26,9 @@ function MagicHome(log, config = {}, api)
 	this.port = config['port'] || 1712;
 	
 	console.log('** LOGGER **');
+	console.log(logger);
+
+	console.log(new Logger(platformName, this.logDirectory, api.user.storagePath()));
 	console.log(new logger(platformName, this.logDirectory, api.user.storagePath()));
     
 	logger = new logger(platformName, this.logDirectory, api.user.storagePath());
