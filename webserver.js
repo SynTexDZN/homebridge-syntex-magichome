@@ -55,7 +55,7 @@ module.exports = class WebServer
         logger.log('info', 'bridge', 'Bridge', prefix + ' Web-Server läuft auf Port [' + port + ']');
     }
 
-    addPage = function(path, callback)
+    addPage(path, callback)
     {
         pages.push({ path : path, callback : callback });
     }
