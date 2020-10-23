@@ -35,30 +35,13 @@ function MagicHome(log, config = {}, api)
 	{
 		lightAgent.setPersistPath(homebridge.PersistPath);
 	}
-
-	if(config)
+	
+	if(config && config.debug)
 	{
-		if(config.debug)
-		{
-			lightAgent.setVerbose();
-		}
-
-		if(config.disableDiscovery)
-		{
-			logger.log('info', 'bridge', 'Bridge', '** DISABLED DISCOVERY **');
-			lightAgent.disableDiscovery();
-		}
+		lightAgent.setVerbose();
 	}
 
-	lightAgent.startDiscovery();
-	
 	restart = false;
-	/*
-    Automations.SETUP(logger, this.cacheDirectory, DeviceManager).then(function () {
-
-        restart = false;
-	});
-	*/
 }
 
 MagicHome.prototype = {
