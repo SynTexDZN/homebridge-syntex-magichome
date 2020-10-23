@@ -41,6 +41,16 @@ function MagicHome(log, config = {}, api)
 		lightAgent.setVerbose();
 	}
 
+	const { exec } = require('child_process');
+			
+	exec('sudo chmod 777 -R /usr/local/lib/node_modules/homebridge-syntex-magichome/src/flux_led.py', (error, stdout, stderr) => {
+
+		if(error)
+		{
+
+		}
+	});
+
 	restart = false;
 }
 
