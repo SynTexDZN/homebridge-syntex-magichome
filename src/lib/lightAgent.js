@@ -2,7 +2,7 @@ const cp = require('child_process')
 const path = require('path')
 
 const cacheKey = 'magicHomeSynTex_cache'
-const spawn = cp.spawn
+const spawn = cp.spawn;
 
 var logger = null;
 
@@ -177,12 +177,11 @@ const LightAgent = class {
 	{
 		try
 		{
-			/*
 			const self = this;
 			const cmd = path.join(__dirname, '../flux_led.py');
 
 			logger.debug('Discovering Devices');
-			
+			/*
 			this.proc = spawn(cmd, ['-s']);
 
 			this.proc.stdout.on('data', (data) => {

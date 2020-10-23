@@ -52,7 +52,10 @@ module.exports = class Accessory
 				self.logger.debug(stdOut);
 			}
 
-			self.logger.debug(err);
+			if(err)
+			{
+				self.logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py]');
+			}
 
 			if(callback)
 			{
