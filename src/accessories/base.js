@@ -36,27 +36,34 @@ module.exports = class Accessory
 
 	executeCommand(address, command, callback)
 	{
-		const exec = cp.exec;
-		const self = this;
-		const cmd = path.join(__dirname, '../flux_led.py ' + lightAgent.getAddress(address) + command);
-
-		if(self.homebridge.debug)
+		try
 		{
-			logger.debug(cmd);
-		}
-
-		exec(cmd, (err, stdOut) => {
+			const exec = cp.exec;
+			const self = this;
+			const cmd = path.join(__dirname, '../flux_led.py ' + lightAgent.getAddress(address) + command);
 
 			if(self.homebridge.debug)
 			{
-				logger.debug(stdOut);
+				logger.debug(cmd);
 			}
 
-			if(callback)
-			{
-				callback(err, stdOut);
-			}
-		});
+			exec(cmd, (err, stdOut) => {
+
+				if(self.homebridge.debug)
+				{
+					logger.debug(stdOut);
+				}
+
+				if(callback)
+				{
+					callback(err, stdOut);
+				}
+			});
+		}
+		catch(error)
+		{
+			logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py]');
+		}
 	}
 
 	getAccessoryServices()

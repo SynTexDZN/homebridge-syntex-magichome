@@ -175,13 +175,13 @@ const LightAgent = class {
 
 	getDevices()
 	{
-		const self = this;
-		const cmd = path.join(__dirname, '../flux_led.py');
-
-		logger.debug('Discovering Devices');
-
 		try
 		{
+			const self = this;
+			const cmd = path.join(__dirname, '../flux_led.py');
+
+			logger.debug('Discovering Devices');
+			
 			this.proc = spawn(cmd, ['-s']);
 
 			this.proc.stdout.on('data', (data) => {
