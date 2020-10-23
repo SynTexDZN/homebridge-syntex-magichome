@@ -19,7 +19,7 @@ function MagicHome(log, config = {}, api)
 	this.presetSwitches = [];
 	this.resetSwitches = [];
 
-	this.devices = config['accessories'] || [];
+	//this.devices = config['accessories'] || [];
     
     this.cacheDirectory = config['cache_directory'] || './SynTex';
     this.logDirectory = config['log_directory'] || './SynTex/log';
@@ -47,7 +47,7 @@ function MagicHome(log, config = {}, api)
 
 		if(error)
 		{
-
+			logger.log('error', 'bridge', 'Bridge', '[flux_led.py] konnte nicht aktiviert werden!');
 		}
 	});
 

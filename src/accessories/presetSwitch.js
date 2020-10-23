@@ -102,6 +102,7 @@ module.exports = class PresetSwitch extends Accessory
 
 						callback();
 					});
+
 				}, 3000);
 			});
 		}
@@ -135,6 +136,7 @@ module.exports = class PresetSwitch extends Accessory
 
 							callback();
 						});
+
 					}, 3000);
 				}
 				else

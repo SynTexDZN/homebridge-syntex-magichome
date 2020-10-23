@@ -67,7 +67,9 @@ module.exports = class ResetSwitch extends Accessory
 
 					callback();
 				});
+				
 			}, 3000);
+
 		}).then(() => {
 
 			setTimeout(() => {

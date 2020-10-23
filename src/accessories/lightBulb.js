@@ -196,7 +196,6 @@ module.exports = class LightBulb extends Accessory
 	
 			this.logger.err(e);
 		});
-		//callback(null, this.isOn);
 	}
 
 	setPowerState(value, callback)
@@ -225,7 +224,6 @@ module.exports = class LightBulb extends Accessory
 	
 			this.logger.err(e);
 		});
-		//callback(null, this.color.H);
 	}
 
 	setHue(value, callback)
@@ -254,7 +252,6 @@ module.exports = class LightBulb extends Accessory
 	
 			this.logger.err(e);
 		});
-		//callback(null, this.color.L);
 	}
 
 	setBrightness(value, callback)
@@ -283,7 +280,6 @@ module.exports = class LightBulb extends Accessory
 	
 			this.logger.err(e);
 		});
-		//callback(null, this.color.S);
 	}
 
 	setSaturation(value, callback)
@@ -322,8 +318,8 @@ module.exports = class LightBulb extends Accessory
 		this.logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
 
 		var base = '-x ' + this.setup + ' -c ';
-		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
 
+		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
 		this.DeviceManager.setDevice(this.mac, this.letters, this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L);
 	}
 }
