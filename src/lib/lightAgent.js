@@ -181,7 +181,7 @@ const LightAgent = class {
 			const cmd = path.join(__dirname, '../flux_led.py');
 
 			logger.debug('Discovering Devices');
-			/*
+			
 			this.proc = spawn(cmd, ['-s']);
 
 			this.proc.stdout.on('data', (data) => {
@@ -202,7 +202,6 @@ const LightAgent = class {
 				logger.debug('Discovery Finished');
 				self.rediscoverLights();
 			});
-			*/
 		}
 		catch(error)
 		{
