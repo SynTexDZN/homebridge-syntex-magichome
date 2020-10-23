@@ -327,5 +327,3 @@ module.exports = class LightBulb extends Accessory
 		this.DeviceManager.setDevice(this.mac, this.letters, this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L);
 	}
 }
-
-module.exports = LightBulb;
