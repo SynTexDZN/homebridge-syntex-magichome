@@ -177,6 +177,7 @@ const LightAgent = class {
 	{
 		try
 		{
+			/*
 			const self = this;
 			const cmd = path.join(__dirname, '../flux_led.py');
 
@@ -202,6 +203,7 @@ const LightAgent = class {
 				logger.debug('Discovery Finished');
 				self.rediscoverLights();
 			});
+			*/
 		}
 		catch(error)
 		{
