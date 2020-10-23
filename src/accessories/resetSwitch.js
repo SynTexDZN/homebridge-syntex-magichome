@@ -1,5 +1,5 @@
 const Accessory = require('./base');
-const emitter = require('../lib/emitter');
+const emitter = require('../lib/emitter')();
 
 module.exports = class ResetSwitch extends Accessory
 {
@@ -67,7 +67,7 @@ module.exports = class ResetSwitch extends Accessory
 
 					callback();
 				});
-				
+
 			}, 3000);
 
 		}).then(() => {
