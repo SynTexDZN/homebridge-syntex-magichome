@@ -39,7 +39,7 @@ const LightAgent = class {
 				}
 				catch(error)
 				{
-					devices = {};
+					logger.log('error', 'bridge', 'Bridge', 'JSON String konnte nicht verarbeitet werden! ( ' + data + ')');
 				}
 			}
 

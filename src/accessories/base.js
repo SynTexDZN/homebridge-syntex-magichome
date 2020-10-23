@@ -2,13 +2,12 @@ const cp = require('child_process');
 const path = require('path');
 const lightAgent = require('../lib/lightAgent');
 
-var logger = null;
-
-const Accessory = class
+module.exports = class Accessory
 {
-	constructor(config, log, homebridge)
+	constructor(config, log, homebridge, manager)
 	{
-		logger = log;
+		this.logger = log;
+		this.DeviceManager = manager;
 		
 		this.homebridge = homebridge;
 		this.config = config;
@@ -18,19 +17,19 @@ const Accessory = class
 
 		this.services.push(this.getInformationService());
 	}
-
+	/*
 	identify(callback)
 	{
 		callback();
 	}
-
+	*/
 	getInformationService()
 	{
 		var informationService = new this.homebridge.Service.AccessoryInformation();
 
 		informationService.setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'SynTex')
 			.setCharacteristic(this.homebridge.Characteristic.Model, this.getModelName())
-			.setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.getSerialNumber());
+			.setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.mac);
 
 		return informationService;
 	}
@@ -52,6 +51,7 @@ const Accessory = class
 			{
 				logger.debug(stdOut);
 			}
+
 			if(callback)
 			{
 				callback(err, stdOut);
@@ -61,7 +61,7 @@ const Accessory = class
 
 	getAccessoryServices()
 	{
-		throw new Error('The getSystemServices method must be overridden.');
+		throw new Error('The getAccessoryServices method must be overridden.');
 	}
 
 	getModelName()
@@ -69,15 +69,8 @@ const Accessory = class
 		throw new Error('The getModelName method must be overridden.');
 	}
 
-	getSerialNumber()
-	{
-		return this.mac;
-	}
-
 	getServices()
 	{
 		return this.services;
 	}
 }
-
-module.exports = Accessory;

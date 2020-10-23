@@ -1,16 +1,11 @@
 const Accessory = require('./base');
 const emitter = require('../lib/emitter');
 
-var logger = null, DeviceManager = null;
-
-const ResetSwitch = class extends Accessory
+module.exports = class ResetSwitch extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge);
-
-		logger = log;
-		DeviceManager = manager;
+		super(config, log, homebridge, manager);
 
 		this.name = config.name || 'Reset LED Controller Presets';
 		this.ips = Object.keys(config.ips);
@@ -19,7 +14,7 @@ const ResetSwitch = class extends Accessory
 		/*
 		this.changeHandler = (function(state)
 		{
-			logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
+			this.logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
 
 			this.switchStateChanged(state, () => {});
 
@@ -97,5 +92,3 @@ const ResetSwitch = class extends Accessory
 		return 'Magic Home Reset Switch';
 	}
 }
-
-module.exports = ResetSwitch;

@@ -1,16 +1,11 @@
 const convert = require('color-convert');
 const Accessory = require('./base');
 
-var logger = null, DeviceManager = null;
-
-const LightBulb = class extends Accessory
+module.exports = class LightBulb extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge);
-
-		logger = log;
-		DeviceManager = manager;
+		super(config, log, homebridge, manager);
 
 		this.name = config.name || 'LED Controller';
 		this.ip = config.ip;
@@ -21,15 +16,15 @@ const LightBulb = class extends Accessory
 
 		this.letters = '30';
 
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			if(state == null)
 			{
-				logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
+				this.logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
 			}
 			else if(state != null)
 			{
-				logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
+				this.logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
 
 				this.isOn = state.split(':')[0];
 				this.color = {
@@ -112,7 +107,7 @@ const LightBulb = class extends Accessory
 	{
 		if(this.config.debug)
 		{
-			logger.debug(args);
+			this.logger.debug(args);
 		}
 	}
 
@@ -193,13 +188,13 @@ const LightBulb = class extends Accessory
 
 	getPowerState(callback)
 	{
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			callback(null, state != null ? (state.split(':')[0] || 0) : 0);
 	
 		}.bind(this)).catch(function(e) {
 	
-			logger.err(e);
+			this.logger.err(e);
 		});
 		//callback(null, this.isOn);
 	}
@@ -212,9 +207,9 @@ const LightBulb = class extends Accessory
 
 			self.isOn = value;
 
-			logger.log('update', self.mac, self.name, 'HomeKit Status für [' + self.name + '] geändert zu [' + self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L + '] ( ' + self.mac + ' )');
+			this.logger.log('update', self.mac, self.name, 'HomeKit Status für [' + self.name + '] geändert zu [' + self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L + '] ( ' + self.mac + ' )');
 
-			DeviceManager.setDevice(self.mac, self.letters, self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L);
+			this.DeviceManager.setDevice(self.mac, self.letters, self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L);
 
 			callback();
 		});
@@ -222,13 +217,13 @@ const LightBulb = class extends Accessory
 
 	getHue(callback)
 	{
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			callback(null, state != null ? (state.split(':')[1] || 0) : 0);
 	
 		}.bind(this)).catch(function(e) {
 	
-			logger.err(e);
+			this.logger.err(e);
 		});
 		//callback(null, this.color.H);
 	}
@@ -251,13 +246,13 @@ const LightBulb = class extends Accessory
 
 	getBrightness(callback)
 	{
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			callback(null, state != null ? (state.split(':')[2] || 0) : 0);
 	
 		}.bind(this)).catch(function(e) {
 	
-			logger.err(e);
+			this.logger.err(e);
 		});
 		//callback(null, this.color.L);
 	}
@@ -280,13 +275,13 @@ const LightBulb = class extends Accessory
 
 	getSaturation(callback)
 	{
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			callback(null, state != null ? (state.split(':')[3] || 0) : 0);
 	
 		}.bind(this)).catch(function(e) {
 	
-			logger.err(e);
+			this.logger.err(e);
 		});
 		//callback(null, this.color.S);
 	}
@@ -324,12 +319,12 @@ const LightBulb = class extends Accessory
 
 		var converted = convert.hsv.rgb([color.H, color.S, color.L]);
 		
-		logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
+		this.logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
 
 		var base = '-x ' + this.setup + ' -c ';
 		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
 
-		DeviceManager.setDevice(this.mac, this.letters, this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L);
+		this.DeviceManager.setDevice(this.mac, this.letters, this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L);
 	}
 }
 

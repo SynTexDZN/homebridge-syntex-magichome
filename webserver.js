@@ -28,18 +28,29 @@ module.exports = class WebServer
                     {
                         var post = '';
 
-                        request.on('data', function(data)
-                        {
+                        request.on('data', (data) => {
+
                             post += data;
                         });
 
-                        request.on('end', async function()
-                        {
-                            var json = post != '' ? JSON.parse(post) : null;
+                        request.on('end', () => {
+                        
+                            var json = null;
+
+                            if(post != '')
+                            {
+                                try
+                                {
+                                    json = JSON.parse(post);
+                                }
+                                catch(error)
+                                {
+                                    logger.log('error', 'bridge', 'Bridge', 'JSON String konnte nicht verarbeitet werden! ( ' + post + ')');
+                                }
+                            }
                             
-                            this.page.callback(response, urlParams, json);
-                            
-                        }.bind({ page : pages[i] }));
+                            pages[i].callback(response, urlParams, json);
+                        });
                     }
                     else
                     {

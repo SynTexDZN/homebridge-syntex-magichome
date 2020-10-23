@@ -1,12 +1,11 @@
 const store = require('json-fs-store');
-var prefix, config, logs = [], que = [], debugLevel = 'success', inWork = false;
+var prefix, logs = [], que = [], debugLevel = 'success', inWork = false;
 
 module.exports = class Logger
 {
     constructor(pluginName, logDirectory, configDirectory)
     {
         prefix = pluginName;
-        config = store(configDirectory);
         logs = store(logDirectory);
     }
 

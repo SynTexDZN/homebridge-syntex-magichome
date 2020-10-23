@@ -2,16 +2,11 @@ const Accessory = require('./base');
 const preset = require('../presets');
 const emitter = require('../lib/emitter');
 
-var logger = null, DeviceManager = null;
-
-const PresetSwitch = class extends Accessory
+module.exports = class PresetSwitch extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
-		super(config, log, homebridge);
-
-		logger = log;
-		DeviceManager = manager;
+		super(config, log, homebridge, manager);
 
 		this.isOn = false;
 		this.name = config.name || 'LED Controller Presets';
@@ -23,7 +18,7 @@ const PresetSwitch = class extends Accessory
 
 		if(this.sceneValue == null)
 		{
-			logger.log('warn', 'bridge', 'Bridge', 'Das Preset [' + this.preset + '] wurde nicht gefunden. Es wird das Default-Preset [seven_color_cross_fade] verwendet!');
+			this.logger.log('warn', 'bridge', 'Bridge', 'Das Preset [' + this.preset + '] wurde nicht gefunden. Es wird das Default-Preset [seven_color_cross_fade] verwendet!');
 			this.sceneValue = 37;
 		}
 
@@ -37,15 +32,15 @@ const PresetSwitch = class extends Accessory
 
 		}).bind(this);
 
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			if(state == null)
 			{
-				logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
+				this.logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
 			}
 			else if(state != null)
 			{
-				logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
+				this.logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
 
 				this.isOn = state;
 
@@ -88,7 +83,7 @@ const PresetSwitch = class extends Accessory
 	{
 		this.isOn = newState;
 
-		logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + newState + '] ( ' + this.mac + ' )');
+		this.logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + newState + '] ( ' + this.mac + ' )');
 
 		const self = this;
 
@@ -103,7 +98,7 @@ const PresetSwitch = class extends Accessory
 
 					self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
 
-						DeviceManager.setDevice(self.mac, self.letters, true);
+						this.DeviceManager.setDevice(self.mac, self.letters, true);
 
 						callback();
 					});
@@ -121,7 +116,7 @@ const PresetSwitch = class extends Accessory
 
 					self.executeCommand(ip, ' -c ' + self.config.ips[ip], () => {
 
-						DeviceManager.setDevice(self.mac, self.letters, false);
+						this.DeviceManager.setDevice(self.mac, self.letters, false);
 
 						resolve();
 					});
@@ -158,15 +153,15 @@ const PresetSwitch = class extends Accessory
 
 	getState(callback)
 	{
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
-			logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
+			this.logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
 
 			callback(null, state);
 	
 		}.bind(this)).catch(function(e) {
 	
-			logger.err(e);
+			this.logger.err(e);
 		});
 	}
 
@@ -175,5 +170,3 @@ const PresetSwitch = class extends Accessory
 		return 'Magic Home Preset Switch';
 	}
 }
-
-module.exports = PresetSwitch;
