@@ -180,25 +180,33 @@ const LightAgent = class {
 
 		logger.debug('Discovering Devices');
 
-		this.proc = spawn(cmd, ['-s']);
-		this.proc.stdout.on('data', (data) => {
+		try
+		{
+			this.proc = spawn(cmd, ['-s']);
 
-			const newData = '' + data;
+			this.proc.stdout.on('data', (data) => {
 
-			logger.debug(newData);
-			self.cachedAddress = self.parseDevices(newData);
-		});
-
-		this.proc.stderr.on('data', (data) => {
-
-			logger.log('error', 'bridge', 'Bridge', 'Error : ' + data)
-		});
-
-		this.proc.on('close', () => {
-
-			logger.debug('Discovery Finished');
-			self.rediscoverLights();
-		});
+				const newData = '' + data;
+	
+				logger.debug(newData);
+				self.cachedAddress = self.parseDevices(newData);
+			});
+	
+			this.proc.stderr.on('data', (data) => {
+	
+				logger.log('error', 'bridge', 'Bridge', 'Error : ' + data)
+			});
+	
+			this.proc.on('close', () => {
+	
+				logger.debug('Discovery Finished');
+				self.rediscoverLights();
+			});
+		}
+		catch(error)
+		{
+			logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py]');
+		}
 	}
 
 	rediscoverLights()
