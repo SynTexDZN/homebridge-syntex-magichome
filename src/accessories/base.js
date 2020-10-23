@@ -42,17 +42,17 @@ module.exports = class Accessory
 
 		if(self.homebridge.debug)
 		{
-			logger.debug(cmd);
+			self.logger.debug(cmd);
 		}
 
 		exec(cmd, (err, stdOut) => {
 
 			if(self.homebridge.debug)
 			{
-				logger.debug(stdOut);
+				self.logger.debug(stdOut);
 			}
 
-			logger.debug(err);
+			self.logger.debug(err);
 
 			if(callback)
 			{
