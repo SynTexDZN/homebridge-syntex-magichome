@@ -83,7 +83,7 @@ module.exports = class PresetSwitch extends Accessory
 	{
 		this.isOn = newState;
 
-		this.logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + newState + '] ( ' + this.mac + ' )');
+		this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + newState + '] ( ' + this.mac + ' )');
 
 		const self = this;
 

@@ -14,7 +14,7 @@ module.exports = class ResetSwitch extends Accessory
 		/*
 		this.changeHandler = (function(state)
 		{
-			this.logger.log('update', this.mac, this.name, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
+			this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
 
 			this.switchStateChanged(state, () => {});
 
