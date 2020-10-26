@@ -93,7 +93,7 @@ MagicHome.prototype = {
 
 		WebServer.addPage('/devices', async (response, urlParams) => {
 	
-			if(urlParams.mac)
+			if(urlParams.mac != null)
 			{
 				var accessory = null;
 	
@@ -111,7 +111,7 @@ MagicHome.prototype = {
 	
 					response.write('Error');
 				}
-				else if(urlParams.value)
+				else if(urlParams.value != null)
 				{
 					var state = null;
 	
@@ -143,13 +143,13 @@ MagicHome.prototype = {
 			response.end();
 		});
 
-		WebServer.addPage('/version', async (response, urlParams) => {
+		WebServer.addPage('/version', (response, urlParams) => {
 
 			response.write(require('./package.json').version);
             response.end();
 		});
 
-		WebServer.addPage('/check-restart', async (response, urlParams) => {
+		WebServer.addPage('/check-restart', (response, urlParams) => {
 
 			response.write(restart.toString());
             response.end();
