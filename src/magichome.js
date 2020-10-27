@@ -124,8 +124,6 @@ MagicHome.prototype = {
 						logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
 					}
 	
-					DeviceManager.setDevice(urlParams.mac, accessory.letters, urlParams.value); // TODO : Concat RGB Light Services
-						
 					response.write(state != null ? 'Success' : 'Error');
 				}
 				else
@@ -157,7 +155,7 @@ MagicHome.prototype = {
 
 		WebServer.addPage('/update', async (response, urlParams) => {
 
-			var version = urlParams.version ? urlParams.version : 'latest';
+			var version = urlParams.version != null ? urlParams.version : 'latest';
 
 			const { exec } = require('child_process');
 			
