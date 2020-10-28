@@ -7,7 +7,7 @@ const pluginName = 'homebridge-syntex-magichome';
 const platformName = 'SynTexMagicHome';
 
 var DeviceManager = require('../device-manager');
-//var WebServer = require('../webserver');
+var WebServer = require('../webserver');
 var logger = require('../logger');
 
 var homebridge;
@@ -26,7 +26,7 @@ function MagicHome(log, config = {}, api)
 	this.port = config['port'] || 1712;
 	
 	logger = new logger(platformName, this.logDirectory, api.user.storagePath());
-	//WebServer = new WebServer(platformName, logger, this.port, false);
+	WebServer = new WebServer(platformName, logger, this.port);
 	DeviceManager = new DeviceManager(logger, this.cacheDirectory);
 
 	lightAgent.setLogger(logger);
@@ -90,7 +90,7 @@ MagicHome.prototype = {
 		accessories = this.lights.concat(this.presetSwitches).concat(this.resetSwitches);
 
 		callback(accessories);
-		/*
+
 		WebServer.addPage('/devices', async (response, urlParams) => {
 	
 			if(urlParams.mac != null)
@@ -141,13 +141,13 @@ MagicHome.prototype = {
 			response.end();
 		});
 
-		WebServer.addPage('/version', (response) => {
+		WebServer.addPage('/version', (response, urlParams) => {
 
-			response.write(require('../package.json').version);
+			response.write(require('./package.json').version);
             response.end();
 		});
 
-		WebServer.addPage('/check-restart', (response) => {
+		WebServer.addPage('/check-restart', (response, urlParams) => {
 
 			response.write(restart.toString());
             response.end();
@@ -187,7 +187,6 @@ MagicHome.prototype = {
 				}
 			});
 		});
-		*/
 	}
 }
 
