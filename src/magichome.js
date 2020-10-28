@@ -26,7 +26,7 @@ function MagicHome(log, config = {}, api)
 	this.port = config['port'] || 1712;
 	
 	logger = new logger(platformName, this.logDirectory, api.user.storagePath());
-	WebServer = new WebServer(platformName, logger, this.port);
+	WebServer = new WebServer(platformName, logger, this.port, false);
 	DeviceManager = new DeviceManager(logger, this.cacheDirectory);
 
 	lightAgent.setLogger(logger);
@@ -141,13 +141,13 @@ MagicHome.prototype = {
 			response.end();
 		});
 
-		WebServer.addPage('/version', (response, urlParams) => {
+		WebServer.addPage('/version', (response) => {
 
 			response.write(require('../package.json').version);
             response.end();
 		});
 
-		WebServer.addPage('/check-restart', (response, urlParams) => {
+		WebServer.addPage('/check-restart', (response) => {
 
 			response.write(restart.toString());
             response.end();
