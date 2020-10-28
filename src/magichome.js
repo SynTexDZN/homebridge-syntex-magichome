@@ -143,7 +143,7 @@ MagicHome.prototype = {
 
 		WebServer.addPage('/version', (response) => {
 
-			response.write(require('./package.json').version);
+			response.write(require('../package.json').version);
             response.end();
 		});
 
