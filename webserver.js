@@ -3,7 +3,7 @@ var logger, pages = [], head = '';
 
 module.exports = class WebServer
 {
-    constructor(prefix, log, port, filesystem)
+    constructor(prefix, log, port)
     {
         logger = log;
 
@@ -44,10 +44,8 @@ module.exports = class WebServer
 
             for(var i = 0; i < pages.length; i++)
             {
-                if(urlPath == pages[i].path || urlPath == pages[i].path + '.html')
+                if(urlPath == pages[i].path)
                 {
-                    found = true;
-
                     if(request.method == 'POST')
                     {
                         var post = '', page = pages[i];
@@ -73,12 +71,12 @@ module.exports = class WebServer
                                 }
                             }
                             
-                            page.callback(response, urlParams, content, json);
+                            page.callback(response, urlParams, json);
                         });
                     }
                     else
                     {
-                        pages[i].callback(response, urlParams, content, null);
+                        pages[i].callback(response, urlParams, null);
                     }
                 }
             }
