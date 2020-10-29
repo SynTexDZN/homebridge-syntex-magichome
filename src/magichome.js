@@ -1,4 +1,4 @@
-const DeviceManager = require('../device-manager'), WebServer = require('../webserver'), logger = require('../logger');
+let DeviceManager = require('../device-manager'), WebServer = require('../webserver'), logger = require('../logger');
 
 const LightBulb = require('./accessories/lightBulb');
 const PresetSwitch = require('./accessories/presetSwitch');
