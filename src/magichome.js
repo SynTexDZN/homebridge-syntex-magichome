@@ -1,3 +1,5 @@
+const DeviceManager = require('../device-manager'), WebServer = require('../webserver'), logger = require('../logger');
+
 const LightBulb = require('./accessories/lightBulb');
 const PresetSwitch = require('./accessories/presetSwitch');
 const ResetSwitch = require('./accessories/resetSwitch');
@@ -5,10 +7,6 @@ const lightAgent = require('./lib/lightAgent');
 
 const pluginName = 'homebridge-syntex-magichome';
 const platformName = 'SynTexMagicHome';
-
-var DeviceManager = require('../device-manager');
-var WebServer = require('../webserver');
-var logger = require('../logger');
 
 var homebridge;
 
