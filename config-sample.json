@@ -6,6 +6,7 @@
             "disableDiscovery": false,
             "accessories": [
                 {
+                    "mac": "light1",
                     "name": "Kitchen LED Strip",
                     "ip": "DC4F22C5D4E1",
                     "type": "light",
@@ -14,6 +15,7 @@
                     "timeout": 10000
                 },
                 {
+                    "mac": "light2",
                     "name": "Living Room LED Strip",
                     "ip": "192.168.1.112",
                     "type": "light",
@@ -22,6 +24,7 @@
                     "timeout": 0
                 },
                 {
+                    "mac": "pswitch1",
                     "name": "Kitchen Color Strobe Flash (Party)",
                     "type": "preset-switch",
                     "ips": {
@@ -31,6 +34,7 @@
                     "speed": 60
                 },
                 {
+                    "mac": "pswitch2",
                     "name": "All Lights Cross Fade (Soothing)",
                     "type": "preset-switch",
                     "ips": {
@@ -42,6 +46,7 @@
                     "shouldTurnOff": true
                 },
                 {
+                    "mac": "rswitch1",
                     "name": "Reset All Switches to Default",
                     "type": "reset-switch",
                     "ips": {

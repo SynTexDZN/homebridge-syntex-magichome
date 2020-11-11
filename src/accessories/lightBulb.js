@@ -5,11 +5,9 @@ module.exports = class LightBulb extends Accessory
 {
 	constructor(config, log, homebridge, manager)
 	{
-		console.log(1, this.mac);
-
 		super(config, log, homebridge, manager);
 
-		console.log(2, this.mac);
+		console.log(1, this.mac);
 
 		this.name = config.name || 'LED Controller';
 		this.ip = config.ip;
@@ -21,7 +19,7 @@ module.exports = class LightBulb extends Accessory
 
 		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
-			console.log(this.mac);
+			console.log(2, this.mac);
 			
 			if(state == null)
 			{
