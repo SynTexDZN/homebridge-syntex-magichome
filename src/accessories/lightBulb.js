@@ -134,10 +134,10 @@ module.exports = class LightBulb extends Accessory
 
 			self.logMessage('Updating Device', self.ip, self.color, self.isOn);
 
-			self.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(self.isOn);
-			self.services[0].getCharacteristic(this.homebridge.Characteristic.Hue).updateValue(self.color.H);
-			self.services[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(self.color.S);
-			self.services[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(self.color.L);
+			self.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(self.isOn);
+			self.service[0].getCharacteristic(this.homebridge.Characteristic.Hue).updateValue(self.color.H);
+			self.service[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(self.color.S);
+			self.service[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(self.color.L);
 
 			this.DeviceManager.setDevice(self.mac, self.letters, self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L);
 
