@@ -9,7 +9,6 @@ module.exports = class LightBulb extends Accessory
 
 		this.name = config.name || 'LED Controller';
 		this.ip = config.ip;
-		this.setup = config.setup || 'RGBW';
 		this.color = { H: 0, S: 0, L: 100 };
 		this.purewhite = config.purewhite || false;
 		this.timeout = config.timeout != null ? config.timeout : 60000;
@@ -33,10 +32,10 @@ module.exports = class LightBulb extends Accessory
 					L : state.split(':')[3]
 				};
 
-				this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
-				this.services[0].getCharacteristic(this.homebridge.Characteristic.Hue).updateValue(this.color.H);
-				this.services[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(this.color.S);
-				this.services[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(this.color.L);
+				this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
+				this.service[0].getCharacteristic(this.homebridge.Characteristic.Hue).updateValue(this.color.H);
+				this.service[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(this.color.S);
+				this.service[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(this.color.L);
 			}
 
 		}.bind(this));
@@ -319,7 +318,18 @@ module.exports = class LightBulb extends Accessory
 		
 		this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
 
-		var base = '-x ' + this.setup + ' -c ';
+		var setup = 'RGBW';
+
+		if(this.services == 'rgb')
+		{
+			setup = 'RGBW';
+		}
+		else if(this.services == 'rgbw')
+		{
+			setup = 'RGBWW';
+		}
+
+		var base = '-x ' + setup + ' -c ';
 
 		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
 		this.DeviceManager.setDevice(this.mac, this.letters, this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L);

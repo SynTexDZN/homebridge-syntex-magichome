@@ -13,11 +13,12 @@ var homebridge, restart = true;
 function MagicHome(log, config = {}, api)
 {
 	this.config = config;
+	/*
 	this.lights = [];
 	this.presetSwitches = [];
 	this.resetSwitches = [];
-
-	//this.devices = config['accessories'] || [];
+	*/
+	this.devices = config['accessories'] || [];
     
     this.cacheDirectory = config['cache_directory'] || './SynTex';
     this.logDirectory = config['log_directory'] || './SynTex/log';
@@ -60,6 +61,28 @@ MagicHome.prototype = {
 
 		homebridge.debug = this.config.debug || false;
 
+        for(var i = 0; i < this.devices.length; i++)
+        {
+            if(this.devices[i].type == 'light')
+            {
+				var newLightConfig = this.devices[i];
+
+				newLightConfig.debug = this.config.debug || false;
+
+                accessories.push(new LightBulb(lightConfig, logger, homebridge, DeviceManager));
+            }
+            else if(this.devices[i].type == 'preset-switch')
+            {
+                accessories.push(new PresetSwitch(this.devices[i], logger, homebridge, DeviceManager));
+			}
+			else if(this.devices[i].type == 'reset-switch')
+            {
+                accessories.push(new ResetSwitch(this.devices[i], logger, homebridge, DeviceManager));
+            }
+        }
+
+        callback(accessories);
+		/*
 		if(this.config.lights != null && this.config.lights.length > 0)
 		{
 			this.config.lights.forEach((lightConfig) => {
@@ -86,9 +109,9 @@ MagicHome.prototype = {
 		}
 
 		accessories = this.lights.concat(this.presetSwitches).concat(this.resetSwitches);
-
+		
 		callback(accessories);
-
+		*/
 		WebServer.addPage('/devices', async (response, urlParams) => {
 	
 			if(urlParams.mac != null)

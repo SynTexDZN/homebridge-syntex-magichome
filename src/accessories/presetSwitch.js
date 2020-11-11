@@ -44,7 +44,7 @@ module.exports = class PresetSwitch extends Accessory
 
 				this.isOn = state;
 
-				this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
+				this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
 			}
 
 		}.bind(this));
@@ -150,7 +150,7 @@ module.exports = class PresetSwitch extends Accessory
 	updateState(newValue)
 	{
 		this.isOn = newValue;
-		this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
+		this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
 		this.DeviceManager.setDevice(this.mac, this.letters, this.isOn);
 	}
 

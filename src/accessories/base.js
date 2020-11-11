@@ -13,9 +13,10 @@ module.exports = class Accessory
 		this.config = config;
 		this.mac = config.mac;
 		this.name = config.name;
-		this.services = this.getAccessoryServices();
+		this.services = config.services;
+		this.service = this.getAccessoryServices();
 
-		this.services.push(this.getInformationService());
+		this.service.push(this.getInformationService());
 	}
 	/*
 	identify(callback)
@@ -76,6 +77,6 @@ module.exports = class Accessory
 
 	getServices()
 	{
-		return this.services;
+		return this.service;
 	}
 }

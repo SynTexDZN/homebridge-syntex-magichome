@@ -4,25 +4,26 @@
             "platform": "SynTexMagicHome",
             "debug": true,
             "disableDiscovery": false,
-            "lights": [
+            "accessories": [
                 {
                     "name": "Kitchen LED Strip",
                     "ip": "DC4F22C5D4E1",
-                    "setup": "RGBW",
+                    "type": "light",
+                    "services": "rgb",
                     "purewhite": false,
                     "timeout": 10000
                 },
                 {
                     "name": "Living Room LED Strip",
                     "ip": "192.168.1.112",
-                    "setup": "RGBWW",
+                    "type": "light",
+                    "services": "rgbw",
                     "purewhite": true,
                     "timeout": 0
-                }
-            ],
-            "presetSwitches": [
+                },
                 {
                     "name": "Kitchen Color Strobe Flash (Party)",
+                    "type": "preset-switch",
                     "ips": {
                         "192.168.1.111": "255,255,255"
                     },
@@ -31,6 +32,7 @@
                 },
                 {
                     "name": "All Lights Cross Fade (Soothing)",
+                    "type": "preset-switch",
                     "ips": {
                         "DC4F22C5D4E1": "0,150,255",
                         "192.168.1.112": "102,255,102"
@@ -38,14 +40,15 @@
                     "preset": "seven_color_cross_fade",
                     "speed": 40,
                     "shouldTurnOff": true
-                }
-            ],
-            "resetSwitch": {
-                "name": "Reset All Switches to Default",
-                "ips": {
+                },
+                {
+                    "name": "Reset All Switches to Default",
+                    "type": "reset-switch",
+                    "ips": {
                         "192.168.1.111": "255,255,255"
                     }
-            }
+                }
+            ]
         }
     ]
 }

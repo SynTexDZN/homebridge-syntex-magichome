@@ -81,7 +81,7 @@ module.exports = class ResetSwitch extends Accessory
 
 	updateState()
 	{
-		this.services[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(false);
+		this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(false);
 	}
 
 	getState(callback)
