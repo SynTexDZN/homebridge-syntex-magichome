@@ -2,8 +2,11 @@
     "platforms": [
         {
             "platform": "SynTexMagicHome",
-            "debug": true,
-            "disableDiscovery": false,
+            "debug": false,
+            "disableDiscovery": true,
+            "cache_directory": "./SynTex/devices",
+            "log_directory": "./SynTex/log",
+            "port": 1712,
             "accessories": [
                 {
                     "mac": "light1",
