@@ -69,7 +69,7 @@ MagicHome.prototype = {
 
 				newLightConfig.debug = this.config.debug || false;
 
-                accessories.push(new LightBulb(lightConfig, logger, homebridge, DeviceManager));
+                accessories.push(new LightBulb(newLightConfig, logger, homebridge, DeviceManager));
             }
             else if(this.devices[i].type == 'preset-switch')
             {

@@ -1,7 +1,7 @@
 const store = require('json-fs-store');
 var prefix, logs, que = [], debugLevel = 'success', inWork = false;
 
-module.exports = class Logger
+const logger = class Logger
 {
     constructor(pluginName, logDirectory, configDirectory)
     {
@@ -115,6 +115,8 @@ module.exports = class Logger
         });
     }
 }
+
+module.exports = logger;
 
 async function saveLog(level, mac, letters, time, message)
 {
