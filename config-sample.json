@@ -2,17 +2,17 @@
     "platforms": [
         {
             "platform": "SynTexMagicHome",
-            "debug": false,
-            "disableDiscovery": true,
             "cache_directory": "./SynTex/devices",
             "log_directory": "./SynTex/log",
             "port": 1712,
+            "debug": false,
+            "disableDiscovery": true,
             "accessories": [
                 {
                     "mac": "light1",
                     "name": "Kitchen LED Strip",
-                    "ip": "DC4F22C5D4E1",
                     "type": "light",
+                    "ip": "DC4F22C5D4E1",
                     "services": "rgb",
                     "purewhite": false,
                     "timeout": 10000
@@ -20,8 +20,8 @@
                 {
                     "mac": "light2",
                     "name": "Living Room LED Strip",
-                    "ip": "192.168.1.112",
                     "type": "light",
+                    "ip": "192.168.1.112",
                     "services": "rgbw",
                     "purewhite": true,
                     "timeout": 0

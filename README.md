@@ -66,26 +66,35 @@ Any devices created by Zengge and running on the Magic Home Wi-Fi (or other apps
 {
     "platforms": [
         {
-            "platform": "MagicHome-Platform",
-            "debug": true,
-            "lights": [
+            "platform": "SynTexMagicHome",
+            "cache_directory": "./SynTex/devices",
+            "log_directory": "./SynTex/log",
+            "port": 1712,
+            "debug": false,
+            "disableDiscovery": true,
+            "accessories": [
                 {
+                    "mac": "light1",
                     "name": "Kitchen LED Strip",
-                    "ip": "192.168.1.111",
-                    "setup": "RGBW",
+                    "type": "light",
+                    "ip": "DC4F22C5D4E1",
+                    "services": "rgb",
                     "purewhite": false,
                     "timeout": 10000
                 },
                 {
+                    "mac": "light2",
                     "name": "Living Room LED Strip",
-                    "ip": "DC4F22C5XXXX",
-                    "setup": "RGBWW",
-                    "purewhite": true
-                }
-            ],
-            "presetSwitches": [
+                    "type": "light",
+                    "ip": "192.168.1.112",
+                    "services": "rgbw",
+                    "purewhite": true,
+                    "timeout": 0
+                },
                 {
+                    "mac": "pswitch1",
                     "name": "Kitchen Color Strobe Flash (Party)",
+                    "type": "preset-switch",
                     "ips": {
                         "192.168.1.111": "255,255,255"
                     },
@@ -93,24 +102,24 @@ Any devices created by Zengge and running on the Magic Home Wi-Fi (or other apps
                     "speed": 60
                 },
                 {
+                    "mac": "pswitch2",
                     "name": "All Lights Cross Fade (Soothing)",
+                    "type": "preset-switch",
                     "ips": {
-                        "192.168.1.111": "0,150,255",
-                        "DC4F22C5XXXX": "102, 255, 102"
-
+                        "DC4F22C5D4E1": "0,150,255",
+                        "192.168.1.112": "102,255,102"
                     },
                     "preset": "seven_color_cross_fade",
                     "speed": 40,
                     "shouldTurnOff": true
                 },
                 {
-                    "name": "Jungle Mood (Soothing)",
+                    "mac": "rswitch1",
+                    "name": "Reset All Switches to Default",
+                    "type": "reset-switch",
                     "ips": {
-                        "192.168.1.111": "0,150,255",
-                        "DC4F22C5XXXX": "102, 255, 102"
-                    },
-                    "preset": "green_gradual_change",
-                    "speed": 40,
+                        "192.168.1.111": "255,255,255"
+                    }
                 }
             ]
         }
