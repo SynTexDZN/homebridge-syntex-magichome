@@ -145,7 +145,7 @@ MagicHome.prototype = {
 						logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
 					}
 	
-					response.write(state != null ? 'Success' : 'Error');
+					response.write(state != null ? state.toString() : 'Error');
 				}
 				else
 				{
