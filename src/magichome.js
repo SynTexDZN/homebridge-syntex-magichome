@@ -144,8 +144,8 @@ MagicHome.prototype = {
 					{
 						logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
 					}
-
-					response.write(state != null ? await DeviceManager.getDevice(urlParams.mac, accessory.letters) : 'Error');
+	
+					response.write(state != null ? state.toString() : 'Error');
 				}
 				else
 				{
