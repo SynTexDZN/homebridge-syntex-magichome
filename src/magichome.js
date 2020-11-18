@@ -5,8 +5,8 @@ const PresetSwitch = require('./accessories/presetSwitch');
 const ResetSwitch = require('./accessories/resetSwitch');
 const lightAgent = require('./lib/lightAgent');
 
-const pluginName = 'homebridge-syntex-magichome';
-const platformName = 'SynTexMagicHome';
+const pluginID = 'homebridge-syntex-magichome';
+const pluginName = 'SynTexMagicHome';
 
 var homebridge, restart = true;
 
@@ -24,8 +24,8 @@ function MagicHome(log, config = {}, api)
     this.logDirectory = config['log_directory'] || './SynTex/log';
 	this.port = config['port'] || 1712;
 	
-	logger = new logger(platformName, this.logDirectory, api.user.storagePath());
-	WebServer = new WebServer(platformName, logger, this.port, false);
+	logger = new logger(pluginName, this.logDirectory, api.user.storagePath());
+	WebServer = new WebServer(pluginName, logger, this.port, false);
 	DeviceManager = new DeviceManager(logger, this.cacheDirectory);
 
 	lightAgent.setLogger(logger);
@@ -42,7 +42,7 @@ function MagicHome(log, config = {}, api)
 
 	const { exec } = require('child_process');
 			
-	exec('sudo chmod 777 -R /usr/local/lib/node_modules/homebridge-syntex-magichome/src/flux_led.py', (error, stdout, stderr) => {
+	exec('sudo chmod 777 -R /usr/local/lib/node_modules/' + pluginID + '/src/flux_led.py', (error, stdout, stderr) => {
 
 		if(error)
 		{
@@ -180,17 +180,17 @@ MagicHome.prototype = {
 
 			const { exec } = require('child_process');
 			
-			exec('sudo npm install homebridge-syntex-magichome@' + version + ' -g', (error, stdout, stderr) => {
+			exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
 
 				try
 				{
 					if(error || stderr.includes('ERR!'))
 					{
-						logger.log('warn', 'bridge', 'Bridge', 'Das Plugin SynTexMagicHome konnte nicht aktualisiert werden! ' + (error || stderr));
+						logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' konnte nicht aktualisiert werden! ' + (error || stderr));
 					}
 					else
 					{
-						logger.log('success', 'bridge', 'Bridge', 'Das Plugin SynTexMagicHome wurde auf die Version [' + version + '] aktualisiert!');
+						logger.log('success', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' wurde auf die Version [' + version + '] aktualisiert!');
 
 						restart = true;
 
@@ -273,6 +273,6 @@ MagicHomeGlobals.setHomebridge = function(homebridgeRef)
 module.exports = {
 	platform: MagicHome,
 	globals: MagicHomeGlobals,
-	pluginName: pluginName,
-	platformName: platformName
+	pluginID: pluginID,
+	pluginName: pluginName
 };
