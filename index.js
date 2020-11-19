@@ -11,5 +11,5 @@ module.exports = (homebridge) => {
 	};
 
 	MagicHome.globals.setHomebridge(homebridgeGlobals);
-	homebridge.registerPlatform(MagicHome.pluginName, MagicHome.platformName, MagicHome.platform, true);
+	homebridge.registerPlatform(MagicHome.pluginID, MagicHome.pluginName, MagicHome.platform, true);
 }
