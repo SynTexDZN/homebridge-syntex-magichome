@@ -13,11 +13,7 @@ var homebridge, restart = true;
 function MagicHome(log, config = {}, api)
 {
 	this.config = config;
-	/*
-	this.lights = [];
-	this.presetSwitches = [];
-	this.resetSwitches = [];
-	*/
+	
 	this.devices = config['accessories'] || [];
     
     this.cacheDirectory = config['cache_directory'] || './SynTex';

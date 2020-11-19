@@ -165,7 +165,8 @@ module.exports = class PresetSwitch extends Accessory
 		}.bind(this)).catch(function(e) {
 	
 			this.logger.err(e);
-		});
+			
+		}.bind(this));
 	}
 
 	getModelName()

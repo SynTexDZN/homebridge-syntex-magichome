@@ -189,14 +189,15 @@ module.exports = class LightBulb extends Accessory
 
 	getPowerState(callback)
 	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
 			callback(null, state != null ? (state.split(':')[0] || 0) : 0);
 	
-		}.bind(this)).catch(function(e) {
+		}).catch(function(e) {
 	
 			this.logger.err(e);
-		});
+
+		}.bind(this));
 	}
 
 	setPowerState(value, callback)
@@ -217,14 +218,15 @@ module.exports = class LightBulb extends Accessory
 
 	getHue(callback)
 	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
 			callback(null, state != null ? (state.split(':')[1] || 0) : 0);
 	
-		}.bind(this)).catch(function(e) {
+		}).catch(function(e) {
 	
 			this.logger.err(e);
-		});
+
+		}.bind(this));
 	}
 
 	setHue(value, callback)
@@ -245,14 +247,15 @@ module.exports = class LightBulb extends Accessory
 
 	getBrightness(callback)
 	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
 			callback(null, state != null ? (state.split(':')[2] || 0) : 0);
 	
-		}.bind(this)).catch(function(e) {
+		}).catch(function(e) {
 	
 			this.logger.err(e);
-		});
+
+		}.bind(this));
 	}
 
 	setBrightness(value, callback)
@@ -273,14 +276,15 @@ module.exports = class LightBulb extends Accessory
 
 	getSaturation(callback)
 	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
 			callback(null, state != null ? (state.split(':')[3] || 0) : 0);
 	
-		}.bind(this)).catch(function(e) {
+		}).catch(function(e) {
 	
 			this.logger.err(e);
-		});
+			
+		}.bind(this));
 	}
 
 	setSaturation(value, callback)

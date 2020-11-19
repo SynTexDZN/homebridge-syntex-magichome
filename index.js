@@ -1,7 +1,7 @@
-const MagicHome = require('./src/magichome')
+const MagicHome = require('./src/magichome');
 
-module.exports = function(homebridge)
-{
+module.exports = (homebridge) => {
+
 	var homebridgeGlobals = {
 		Service: homebridge.hap.Service,
 		Characteristic: homebridge.hap.Characteristic,
