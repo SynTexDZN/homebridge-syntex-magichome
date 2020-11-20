@@ -248,41 +248,8 @@ module.exports = class LightBulb extends Accessory
 
 	setHue(value, callback)
 	{
-		if(this.color.H != value)
-        {
-			this.color.H = value;
-			
-			console.log(1, this.isOn);
-
-			if(!this.isOn)
-			{
-				//this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
-			}
-			else
-			{
-				//this.setToCurrentColor();
-			}
-
-			callback(null);
-		}
-		else
-		{
-			callback(null);
-		}
-		/*
 		this.color.H = value;
-
-		if(!this.isOn)
-		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
-		}
-		else
-		{
-			this.setToCurrentColor();
-		}
-
-		callback();
-		*/
+		callback(null);
 	}
 
 	getBrightness(callback)
@@ -300,41 +267,9 @@ module.exports = class LightBulb extends Accessory
 
 	setBrightness(value, callback)
 	{
-		if(this.color.L != value)
-        {
-			this.color.L = value;
-			
-			console.log(2, this.isOn);
-
-			if(!this.isOn)
-			{
-				//this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
-			}
-			else
-			{
-				//this.setToCurrentColor();
-			}
-
-			callback(null);
-		}
-		else
-		{
-			callback(null);
-		}
-		/*
 		this.color.L = value;
-		
-		if(!this.isOn)
-		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
-		}
-		else
-		{
-			this.setToCurrentColor();
-		}
 
-		callback();
-		*/
+		callback(null);
 	}
 
 	getSaturation(callback)
@@ -352,41 +287,9 @@ module.exports = class LightBulb extends Accessory
 
 	setSaturation(value, callback)
 	{
-		if(this.color.S != value)
-        {
-			this.color.S = value;
-			
-			console.log(3, this.isOn);
-
-			if(!this.isOn)
-			{
-				//this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
-			}
-			else
-			{
-				//this.setToCurrentColor();
-			}
-
-			callback(null);
-		}
-		else
-		{
-			callback(null);
-		}
-		/*
 		this.color.S = value;
-		
-		if(!this.isOn)
-		{
-			this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
-		}
-		else
-		{
-			this.setToCurrentColor();
-		}
 
-		callback();
-		*/
+		callback(null);
 	}
 
 	setToWarmWhite()
@@ -405,11 +308,6 @@ module.exports = class LightBulb extends Accessory
 		}
 
 		var converted = convert.hsv.rgb([color.H, color.S, color.L]);
-
-		console.log('SET COLOR');
-		
-		//this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
-
 		var setup = 'RGBW';
 
 		if(this.services == 'rgb')
