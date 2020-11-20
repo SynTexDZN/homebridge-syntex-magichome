@@ -25,11 +25,11 @@ module.exports = class LightBulb extends Accessory
 			{
 				this.logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
 
-				this.isOn = state.split(':')[0];
+				this.isOn = state.power;
 				this.color = {
-					H : state.split(':')[1],
-					S : state.split(':')[2],
-					L : state.split(':')[3]
+					H : state.hue,
+					S : state.saturation,
+					L : state.brightness
 				};
 
 				this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
@@ -52,10 +52,10 @@ module.exports = class LightBulb extends Accessory
 
 			if(state.includes(':'))
 			{
-				var power = state.split(':')[0];
-				var hue = state.split(':')[1];
-				var saturation = state.split(':')[2];
-				var brightness = state.split(':')[3];
+				var power = state.power;
+				var hue = state.hue;
+				var saturation = state.saturation;
+				var brightness = state.brightness;
 				
 				this.color = { H: hue, S: saturation, L: brightness };
 
@@ -139,7 +139,7 @@ module.exports = class LightBulb extends Accessory
 			self.service[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(self.color.S);
 			self.service[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(self.color.L);
 
-			this.DeviceManager.setDevice(self.mac, self.letters, self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L);
+			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
 
 			this.startTimer();
 		});
@@ -191,7 +191,7 @@ module.exports = class LightBulb extends Accessory
 	{
 		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
-			callback(null, state != null ? (state.split(':')[0] || 0) : 0);
+			callback(null, state != null ? (state.power || 0) : 0);
 	
 		}).catch(function(e) {
 	
@@ -210,7 +210,7 @@ module.exports = class LightBulb extends Accessory
 
 			this.logger.log('update', self.mac, self.letters, 'HomeKit Status für [' + self.name + '] geändert zu [' + self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L + '] ( ' + self.mac + ' )');
 
-			this.DeviceManager.setDevice(self.mac, self.letters, self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L);
+			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
 
 			callback();
 		});
@@ -220,7 +220,7 @@ module.exports = class LightBulb extends Accessory
 	{
 		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
-			callback(null, state != null ? (state.split(':')[1] || 0) : 0);
+			callback(null, state != null ? (state.hue || 0) : 0);
 	
 		}).catch(function(e) {
 	
@@ -231,6 +231,26 @@ module.exports = class LightBulb extends Accessory
 
 	setHue(value, callback)
 	{
+		if(this.color.H != value)
+        {
+            this.color.H = value;
+
+			if(!this.isOn)
+			{
+				this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+			}
+			else
+			{
+				this.setToCurrentColor();
+			}
+
+			callback(null);
+		}
+		else
+		{
+			callback(null);
+		}
+		/*
 		this.color.H = value;
 
 		if(!this.isOn)
@@ -243,13 +263,14 @@ module.exports = class LightBulb extends Accessory
 		}
 
 		callback();
+		*/
 	}
 
 	getBrightness(callback)
 	{
 		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
-			callback(null, state != null ? (state.split(':')[2] || 0) : 0);
+			callback(null, state != null ? (state.brightness || 0) : 0);
 	
 		}).catch(function(e) {
 	
@@ -260,6 +281,26 @@ module.exports = class LightBulb extends Accessory
 
 	setBrightness(value, callback)
 	{
+		if(this.color.L != value)
+        {
+            this.color.L = value;
+
+			if(!this.isOn)
+			{
+				this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+			}
+			else
+			{
+				this.setToCurrentColor();
+			}
+
+			callback(null);
+		}
+		else
+		{
+			callback(null);
+		}
+		/*
 		this.color.L = value;
 		
 		if(!this.isOn)
@@ -272,13 +313,14 @@ module.exports = class LightBulb extends Accessory
 		}
 
 		callback();
+		*/
 	}
 
 	getSaturation(callback)
 	{
 		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
 
-			callback(null, state != null ? (state.split(':')[3] || 0) : 0);
+			callback(null, state != null ? (state.saturation || 0) : 0);
 	
 		}).catch(function(e) {
 	
@@ -289,6 +331,26 @@ module.exports = class LightBulb extends Accessory
 
 	setSaturation(value, callback)
 	{
+		if(this.color.S != value)
+        {
+            this.color.S = value;
+
+			if(!this.isOn)
+			{
+				this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+			}
+			else
+			{
+				this.setToCurrentColor();
+			}
+
+			callback(null);
+		}
+		else
+		{
+			callback(null);
+		}
+		/*
 		this.color.S = value;
 		
 		if(!this.isOn)
@@ -301,6 +363,7 @@ module.exports = class LightBulb extends Accessory
 		}
 
 		callback();
+		*/
 	}
 
 	setToWarmWhite()
@@ -336,6 +399,6 @@ module.exports = class LightBulb extends Accessory
 		var base = '-x ' + setup + ' -c ';
 
 		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
-		this.DeviceManager.setDevice(this.mac, this.letters, this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L);
+		this.DeviceManager.setDevice(this.mac, this.letters, { power : this.isOn, hue : this.color.H, saturation : this.color.S, brightness : this.color.L });
 	}
 }
