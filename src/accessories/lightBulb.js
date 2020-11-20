@@ -222,7 +222,7 @@ module.exports = class LightBulb extends Accessory
 
 			if(delay)
 			{
-				setTimeout(() => this.setToCurrentColor(), 1000);
+				setTimeout(() => self.setToCurrentColor(), 1000);
 			}
 			else if(self.isOn)
 			{
