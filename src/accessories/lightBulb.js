@@ -208,6 +208,8 @@ module.exports = class LightBulb extends Accessory
 
 			self.isOn = value;
 
+			console.log('SET POWER');
+
 			this.logger.log('update', self.mac, self.letters, 'HomeKit Status für [' + self.name + '] geändert zu [' + self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L + '] ( ' + self.mac + ' )');
 
 			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
@@ -382,6 +384,8 @@ module.exports = class LightBulb extends Accessory
 		}
 
 		var converted = convert.hsv.rgb([color.H, color.S, color.L]);
+
+		console.log('SET COLOR');
 		
 		this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.isOn + ':' + this.color.H + ':' + this.color.S + ':' + this.color.L + '] ( ' + this.mac + ' )');
 
