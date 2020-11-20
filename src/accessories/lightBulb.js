@@ -214,6 +214,11 @@ module.exports = class LightBulb extends Accessory
 
 			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
 
+			if(self.isOn)
+			{
+				self.setToCurrentColor();
+			}
+
 			callback();
 		});
 	}
@@ -245,7 +250,7 @@ module.exports = class LightBulb extends Accessory
 			}
 			else
 			{
-				this.setToCurrentColor();
+				//this.setToCurrentColor();
 			}
 
 			callback(null);
@@ -297,7 +302,7 @@ module.exports = class LightBulb extends Accessory
 			}
 			else
 			{
-				this.setToCurrentColor();
+				//this.setToCurrentColor();
 			}
 
 			callback(null);
@@ -349,7 +354,7 @@ module.exports = class LightBulb extends Accessory
 			}
 			else
 			{
-				this.setToCurrentColor();
+				//this.setToCurrentColor();
 			}
 
 			callback(null);
