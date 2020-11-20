@@ -224,10 +224,6 @@ module.exports = class LightBulb extends Accessory
 			{
 				setTimeout(() => self.setToCurrentColor(), 1000);
 			}
-			else if(self.isOn)
-			{
-				self.setToCurrentColor();
-			}
 
 			callback();
 		});
@@ -260,7 +256,7 @@ module.exports = class LightBulb extends Accessory
 			}
 			else
 			{
-				//this.setToCurrentColor();
+				this.setToCurrentColor();
 			}
 
 			callback(null);
@@ -312,7 +308,7 @@ module.exports = class LightBulb extends Accessory
 			}
 			else
 			{
-				//this.setToCurrentColor();
+				this.setToCurrentColor();
 			}
 
 			callback(null);
@@ -364,7 +360,7 @@ module.exports = class LightBulb extends Accessory
 			}
 			else
 			{
-				//this.setToCurrentColor();
+				this.setToCurrentColor();
 			}
 
 			callback(null);
