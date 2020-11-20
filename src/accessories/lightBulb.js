@@ -235,7 +235,9 @@ module.exports = class LightBulb extends Accessory
 	{
 		if(this.color.H != value)
         {
-            this.color.H = value;
+			this.color.H = value;
+			
+			console.log(1, this.isOn);
 
 			if(!this.isOn)
 			{
@@ -285,7 +287,9 @@ module.exports = class LightBulb extends Accessory
 	{
 		if(this.color.L != value)
         {
-            this.color.L = value;
+			this.color.L = value;
+			
+			console.log(2, this.isOn);
 
 			if(!this.isOn)
 			{
@@ -335,7 +339,9 @@ module.exports = class LightBulb extends Accessory
 	{
 		if(this.color.S != value)
         {
-            this.color.S = value;
+			this.color.S = value;
+			
+			console.log(3, this.isOn);
 
 			if(!this.isOn)
 			{
