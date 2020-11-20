@@ -52,10 +52,10 @@ module.exports = class LightBulb extends Accessory
 
 			if(state.includes(':'))
 			{
-				var power = state.power;
-				var hue = state.hue;
-				var saturation = state.saturation;
-				var brightness = state.brightness;
+				var power = state.split(':')[0];
+				var hue = state.split(':')[1];
+				var saturation = state.split(':')[2];
+				var brightness = state.split(':')[3];
 				
 				this.color = { H: hue, S: saturation, L: brightness };
 
