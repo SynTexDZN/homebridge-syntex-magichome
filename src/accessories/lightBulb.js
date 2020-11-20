@@ -203,6 +203,12 @@ module.exports = class LightBulb extends Accessory
 	setPowerState(value, callback)
 	{
 		const self = this;
+		var delay = false;
+
+		if(!this.isOn)
+		{
+			delay = true;
+		}
 
 		this.sendCommand(value ? '--on' : '--off', () => {
 
@@ -214,7 +220,11 @@ module.exports = class LightBulb extends Accessory
 
 			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
 
-			if(self.isOn)
+			if(delay)
+			{
+				setTimeout(() => this.setToCurrentColor(), 1000);
+			}
+			else if(self.isOn)
 			{
 				self.setToCurrentColor();
 			}
@@ -246,7 +256,7 @@ module.exports = class LightBulb extends Accessory
 
 			if(!this.isOn)
 			{
-				this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+				//this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
 			}
 			else
 			{
@@ -298,7 +308,7 @@ module.exports = class LightBulb extends Accessory
 
 			if(!this.isOn)
 			{
-				this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+				//this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
 			}
 			else
 			{
@@ -350,7 +360,7 @@ module.exports = class LightBulb extends Accessory
 
 			if(!this.isOn)
 			{
-				this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
+				//this.setPowerState(true, () => setTimeout(() => this.setToCurrentColor(), 1000));
 			}
 			else
 			{
