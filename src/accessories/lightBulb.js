@@ -214,8 +214,6 @@ module.exports = class LightBulb extends Accessory
 
 			self.isOn = value;
 
-			console.log('SET POWER');
-
 			this.logger.log('update', self.mac, self.letters, 'HomeKit Status für [' + self.name + '] geändert zu [' + self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L + '] ( ' + self.mac + ' )');
 
 			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
@@ -249,6 +247,7 @@ module.exports = class LightBulb extends Accessory
 	setHue(value, callback)
 	{
 		this.color.H = value;
+		
 		callback(null);
 	}
 
