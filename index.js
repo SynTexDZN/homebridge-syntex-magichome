@@ -1,31 +1,8 @@
-/*
-const MagicHome = require('./src/magichome');
-
-module.exports = (homebridge) => {
-
-	var homebridgeGlobals = {
-		Service: homebridge.hap.Service,
-		Characteristic: homebridge.hap.Characteristic,
-		Accessory: homebridge.platformAccessory,
-		UUIDGen: homebridge.hap.uuid,
-		PersistPath: homebridge.user.storagePath()
-	};
-
-	MagicHome.globals.setHomebridge(homebridgeGlobals);
-	homebridge.registerPlatform(MagicHome.pluginID, MagicHome.pluginName, MagicHome.platform, true);
-}
-*/
-// NEW
+let DeviceManager = require('./device-manager');
 
 const SynTexDynamicPlatform = require('homebridge-syntex-dynamic-platform').DynamicPlatform;
-//const SynTexUniversalAccessory = require('./src/universal');
-
-let DeviceManager = require('../device-manager');
-
-const LightBulb = require('./accessories/lightBulb');
-const PresetSwitch = require('./accessories/presetSwitch');
-const ResetSwitch = require('./accessories/resetSwitch');
-const lightAgent = require('./lib/lightAgent');
+const SynTexUniversalAccessory = require('./src/universal');
+const lightAgent = require('./src/lib/lightAgent');
 
 const pluginID = 'homebridge-syntex-magichome';
 const pluginName = 'SynTexMagicHome';
@@ -48,8 +25,6 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
 		this.devices = config['accessories'] || [];
 		
 		this.cacheDirectory = config['cache_directory'] || './SynTex';
-		this.logDirectory = config['log_directory'] || './SynTex/log';
-		this.port = config['port'] || 1712;
 
 		if(this.api && this.logger)
         {
@@ -91,52 +66,49 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
 	initWebServer()
 	{
 		this.WebServer.addPage('/devices', async (response, urlParams) => {
-	
-			if(urlParams.mac != null)
-			{
-				var accessory = null;
-	
-				for(var i = 0; i < accessories.length; i++)
-				{
-					if(accessories[i].mac == urlParams.mac)
-					{
-						accessory = accessories[i];
-					}
-				}
-	
-				if(accessory == null)
-				{
-					this.logger.log('error', urlParams.mac, '', 'Es wurde kein passendes Gerät in der Config gefunden! ( ' + urlParams.mac + ' )');
-	
-					response.write('Error');
-				}
-				else if(urlParams.value != null)
-				{
-					var state = null;
-	
-					if((state = validateUpdate(urlParams.mac, accessory.letters, urlParams.value)) != null)
-					{
-						accessory.changeHandler(state);
-					}
+
+            if(urlParams.id != null)
+            {
+                var accessory = this.getAccessory(urlParams.id);
+    
+                if(accessory == null)
+                {
+                    this.logger.log('error', urlParams.id, '', 'Es wurde kein passendes Gerät in der Config gefunden! ( ' + urlParams.id + ' )');
+    
+                    response.write('Error');
+                }
+                else if(urlParams.value != null)
+                {
+                    var state = { power : urlParams.value };
+
+                    if(urlParams.brightness != null)
+                    {
+                        state.brightness = urlParams.brightness;
+                    }
+    
+                    if((state = this.validateUpdate(urlParams.id, accessory.service[1].letters, state)) != null)
+                    {
+                        accessory.service[1].changeHandler(state, true);
+                    }
 					else
 					{
-						this.logger.log('error', urlParams.mac, accessory.letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.mac + ' )');
+						this.logger.log('error', urlParams.id, accessory.service[1].letters, '[' + urlParams.value + '] ist kein gültiger Wert! ( ' + urlParams.id + ' )');
 					}
-	
-					response.write(state != null ? state.toString() : 'Error');
+
+					response.write(state != null ? 'Success' : 'Error');
 				}
 				else
 				{
-					var state = await DeviceManager.getDevice(urlParams.mac, accessory.letters);
-	
-					response.write(state != null ? state.toString() : 'Error');
-				}
+					var state = accessory.homebridgeAccessory.context.data[accessory.service[1].letters];
+
+					response.write(state != null ? JSON.stringify(state) : 'Error');
+			}
 			}
 			else
 			{
 				response.write('Error');
 			}
-	
+
 			response.end();
 		});
 
@@ -152,64 +124,42 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
             response.end();
 		});
 
-		this.WebServer.addPage('/serverside/update', async (response, urlParams) => {
+		this.WebServer.addPage('/serverside/update', (response, urlParams) => {
 
 			var version = urlParams.version != null ? urlParams.version : 'latest';
 
 			const { exec } = require('child_process');
-			
+
 			exec('sudo npm install ' + pluginID + '@' + version + ' -g', (error, stdout, stderr) => {
 
-				try
-				{
-					if(error || stderr.includes('ERR!'))
-					{
-						this.logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' konnte nicht aktualisiert werden! ' + (error || stderr));
-					}
-					else
-					{
-						this.logger.log('success', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' wurde auf die Version [' + version + '] aktualisiert!');
+				response.write(error || (stderr && stderr.includes('ERR!')) ? 'Error' : 'Success');
+				response.end();
 
-						restart = true;
+                if(error || (stderr && stderr.includes('ERR!')))
+                {
+                    this.logger.log('warn', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' konnte nicht aktualisiert werden! ' + (error || stderr));
+                }
+                else
+                {
+                    this.logger.log('success', 'bridge', 'Bridge', 'Das Plugin ' + pluginName + ' wurde auf die Version [' + version + '] aktualisiert!');
 
-						this.logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge wird neu gestartet ..');
+                    restart = true;
 
-						exec('sudo systemctl restart homebridge');
-					}
+                    this.logger.log('warn', 'bridge', 'Bridge', 'Die Homebridge wird neu gestartet ..');
 
-					response.write(error || stderr.includes('ERR!') ? 'Error' : 'Success');
-					response.end();
-				}
-				catch(e)
-				{
-					this.logger.err(e);
-				}
-			});
-		});
+                    exec('sudo systemctl restart homebridge');
+                }
+            });
+        });
 	}
 
 	loadAccessories()
 	{
-		homebridge.debug = this.config.debug || false;
-
-        for(var i = 0; i < this.devices.length; i++)
+        for(const device of this.devices)
         {
-            if(this.devices[i].type == 'light')
-            {
-				var newLightConfig = this.devices[i];
+			const homebridgeAccessory = this.getAccessory(device.id);
 
-				newLightConfig.debug = this.config.debug || false;
-
-                this.addAccessory(new LightBulb(newLightConfig, this.logger, homebridge, DeviceManager));
-            }
-            else if(this.devices[i].type == 'preset-switch')
-            {
-                this.addAccessory(new PresetSwitch(this.devices[i], this.logger, homebridge, DeviceManager));
-			}
-			else if(this.devices[i].type == 'reset-switch')
-            {
-                this.addAccessory(new ResetSwitch(this.devices[i], this.logger, homebridge, DeviceManager));
-            }
+			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, { id : device.id, name : device.name, services : device.services, manufacturer : this.manufacturer, model : this.model, version : this.version }, { platform : this, logger : this.logger, DeviceManager : DeviceManager }));
         }
 	}
 }
