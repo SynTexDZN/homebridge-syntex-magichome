@@ -1,14 +1,16 @@
 const { UniversalAccessory } = require('homebridge-syntex-dynamic-platform');
-//const OutletService = require('./accessories/outlet');
-//const DimmedBulbService = require('./accessories/dimmer');
 const LightBulb = require('./accessories/lightBulb');
 const PresetSwitch = require('./accessories/presetSwitch');
 const ResetSwitch = require('./accessories/resetSwitch');
+
+var accessoryType;
 
 module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 {
     constructor(homebridgeAccessory, deviceConfig, manager)
     {
+		accessoryType = deviceConfig.type;
+
 		super(homebridgeAccessory, deviceConfig, manager);
     }
     
@@ -33,15 +35,22 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 		var service = null;
 		var serviceConfig = { name : name, type : type, subtype : subtype };
 
-		if(type == 'switch' || type == 'outlet')
+		if(accessoryType == 'preset-switch')
 		{
-			service = new PresetSwitch(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+			service = new PresetSwitch(this.deviceConfig, this.logger, { Service : this.platform.api.hap.Service, Characteristic : this.platform.api.hap.Characteristic }, this.manager.DeviceManager);
 		}
-		else if(type == 'rgb' || type == 'rgbw')
+		else if(accessoryType == 'reset-switch')
 		{
-			serviceConfig.type = 'rgb';
+			service = new ResetSwitch(this.deviceConfig, this.logger, { Service : this.platform.api.hap.Service, Characteristic : this.platform.api.hap.Characteristic }, this.manager.DeviceManager);
+		}
+		else if(accessoryType == 'light')
+		{
+			//serviceConfig.type = 'rgb';
+			var newLightConfig = this.deviceConfig;
 
-			service = new LightBulb(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
+			newLightConfig.debug = this.platform.config.debug || false;
+
+			service = new LightBulb(newLightConfig, this.logger, { Service : this.platform.api.hap.Service, Characteristic : this.platform.api.hap.Characteristic }, this.manager.DeviceManager);
 		}
 
 		if(service != null)
@@ -52,6 +61,6 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 	
     getModel()
     {
-        return 'Tuya ' + (this.services == 'light' ? 'Light Bulb' : this.services == 'switch' ? 'Outlet' : 'Accessory');
+        return 'Magic Home ' + (accessoryType == 'light' ? 'Light Bulb' : accessoryType == 'preset-switch' ? 'Preset Switch' : accessoryType == 'reset-switch' ? 'Reset Switch' : 'Accessory');
     }
 };

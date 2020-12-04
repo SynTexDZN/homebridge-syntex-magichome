@@ -15,8 +15,6 @@ module.exports = class Accessory
 		this.name = config.name;
 		this.services = config.services;
 		this.service = this.getAccessoryServices();
-
-		this.service.push(this.getInformationService());
 	}
 	/*
 	identify(callback)
@@ -24,16 +22,6 @@ module.exports = class Accessory
 		callback();
 	}
 	*/
-	getInformationService()
-	{
-		var informationService = new this.homebridge.Service.AccessoryInformation();
-
-		informationService.setCharacteristic(this.homebridge.Characteristic.Manufacturer, 'SynTex')
-			.setCharacteristic(this.homebridge.Characteristic.Model, this.getModelName())
-			.setCharacteristic(this.homebridge.Characteristic.SerialNumber, this.mac);
-
-		return informationService;
-	}
 
 	executeCommand(address, command, callback)
 	{

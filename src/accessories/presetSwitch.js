@@ -168,9 +168,4 @@ module.exports = class PresetSwitch extends Accessory
 			
 		}.bind(this));
 	}
-
-	getModelName()
-	{
-		return 'Magic Home Preset Switch';
-	}
 }

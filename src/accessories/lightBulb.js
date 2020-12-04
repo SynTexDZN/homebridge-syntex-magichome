@@ -97,11 +97,6 @@ module.exports = class LightBulb extends Accessory
 		this.executeCommand(this.ip, command, callback);
 	}
 
-	getModelName()
-	{
-		return 'Magic Home Light Bulb';
-	}
-
 	logMessage(...args)
 	{
 		if(this.config.debug)

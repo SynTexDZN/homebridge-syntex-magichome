@@ -159,7 +159,7 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
         {
 			const homebridgeAccessory = this.getAccessory(device.id);
 
-			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, { id : device.id, name : device.name, services : device.services, manufacturer : this.manufacturer, model : this.model, version : this.version }, { platform : this, logger : this.logger, DeviceManager : DeviceManager }));
+			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger, DeviceManager : DeviceManager }));
         }
 	}
 }
