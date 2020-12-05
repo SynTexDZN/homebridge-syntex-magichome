@@ -1,20 +1,30 @@
-const Accessory = require('./base');
+const { SwitchService } = require('homebridge-syntex-dynamic-platform');
+
+let Characteristic, DeviceManager;
+
 const preset = require('../presets');
 const emitter = require('../lib/emitter');
+const cp = require('child_process');
+const path = require('path');
+const lightAgent = require('../lib/lightAgent');
 
-module.exports = class PresetSwitch extends Accessory
+module.exports = class PresetSwitch extends SwitchService
 {
-	constructor(config, log, homebridge, manager)
+	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		super(config, log, homebridge, manager);
-
+		Characteristic = manager.platform.api.hap.Characteristic;
+		DeviceManager = manager.DeviceManager;
+		
+		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+		
 		this.isOn = false;
-		this.name = config.name || 'LED Controller Presets';
-		this.ips = Object.keys(config.ips);
-		this.preset = config.preset || 'seven_color_cross_fade';
+		//this.name = deviceConfig.name || 'LED Controller Presets';
+		this.ips = Object.keys(deviceConfig.ips);
+		this.preset = deviceConfig.preset || 'seven_color_cross_fade';
 		this.sceneValue = preset[this.preset];
+		this.deviceConfig = deviceConfig;
 
-		this.letters = '40';
+		//this.letters = '40';
 
 		if(this.sceneValue == null)
 		{
@@ -22,17 +32,17 @@ module.exports = class PresetSwitch extends Accessory
 			this.sceneValue = 37;
 		}
 
-		this.speed = config.speed || 40;
-		this.shouldTurnOff = config.shouldTurnOff || true;
+		this.speed = deviceConfig.speed || 40;
+		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
 		this.bindEmitter();
 
 		this.changeHandler = (function(state)
 		{
-			this.switchStateChanged(state, () => {});
+			this.setState(state, () => {});
 
 		}).bind(this);
 
-		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
 
 			if(state == null)
 			{
@@ -44,7 +54,7 @@ module.exports = class PresetSwitch extends Accessory
 
 				this.isOn = state;
 
-				this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
+				//this.service[0].getCharacteristic(Characteristic.On).updateValue(this.isOn);
 			}
 
 		}.bind(this));
@@ -63,27 +73,15 @@ module.exports = class PresetSwitch extends Accessory
 		})
 	}
 
-	getAccessoryServices()
-	{
-		const switchService = new this.homebridge.Service.Switch(this.name);
-
-		switchService.getCharacteristic(this.homebridge.Characteristic.On)
-			.on('get', this.getState.bind(this))
-			.on('set', this.switchStateChanged.bind(this));
-
-		return [switchService];
-	}
-
 	sendCommand(command, callback)
 	{
 		this.executeCommand(this.ips, command, callback);
 	}
 
-	switchStateChanged(newState, callback)
+	setState(newState, callback)
 	{
 		this.isOn = newState;
-
-		this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + newState + '] ( ' + this.mac + ' )');
+		this.power = newState;
 
 		const self = this;
 
@@ -94,16 +92,18 @@ module.exports = class PresetSwitch extends Accessory
 
 			self.sendCommand('--on', () => {
 
-				setTimeout(() => {
+				setTimeout(() => self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
 
-					self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
+					//DeviceManager.setDevice(self.mac, self.letters, true);
 
-						this.DeviceManager.setDevice(self.mac, self.letters, true);
+					super.setState(true, () => {
 
+						this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
+					
 						callback();
 					});
 
-				}, 3000);
+				}, 3000));
 			});
 		}
 		else
@@ -111,13 +111,13 @@ module.exports = class PresetSwitch extends Accessory
 			// Turning OFF
 			var promiseArray = [];
 
-			Object.keys(self.config.ips).forEach((ip) => {
+			Object.keys(self.deviceConfig.ips).forEach((ip) => {
 
 				const newPromise = new Promise((resolve) => {
 
-					self.executeCommand(ip, ' -c ' + self.config.ips[ip], () => {
+					self.executeCommand(ip, ' -c ' + self.deviceConfig.ips[ip], () => {
 
-						this.DeviceManager.setDevice(self.mac, self.letters, false);
+						DeviceManager.setDevice(self.mac, self.letters, false);
 
 						resolve();
 					});
@@ -130,17 +130,21 @@ module.exports = class PresetSwitch extends Accessory
 
 				if(self.shouldTurnOff)
 				{
-					setTimeout(() => {
+					setTimeout(() => self.sendCommand('--off', () => {
 
-						self.sendCommand('--off', () => {
+						super.setState(false, () => {
 
+							this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
+						
 							callback();
 						});
 
-					}, 3000);
+					}, 3000));
 				}
 				else
 				{
+					this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
+
 					callback();
 				}
 			});
@@ -150,22 +154,66 @@ module.exports = class PresetSwitch extends Accessory
 	updateState(newValue)
 	{
 		this.isOn = newValue;
-		this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
-		this.DeviceManager.setDevice(this.mac, this.letters, this.isOn);
+		this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.isOn);
+		DeviceManager.setDevice(this.mac, this.letters, this.isOn);
 	}
 
 	getState(callback)
+    {
+        super.getState((state) => {
+
+            if(state != null)
+            {
+                this.power = state;
+
+                callback(null, this.power);
+            }
+            else
+            {
+				DeviceManager.getDevice(this.mac, this.letters).then((state) => {
+
+					if(state != null)
+                    {
+                        this.power = state;
+
+                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
+                    
+                        super.setValue('state', this.power);
+                    }
+                    
+                    callback(null, state != null ? state : false);
+				});
+            }
+        });
+	}
+	
+	executeCommand(address, command, callback)
 	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		const exec = cp.exec;
+		const self = this;
+		const cmd = path.join(__dirname, '../flux_led.py ' + lightAgent.getAddress(address) + command);
+		/*
+		if(self.homebridge.debug)
+		{
+			self.logger.debug(cmd);
+		}
+		*/
+		exec(cmd, (err, stdOut) => {
+			/*
+			if(self.homebridge.debug)
+			{
+				self.logger.debug(stdOut);
+			}
+			*/
+			if(err)
+			{
+				self.logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py] ' + err);
+			}
 
-			this.logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
-
-			callback(null, state);
-	
-		}.bind(this)).catch(function(e) {
-	
-			this.logger.err(e);
-			
-		}.bind(this));
+			if(callback)
+			{
+				callback(err, stdOut);
+			}
+		});
 	}
 }

@@ -37,7 +37,7 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 
 		if(accessoryType == 'preset-switch')
 		{
-			service = new PresetSwitch(this.deviceConfig, this.logger, { Service : this.platform.api.hap.Service, Characteristic : this.platform.api.hap.Characteristic }, this.manager.DeviceManager);
+			service = new PresetSwitch(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 		else if(accessoryType == 'reset-switch')
 		{

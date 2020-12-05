@@ -1,3 +1,5 @@
+const { BaseService } = require('homebridge-syntex-dynamic-platform');
+
 const cp = require('child_process');
 const path = require('path');
 const lightAgent = require('../lib/lightAgent');
