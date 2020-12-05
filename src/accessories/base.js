@@ -54,19 +54,4 @@ module.exports = class Accessory
 			}
 		});
 	}
-
-	getAccessoryServices()
-	{
-		throw new Error('The getAccessoryServices method must be overridden.');
-	}
-
-	getModelName()
-	{
-		throw new Error('The getModelName method must be overridden.');
-	}
-
-	getServices()
-	{
-		return this.service;
-	}
 }

@@ -1,26 +1,20 @@
-const { SwitchService } = require('homebridge-syntex-dynamic-platform');
+let Characteristic;
 
-let Characteristic, DeviceManager;
-
+const SwitchService = require('./switch');
 const preset = require('../presets');
 const emitter = require('../lib/emitter');
-const cp = require('child_process');
-const path = require('path');
-const lightAgent = require('../lib/lightAgent');
 
 module.exports = class PresetSwitch extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
-		DeviceManager = manager.DeviceManager;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
 		this.ips = Object.keys(deviceConfig.ips);
 		this.preset = deviceConfig.preset || 'seven_color_cross_fade';
 		this.sceneValue = preset[this.preset];
-		this.deviceConfig = deviceConfig;
 
 		if(this.sceneValue == null)
 		{
@@ -36,46 +30,37 @@ module.exports = class PresetSwitch extends SwitchService
         {
             if(state.power != null)
             {
-				this.setState(state.power, () => {
-
-					homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
-				});
+				this.setState(state.power, () => {});
             }
         };
 	}
 
-	bindEmitter()
-	{
-		const self = this;
+	getState(callback)
+    {
+        super.getState((state) => {
 
-		emitter.on('SynTexMagicHomePresetTurnedOn', (presetName) => {
-
-			if(presetName !== self.name)
-			{
-				self.updateState(false);
+            if(state != null)
+            {
+				this.power = state;
+				
+				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
 			}
-		})
-	}
-
-	sendCommand(command, callback)
-	{
-		this.executeCommand(this.ips, command, callback);
+				
+			callback(null, state != null ? state : false);
+        });
 	}
 
 	setState(state, callback)
 	{
 		this.power = state;
 
-		const self = this;
-
 		if(state == true)
 		{
-			// Turn Off Other Running Scenes
 			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name);
 
-			self.sendCommand('--on', () => {
+			this.executeCommand(this.ips, '--on', () => {
 
-				setTimeout(() => self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
+				setTimeout(() => this.executeCommand(this.ips, '-p ' + this.sceneValue + ' ' + this.speed, () => {
 
 					super.setState(true, () => {
 
@@ -84,29 +69,28 @@ module.exports = class PresetSwitch extends SwitchService
 						callback();
 					});
 
-				}, 3000));
+				}), 1500);
 			});
 		}
 		else
 		{
-			// Turning OFF
 			var promiseArray = [];
 
 			Object.keys(this.deviceConfig.ips).forEach((ip) => {
 
 				const newPromise = new Promise((resolve) => {
 
-					self.executeCommand(ip, ' -c ' + self.deviceConfig.ips[ip], () => resolve());
+					this.executeCommand(ip, ' -c ' + this.deviceConfig.ips[ip], () => resolve());
 				});
 
 				promiseArray.push(newPromise);
 			});
 
-			Promise.all(promiseArray).then(async () => {
+			Promise.all(promiseArray).then(() => {
 
-				if(self.shouldTurnOff)
+				if(this.shouldTurnOff)
 				{
-					setTimeout(() => self.sendCommand('--off', () => {}, 3000));
+					setTimeout(() => this.executeCommand(this.ips, '--off', () => {}, 1500));
 				}
 				
 				super.setState(false, () => {
@@ -126,48 +110,14 @@ module.exports = class PresetSwitch extends SwitchService
 		this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
 	}
 
-	getState(callback)
-    {
-        super.getState((state) => {
-
-            if(state != null)
-            {
-				this.power = state;
-				
-				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
-			}
-				
-			callback(null, state != null ? state : false);
-        });
-	}
-	
-	executeCommand(address, command, callback)
+	bindEmitter()
 	{
-		const exec = cp.exec;
-		const self = this;
-		const cmd = path.join(__dirname, '../flux_led.py ' + lightAgent.getAddress(address) + command);
-		/*
-		if(self.homebridge.debug)
-		{
-			self.logger.debug(cmd);
-		}
-		*/
-		exec(cmd, (err, stdOut) => {
-			/*
-			if(self.homebridge.debug)
-			{
-				self.logger.debug(stdOut);
-			}
-			*/
-			if(err)
-			{
-				self.logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py] ' + err);
-			}
+		emitter.on('SynTexMagicHomePresetTurnedOn', (presetName) => {
 
-			if(callback)
+			if(presetName != this.name)
 			{
-				callback(err, stdOut);
+				this.updateState(false);
 			}
-		});
+		})
 	}
 }

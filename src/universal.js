@@ -1,7 +1,7 @@
 const { UniversalAccessory } = require('homebridge-syntex-dynamic-platform');
 const LightBulb = require('./accessories/lightBulb');
 const PresetSwitch = require('./accessories/presetSwitch');
-const ResetSwitch = require('./accessories/resetSwitch');
+const SceneSwitch = require('./accessories/sceneSwitch');
 
 var accessoryType;
 
@@ -39,9 +39,9 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 		{
 			service = new PresetSwitch(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
-		else if(accessoryType == 'reset-switch')
+		else if(accessoryType == 'scene-switch')
 		{
-			service = new ResetSwitch(this.deviceConfig, this.logger, { Service : this.platform.api.hap.Service, Characteristic : this.platform.api.hap.Characteristic }, this.manager.DeviceManager);
+			service = new SceneSwitch(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 		else if(accessoryType == 'light')
 		{
@@ -61,6 +61,6 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 	
     getModel()
     {
-        return 'Magic Home ' + (accessoryType == 'light' ? 'Light Bulb' : accessoryType == 'preset-switch' ? 'Preset Switch' : accessoryType == 'reset-switch' ? 'Reset Switch' : 'Accessory');
+        return 'Magic Home ' + (accessoryType == 'light' ? 'Light Bulb' : accessoryType == 'preset-switch' ? 'Preset Switch' : accessoryType == 'scene-switch' ? 'Scene Switch' : 'Accessory');
     }
 };

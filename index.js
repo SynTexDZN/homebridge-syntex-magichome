@@ -23,6 +23,7 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
 		this.config = config;
 	
 		this.devices = config['accessories'] || [];
+		this.debug = config['debug'] || false;
 		
 		this.cacheDirectory = config['cache_directory'] || './SynTex';
 
