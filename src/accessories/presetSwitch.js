@@ -17,14 +17,10 @@ module.exports = class PresetSwitch extends SwitchService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
-		this.isOn = false;
-		//this.name = deviceConfig.name || 'LED Controller Presets';
 		this.ips = Object.keys(deviceConfig.ips);
 		this.preset = deviceConfig.preset || 'seven_color_cross_fade';
 		this.sceneValue = preset[this.preset];
 		this.deviceConfig = deviceConfig;
-
-		//this.letters = '40';
 
 		if(this.sceneValue == null)
 		{
@@ -36,35 +32,23 @@ module.exports = class PresetSwitch extends SwitchService
 		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
 		this.bindEmitter();
 
-		this.changeHandler = (function(state)
-		{
-			this.setState(state, () => {});
+		this.changeHandler = async (state, refreshDevices) =>
+        {
+            if(state.power != null)
+            {
+				this.setState(state.power, () => {
 
-		}).bind(this);
-
-		DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
-
-			if(state == null)
-			{
-				this.logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
-			}
-			else if(state != null)
-			{
-				this.logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
-
-				this.isOn = state;
-
-				//this.service[0].getCharacteristic(Characteristic.On).updateValue(this.isOn);
-			}
-
-		}.bind(this));
+					homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
+				});
+            }
+        };
 	}
 
 	bindEmitter()
 	{
 		const self = this;
 
-		emitter.on('MagicHomeSynTexPresetTurnedOn', (presetName) => {
+		emitter.on('SynTexMagicHomePresetTurnedOn', (presetName) => {
 
 			if(presetName !== self.name)
 			{
@@ -78,23 +62,20 @@ module.exports = class PresetSwitch extends SwitchService
 		this.executeCommand(this.ips, command, callback);
 	}
 
-	setState(newState, callback)
+	setState(state, callback)
 	{
-		this.isOn = newState;
-		this.power = newState;
+		this.power = state;
 
 		const self = this;
 
-		if(newState === true)
+		if(state == true)
 		{
 			// Turn Off Other Running Scenes
-			emitter.emit('MagicHomeSynTexPresetTurnedOn', self.name);
+			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name);
 
 			self.sendCommand('--on', () => {
 
 				setTimeout(() => self.sendCommand('-p ' + self.sceneValue + ' ' + self.speed, () => {
-
-					//DeviceManager.setDevice(self.mac, self.letters, true);
 
 					super.setState(true, () => {
 
@@ -111,51 +92,38 @@ module.exports = class PresetSwitch extends SwitchService
 			// Turning OFF
 			var promiseArray = [];
 
-			Object.keys(self.deviceConfig.ips).forEach((ip) => {
+			Object.keys(this.deviceConfig.ips).forEach((ip) => {
 
 				const newPromise = new Promise((resolve) => {
 
-					self.executeCommand(ip, ' -c ' + self.deviceConfig.ips[ip], () => {
-
-						DeviceManager.setDevice(self.mac, self.letters, false);
-
-						resolve();
-					});
+					self.executeCommand(ip, ' -c ' + self.deviceConfig.ips[ip], () => resolve());
 				});
 
 				promiseArray.push(newPromise);
 			});
 
-			Promise.all(promiseArray).then(() => {
+			Promise.all(promiseArray).then(async () => {
 
 				if(self.shouldTurnOff)
 				{
-					setTimeout(() => self.sendCommand('--off', () => {
-
-						super.setState(false, () => {
-
-							this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
-						
-							callback();
-						});
-
-					}, 3000));
+					setTimeout(() => self.sendCommand('--off', () => {}, 3000));
 				}
-				else
-				{
+				
+				super.setState(false, () => {
+
 					this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
-
+				
 					callback();
-				}
+				});
 			});
 		}
 	}
 
-	updateState(newValue)
+	updateState(state)
 	{
-		this.isOn = newValue;
-		this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.isOn);
-		DeviceManager.setDevice(this.mac, this.letters, this.isOn);
+		this.power = state;
+
+		this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
 	}
 
 	getState(callback)
@@ -164,26 +132,12 @@ module.exports = class PresetSwitch extends SwitchService
 
             if(state != null)
             {
-                this.power = state;
-
-                callback(null, this.power);
-            }
-            else
-            {
-				DeviceManager.getDevice(this.mac, this.letters).then((state) => {
-
-					if(state != null)
-                    {
-                        this.power = state;
-
-                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
-                    
-                        super.setValue('state', this.power);
-                    }
-                    
-                    callback(null, state != null ? state : false);
-				});
-            }
+				this.power = state;
+				
+				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
+			}
+				
+			callback(null, state != null ? state : false);
         });
 	}
 	

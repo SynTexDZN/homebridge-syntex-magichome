@@ -1,87 +1,25 @@
-const Accessory = require('./base');
+let Characteristic;
+
+const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 const emitter = require('../lib/emitter');
 
-module.exports = class ResetSwitch extends Accessory
+module.exports = class ResetSwitch extends SwitchService
 {
-	constructor(config, log, homebridge, manager)
+	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		super(config, log, homebridge, manager);
+		Characteristic = manager.platform.api.hap.Characteristic;
+		
+		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		this.name = config.name || 'Reset LED Controller Presets';
 		this.ips = Object.keys(config.ips);
-
-		this.letters = '40';
-		/*
-		this.changeHandler = (function(state)
-		{
-			this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + state + '] ( ' + this.mac + ' )');
-
-			this.switchStateChanged(state, () => {});
-
-		}).bind(this);
-		*/
-	}
-
-	getAccessoryServices()
-	{
-		const switchService = new this.homebridge.Service.Switch(this.name);
-
-		switchService.getCharacteristic(this.homebridge.Characteristic.On)
-			.on('get', this.getState.bind(this))
-			.on('set', this.switchStateChanged.bind(this));
-
-		return [switchService];
-	}
-
-	sendCommand(command, callback)
-	{
-		this.executeCommand(this.ips, command, callback);
-	}
-
-	switchStateChanged(newState, callback)
-	{
-		const self = this;
-
-		emitter.emit('MagicHomeSynTexPresetTurnedOn', self.name);
-
-		var promiseArray = [];
-
-		Object.keys(self.config.ips).forEach((ip) => {
-
-			const newPromise = new Promise((resolve) => {
-
-				self.executeCommand(ip, ' -c ' + self.config.ips[ip], () => {
-
-					resolve();
-				});
-			});
-
-			promiseArray.push(newPromise);
-		});
-
-		Promise.all(promiseArray).then(() => {
-
-			setTimeout(() => {
-
-				self.sendCommand('--off', () => {
-
-					callback();
-				});
-				
-			}, 3000);
-
-		}).then(() => {
-
-			setTimeout(() => {
-
-				self.updateState();
-			}, 2000);
-		});
-	}
-
-	updateState()
-	{
-		this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(false);
+		
+		this.changeHandler = async (state) =>
+        {
+            if(state.power != null)
+            {
+				this.setState(state.power, () => {});
+            }
+        };
 	}
 
 	getState(callback)
@@ -89,8 +27,38 @@ module.exports = class ResetSwitch extends Accessory
 		callback(null, false);
 	}
 
-	getModelName()
+	setState(state, callback)
 	{
-		return 'Magic Home Reset Switch';
+		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name);
+
+		var promiseArray = [];
+
+		Object.keys(this.config.ips).forEach((ip) => {
+
+			const newPromise = new Promise((resolve) => {
+
+				this.executeCommand(ip, ' -c ' + this.config.ips[ip], () => resolve());
+			});
+
+			promiseArray.push(newPromise);
+		});
+
+		Promise.all(promiseArray).then(() => {
+
+			this.logger.log('update', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [true] ( ' + this.mac + ' )');
+
+			setTimeout(() => this.sendCommand('--off', () => callback()), 3000);
+
+		}).then(() => setTimeout(() => this.updateState(), 2000));
+	}
+
+	updateState()
+	{
+		this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(false);
+	}
+
+	sendCommand(command, callback)
+	{
+		this.executeCommand(this.ips, command, callback);
 	}
 }
