@@ -12,8 +12,8 @@ module.exports = class PresetSwitch extends SwitchService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
-		this.ips = Object.keys(deviceConfig.ips);
 		this.preset = deviceConfig.preset || 'seven_color_cross_fade';
+		this.speed = deviceConfig.speed || 40;
 		this.sceneValue = preset[this.preset];
 
 		if(this.sceneValue == null)
@@ -22,11 +22,9 @@ module.exports = class PresetSwitch extends SwitchService
 			this.sceneValue = 37;
 		}
 
-		this.speed = deviceConfig.speed || 40;
-		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
 		this.bindEmitter();
 
-		this.changeHandler = async (state, refreshDevices) =>
+		this.changeHandler = (state) =>
         {
             if(state.power != null)
             {

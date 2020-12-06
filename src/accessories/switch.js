@@ -11,6 +11,9 @@ module.exports = class Switch extends SwitchService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
 		this.deviceConfig = deviceConfig;
+		
+		this.ips = Object.keys(deviceConfig.ips);
+		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
     }
 
     executeCommand(address, command, callback)
