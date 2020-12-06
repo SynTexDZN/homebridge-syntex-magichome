@@ -30,7 +30,7 @@ module.exports = class SceneSwitch extends SwitchService
 
 	setState(state, callback)
 	{
-		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name);
+		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, this.ips);
 
 		var promiseArray = [];
 

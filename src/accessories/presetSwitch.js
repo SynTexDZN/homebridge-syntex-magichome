@@ -56,7 +56,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 		if(state == true)
 		{
-			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name);
+			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, this.ips);
 
 			this.executeCommand(this.ips, '--on', () => {
 
@@ -112,11 +112,24 @@ module.exports = class PresetSwitch extends SwitchService
 
 	bindEmitter()
 	{
-		emitter.on('SynTexMagicHomePresetTurnedOn', (presetName) => {
+		emitter.on('SynTexMagicHomePresetTurnedOn', (presetName, ips) => {
 
 			if(presetName != this.name)
 			{
-				this.updateState(false);
+				var updateState = false;
+
+				for(const ip of ips)
+				{
+					if(this.ips.includes(ip))
+					{
+						updateState = true;
+					}
+				}
+
+				if(updateState)
+				{
+					this.updateState(false);
+				}
 			}
 		})
 	}

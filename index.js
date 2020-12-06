@@ -20,8 +20,6 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
     {
 		super(config, api, pluginID, pluginName);
 		
-		this.config = config;
-	
 		this.devices = config['accessories'] || [];
 		this.debug = config['debug'] || false;
 		
