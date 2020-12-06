@@ -31,17 +31,11 @@ module.exports = class Accessory
 		const self = this;
 		const cmd = path.join(__dirname, '../flux_led.py ' + lightAgent.getAddress(address) + command);
 
-		if(self.homebridge.debug)
-		{
-			self.logger.debug(cmd);
-		}
+		self.logger.debug(cmd);
 
 		exec(cmd, (err, stdOut) => {
 
-			if(self.homebridge.debug)
-			{
-				self.logger.debug(stdOut);
-			}
+			self.logger.debug(stdOut);
 
 			if(err)
 			{

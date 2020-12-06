@@ -11,7 +11,6 @@ module.exports = class Switch extends SwitchService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
 		this.deviceConfig = deviceConfig;
-		this.debug = manager.platform.debug;
     }
 
     executeCommand(address, command, callback)
@@ -19,17 +18,11 @@ module.exports = class Switch extends SwitchService
 		const exec = cp.exec;
 		const cmd = path.join(__dirname, '../flux_led.py ' + lightAgent.getAddress(address) + command);
 
-		if(this.debug)
-		{
-			this.logger.debug(cmd);
-		}
+		this.logger.debug(cmd);
 		
 		exec(cmd, (err, stdOut) => {
 			
-			if(this.debug)
-			{
-				this.logger.debug(stdOut);
-			}
+			this.logger.debug(stdOut);
 			
 			if(err)
 			{

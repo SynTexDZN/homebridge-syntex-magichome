@@ -48,8 +48,6 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 			//serviceConfig.type = 'rgb';
 			var newLightConfig = this.deviceConfig;
 
-			newLightConfig.debug = this.platform.config.debug || false;
-
 			service = new LightBulb(newLightConfig, this.logger, { Service : this.platform.api.hap.Service, Characteristic : this.platform.api.hap.Characteristic }, this.manager.DeviceManager);
 		}
 

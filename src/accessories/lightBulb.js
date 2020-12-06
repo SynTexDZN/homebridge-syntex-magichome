@@ -99,10 +99,7 @@ module.exports = class LightBulb extends Accessory
 
 	logMessage(...args)
 	{
-		if(this.config.debug)
-		{
-			this.logger.debug(args);
-		}
+		this.logger.debug(args);
 	}
 
 	startTimer()

@@ -14,7 +14,6 @@ const LightAgent = class {
 		this.pollingInterval = 300 * 1000;
 		this.storage = null;
 		this.hasDiscoveryStarted = false;
-		this.isVerbose = false;
 		this.shouldDiscover = true;
 	}
 
@@ -44,11 +43,7 @@ const LightAgent = class {
 			}
 
 			logger.debug(' ** Fetched Lights from Cache **');
-
-			if(this.isVerbose)
-			{
-				logger.debug(devices);
-			}
+			logger.debug(devices);
 			
 			return devices;
 		});
@@ -57,11 +52,6 @@ const LightAgent = class {
 	setLogger(log)
 	{
 		logger = log;
-	}
-
-	setVerbose()
-	{
-		this.isVerbose = true;
 	}
 
 	setPersistPath(persistPath)

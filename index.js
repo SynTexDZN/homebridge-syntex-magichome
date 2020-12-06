@@ -21,7 +21,6 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
 		super(config, api, pluginID, pluginName);
 		
 		this.devices = config['accessories'] || [];
-		this.debug = config['debug'] || false;
 		
 		this.cacheDirectory = config['cache_directory'] || './SynTex';
 
@@ -38,11 +37,6 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
 					lightAgent.setPersistPath(homebridge.PersistPath);
 				}
 				
-				if(config && config.debug)
-				{
-					lightAgent.setVerbose();
-				}
-
 				const { exec } = require('child_process');
 						
 				exec('sudo chmod 777 -R /usr/local/lib/node_modules/' + pluginID + '/src/flux_led.py', (error, stdout, stderr) => {
