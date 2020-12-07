@@ -1,6 +1,7 @@
 let Characteristic, DeviceManager;
 
-const SwitchService = require('./switch');
+const { SwitchService } = require('homebridge-syntex-dynamic-platform');
+
 const emitter = require('../lib/emitter');
 
 module.exports = class SceneSwitch extends SwitchService
@@ -11,6 +12,9 @@ module.exports = class SceneSwitch extends SwitchService
 		DeviceManager = manager.DeviceManager;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+
+		this.ips = deviceConfig.ips;
+		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
 
 		this.changeHandler = (state) =>
         {
@@ -28,15 +32,15 @@ module.exports = class SceneSwitch extends SwitchService
 
 	setState(value, callback)
 	{
-		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, this.ips);
+		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 
 		var promiseArray = [];
 
-		Object.keys(this.deviceConfig.ips).forEach((ip) => {
+		Object.keys(this.ips).forEach((ip) => {
 
 			const newPromise = new Promise((resolve) => {
 
-				DeviceManager.executeCommand(ip, ' -c ' + this.deviceConfig.ips[ip], () => resolve());
+				DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
 			});
 
 			promiseArray.push(newPromise);
@@ -46,7 +50,7 @@ module.exports = class SceneSwitch extends SwitchService
 
 			if(this.shouldTurnOff)
 			{
-				setTimeout(() => DeviceManager.executeCommand(this.ips, '--off', () => {}), 3000);
+				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}), 3000);
 			}
 			
 			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [activated] ( ' + this.id + ' )');

@@ -13,36 +13,47 @@ module.exports = class DeviceManager
         storage = store(storagePath);
     }
 
-    getDevice(mac, service)
-    {
-        return new Promise(async (resolve) => {
+    getDevice(ip, callback)
+	{
+		this.executeCommand(ip, '-i', (error, stdout) => {
 
-            var found = false;
+			var settings = {
+				on: false,
+				color: { hue: 255, saturation: 100, brightness: 50 }
+			};
 
-            for(var i = 0; i < accessories.length; i++)
-            {
-                if(accessories[i].mac == mac && accessories[i].service == service)
-                {
-                    found = true;
+			var colors = stdout.match(/\(.*,.*,.*\)/g);
+			var power = stdout.match(/\] ON /g);
 
-                    resolve(accessories[i].value);
-                }
-            }
+			if(power && power.length > 0)
+			{
+				settings.on = true;
+			}
 
-            if(!found)
-            {
-                var accessory = {
-                    mac : mac,
-                    service : service,
-                    value : await readFS(mac, service)
-                };
+			if(colors && colors.length > 0)
+			{
+				// Remove last char )
+				var str = colors.toString().substring(0, colors.toString().length - 1);
+				// Remove First Char (
+				str = str.substring(1, str.length);
 
-                accessories.push(accessory);
+				const rgbColors = str.split(',').map((item) => {
 
-                resolve(accessory.value);
-            }
-        });
-    }
+					return item.trim()
+				});
+
+				var converted = convert.rgb.hsv(rgbColors);
+
+				settings.color = {
+					hue: converted[0],
+					saturation: converted[1],
+					brightness: converted[2]
+				};
+			}
+
+			callback(settings);
+		})
+	}
 
     setDevice(mac, service, value)
     {

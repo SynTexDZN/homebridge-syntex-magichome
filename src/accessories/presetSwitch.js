@@ -1,6 +1,7 @@
 let Characteristic, DeviceManager;
 
-const SwitchService = require('./switch');
+const { SwitchService } = require('homebridge-syntex-dynamic-platform');
+
 const preset = require('../presets');
 const emitter = require('../lib/emitter');
 
@@ -13,6 +14,8 @@ module.exports = class PresetSwitch extends SwitchService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
+		this.ips = deviceConfig.ips;
+		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
 		this.preset = deviceConfig.preset || 'seven_color_cross_fade';
 		this.speed = deviceConfig.speed || 40;
 		this.sceneValue = preset[this.preset];
@@ -55,11 +58,11 @@ module.exports = class PresetSwitch extends SwitchService
 
 		if(value == true)
 		{
-			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, this.ips);
+			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 
-			DeviceManager.executeCommand(this.ips, '--on', () => {
+			DeviceManager.executeCommand(Object.keys(this.ips), '--on', () => {
 
-				setTimeout(() => DeviceManager.executeCommand(this.ips, '-p ' + this.sceneValue + ' ' + this.speed, () => {
+				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '-p ' + this.sceneValue + ' ' + this.speed, () => {
 
 					super.setState(true, () => {
 
@@ -75,11 +78,11 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			var promiseArray = [];
 
-			Object.keys(this.deviceConfig.ips).forEach((ip) => {
+			Object.keys(this.ips).forEach((ip) => {
 
 				const newPromise = new Promise((resolve) => {
 
-					DeviceManager.executeCommand(ip, ' -c ' + this.deviceConfig.ips[ip], () => resolve());
+					DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
 				});
 
 				promiseArray.push(newPromise);
@@ -89,7 +92,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				if(this.shouldTurnOff)
 				{
-					setTimeout(() => DeviceManager.executeCommand(this.ips, '--off', () => {}, 1500));
+					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}, 1500));
 				}
 				
 				super.setState(false, () => {
@@ -121,7 +124,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				for(const ip of ips)
 				{
-					if(this.ips.includes(ip))
+					if(Object.keys(this.ips).includes(ip))
 					{
 						updateState = true;
 					}

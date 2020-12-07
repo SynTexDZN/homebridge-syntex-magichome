@@ -3,9 +3,6 @@ let Characteristic, DeviceManager;
 const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
 const convert = require('color-convert');
-const lightAgent = require('../lib/lightAgent');
-const cp = require('child_process');
-const path = require('path');
 const emitter = require('../lib/emitter');
 
 module.exports = class LightBulb extends ColoredBulbService
@@ -74,7 +71,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		this.logger.debug('Polling Light ' + this.ip);
 
-		this.getDeviceState((settings) => {
+		DeviceManager.getDevice(this.ip, (settings) => {
 
 			this.power = settings.on;
 			this.hue = settings.color.hue;
@@ -95,48 +92,6 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			this.startTimer();
 		});
-	}
-
-	getDeviceState(callback)
-	{
-		DeviceManager.executeCommand(this.ip, '-i', (error, stdout) => {
-
-			var settings = {
-				on: false,
-				color: { hue: 255, saturation: 100, brightness: 50 }
-			};
-
-			var colors = stdout.match(/\(.*,.*,.*\)/g);
-			var power = stdout.match(/\] ON /g);
-
-			if(power && power.length > 0)
-			{
-				settings.on = true;
-			}
-
-			if(colors && colors.length > 0)
-			{
-				// Remove last char )
-				var str = colors.toString().substring(0, colors.toString().length - 1);
-				// Remove First Char (
-				str = str.substring(1, str.length);
-
-				const rgbColors = str.split(',').map((item) => {
-
-					return item.trim()
-				});
-
-				var converted = convert.rgb.hsv(rgbColors);
-
-				settings.color = {
-					hue: converted[0],
-					saturation: converted[1],
-					brightness: converted[2]
-				};
-			}
-
-			callback(settings);
-		})
 	}
 
 	getState(callback)
