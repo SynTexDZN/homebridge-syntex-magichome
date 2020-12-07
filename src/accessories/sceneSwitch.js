@@ -1,4 +1,4 @@
-let Characteristic;
+let Characteristic, DeviceManager;
 
 const SwitchService = require('./switch');
 const emitter = require('../lib/emitter');
@@ -8,6 +8,7 @@ module.exports = class SceneSwitch extends SwitchService
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
+		DeviceManager = manager.DeviceManager;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
@@ -25,7 +26,7 @@ module.exports = class SceneSwitch extends SwitchService
 		callback(null, false);
 	}
 
-	setState(state, callback)
+	setState(value, callback)
 	{
 		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, this.ips);
 
@@ -35,7 +36,7 @@ module.exports = class SceneSwitch extends SwitchService
 
 			const newPromise = new Promise((resolve) => {
 
-				this.executeCommand(ip, ' -c ' + this.deviceConfig.ips[ip], () => resolve());
+				DeviceManager.executeCommand(ip, ' -c ' + this.deviceConfig.ips[ip], () => resolve());
 			});
 
 			promiseArray.push(newPromise);
@@ -45,7 +46,7 @@ module.exports = class SceneSwitch extends SwitchService
 
 			if(this.shouldTurnOff)
 			{
-				setTimeout(() => this.executeCommand(this.ips, '--off', () => {}), 3000);
+				setTimeout(() => DeviceManager.executeCommand(this.ips, '--off', () => {}), 3000);
 			}
 			
 			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [activated] ( ' + this.id + ' )');

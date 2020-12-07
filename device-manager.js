@@ -1,3 +1,7 @@
+const lightAgent = require('./src/lib/lightAgent');
+const cp = require('child_process');
+const path = require('path');
+
 const store = require('json-fs-store');
 var logger, storage, accessories = [];
 
@@ -66,6 +70,29 @@ module.exports = class DeviceManager
             resolve();
         });
     }
+
+    executeCommand(address, command, callback)
+	{
+		const exec = cp.exec;
+		const cmd = path.join(__dirname, './src/flux_led.py ' + lightAgent.getAddress(address) + command);
+
+		logger.debug(cmd);
+		
+		exec(cmd, (err, stdOut) => {
+			
+			logger.debug(stdOut);
+			
+			if(err)
+			{
+				logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py] ' + err);
+			}
+
+			if(callback)
+			{
+				callback(err, stdOut);
+			}
+		});
+	}
 }
 
 function readFS(mac, service)

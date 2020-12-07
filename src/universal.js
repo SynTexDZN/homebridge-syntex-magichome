@@ -46,9 +46,9 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 		else if(accessoryType == 'light')
 		{
 			//serviceConfig.type = 'rgb';
-			var newLightConfig = this.deviceConfig;
+			//var newLightConfig = this.deviceConfig;
 
-			service = new LightBulb(newLightConfig, this.logger, { Service : this.platform.api.hap.Service, Characteristic : this.platform.api.hap.Characteristic }, this.manager.DeviceManager);
+			service = new LightBulb(this.homebridgeAccessory, this.deviceConfig, serviceConfig, this.manager);
 		}
 
 		if(service != null)

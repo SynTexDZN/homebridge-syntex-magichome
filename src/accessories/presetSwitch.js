@@ -1,4 +1,4 @@
-let Characteristic;
+let Characteristic, DeviceManager;
 
 const SwitchService = require('./switch');
 const preset = require('../presets');
@@ -9,6 +9,7 @@ module.exports = class PresetSwitch extends SwitchService
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
+		DeviceManager = manager.DeviceManager;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 		
@@ -35,30 +36,30 @@ module.exports = class PresetSwitch extends SwitchService
 
 	getState(callback)
     {
-        super.getState((state) => {
+        super.getState((value) => {
 
-            if(state != null)
+            if(value != null)
             {
-				this.power = state;
+				this.power = value;
 				
 				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
 			}
 				
-			callback(null, state != null ? state : false);
+			callback(null, value != null ? value : false);
         });
 	}
 
-	setState(state, callback)
+	setState(value, callback)
 	{
-		this.power = state;
+		this.power = value;
 
-		if(state == true)
+		if(value == true)
 		{
 			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, this.ips);
 
-			this.executeCommand(this.ips, '--on', () => {
+			DeviceManager.executeCommand(this.ips, '--on', () => {
 
-				setTimeout(() => this.executeCommand(this.ips, '-p ' + this.sceneValue + ' ' + this.speed, () => {
+				setTimeout(() => DeviceManager.executeCommand(this.ips, '-p ' + this.sceneValue + ' ' + this.speed, () => {
 
 					super.setState(true, () => {
 
@@ -78,7 +79,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				const newPromise = new Promise((resolve) => {
 
-					this.executeCommand(ip, ' -c ' + this.deviceConfig.ips[ip], () => resolve());
+					DeviceManager.executeCommand(ip, ' -c ' + this.deviceConfig.ips[ip], () => resolve());
 				});
 
 				promiseArray.push(newPromise);
@@ -88,7 +89,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				if(this.shouldTurnOff)
 				{
-					setTimeout(() => this.executeCommand(this.ips, '--off', () => {}, 1500));
+					setTimeout(() => DeviceManager.executeCommand(this.ips, '--off', () => {}, 1500));
 				}
 				
 				super.setState(false, () => {
@@ -101,9 +102,11 @@ module.exports = class PresetSwitch extends SwitchService
 		}
 	}
 
-	updateState(state)
+	updateState(value)
 	{
-		this.power = state;
+		this.power = value;
+
+		super.setState(this.power, () => {});
 
 		this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
 	}
