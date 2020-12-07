@@ -110,12 +110,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setState(value, callback)
 	{
-		var delay = false;
-
-		if(!this.power)
-		{
-			delay = true;
-		}
+		var delay = (!this.power);
 
 		this.power = value;
 

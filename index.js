@@ -104,7 +104,7 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
 					var state = accessory.homebridgeAccessory.context.data[accessory.service[1].letters];
 
 					response.write(state != null ? JSON.stringify(state) : 'Error');
-			}
+				}
 			}
 			else
 			{
