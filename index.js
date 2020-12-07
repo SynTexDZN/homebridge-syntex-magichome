@@ -22,13 +22,11 @@ class SynTexMagicHomePlatform extends SynTexDynamicPlatform
 		
 		this.devices = config['accessories'] || [];
 		
-		this.cacheDirectory = config['cache_directory'] || './SynTex';
-
 		if(this.api && this.logger)
         {
             this.api.on('didFinishLaunching', () => {
 
-                DeviceManager = new DeviceManager(this.logger, this.cacheDirectory);
+                DeviceManager = new DeviceManager(this.logger);
 
 				lightAgent.setLogger(this.logger);
 

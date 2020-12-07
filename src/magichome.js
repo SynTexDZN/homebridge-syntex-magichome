@@ -49,17 +49,3 @@ function typeToLetter(type)
 {
     return letters[types.indexOf(type.toLowerCase())];
 }
-
-function MagicHomeGlobals() {}
-
-MagicHomeGlobals.setHomebridge = function(homebridgeRef)
-{
-  	homebridge = homebridgeRef;
-};
-
-module.exports = {
-	platform: MagicHome,
-	globals: MagicHomeGlobals,
-	pluginID: pluginID,
-	pluginName: pluginName
-};

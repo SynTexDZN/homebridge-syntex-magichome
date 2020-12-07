@@ -22,21 +22,19 @@ Can cycle through colors, sync all lights to strobe/fade.
 **Info:** If the directory for the storage can't be created you have to do it by yourself and give it full write permissions!
 - `sudo chown -R homebridge ./SynTex/` ( *permissions only for homebridge* )
 - `sudo chmod 777 -R homebridge ./SynTex/` ( *permissions for many processes* )
-- For the mac address you can use a `random unique text`
-- Every device needs these configurations: `mac`, `name`, `type`, `ip` and `services`
+- For the id you can use a `random unique text`
+- Every device needs these configurations: `id`, `name`, `type`, `ip` and `services`
 
 ```
 "platforms": [
     {
         "platform": "SynTexMagicHome",
-        "cache_directory": "./SynTex/devices",
         "log_directory": "./SynTex/log",
         "port": 1712,
         "debug": false,
-        "disableDiscovery": true,
         "accessories": [
             {
-                "mac": "light1",
+                "id": "light1",
                 "name": "Kitchen LED Strip",
                 "type": "light",
                 "ip": "DC4F22C5D4E1",
@@ -45,7 +43,7 @@ Can cycle through colors, sync all lights to strobe/fade.
                 "timeout": 10000
             },
             {
-                "mac": "light2",
+                "id": "light2",
                 "name": "Living Room LED Strip",
                 "type": "light",
                 "ip": "192.168.1.112",
@@ -54,7 +52,7 @@ Can cycle through colors, sync all lights to strobe/fade.
                 "timeout": 0
             },
             {
-                "mac": "pswitch1",
+                "id": "pswitch1",
                 "name": "Kitchen Color Strobe Flash (Party)",
                 "type": "preset-switch",
                 "ips": {
@@ -64,7 +62,7 @@ Can cycle through colors, sync all lights to strobe/fade.
                 "speed": 60
             },
             {
-                "mac": "pswitch2",
+                "id": "pswitch2",
                 "name": "All Lights Cross Fade (Soothing)",
                 "type": "preset-switch",
                 "ips": {
@@ -76,7 +74,7 @@ Can cycle through colors, sync all lights to strobe/fade.
                 "shouldTurnOff": true
             },
             {
-                "mac": "rswitch1",
+                "id": "rswitch1",
                 "name": "Reset All Switches to Default",
                 "type": "reset-switch",
                 "ips": {

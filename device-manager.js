@@ -1,16 +1,15 @@
 const lightAgent = require('./src/lib/lightAgent');
 const cp = require('child_process');
 const path = require('path');
+const convert = require('color-convert');
 
-const store = require('json-fs-store');
-var logger, storage, accessories = [];
+var accessories = [];
 
 module.exports = class DeviceManager
 {
-    constructor(log, storagePath)
+    constructor(log)
     {
-        logger = log;
-        storage = store(storagePath);
+        this.logger = log;
     }
 
     getDevice(ip, callback)
@@ -87,15 +86,15 @@ module.exports = class DeviceManager
 		const exec = cp.exec;
 		const cmd = path.join(__dirname, './src/flux_led.py ' + lightAgent.getAddress(address) + command);
 
-		logger.debug(cmd);
+		this.logger.debug(cmd);
 		
 		exec(cmd, (err, stdOut) => {
 			
-			logger.debug(stdOut);
+			this.logger.debug(stdOut);
 			
 			if(err)
 			{
-				logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py] ' + err);
+				this.logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py] ' + err);
 			}
 
 			if(callback)
@@ -104,36 +103,4 @@ module.exports = class DeviceManager
 			}
 		});
 	}
-}
-
-function readFS(mac, service)
-{
-    return new Promise(resolve => {
-
-        storage.load(mac + ':' + service, (err, device) => {    
-
-            resolve(device && !err ? device.value : null);
-        });
-    });
-}
-
-function writeFS(mac, service, value)
-{
-    return new Promise(resolve => {
-        
-        var device = {
-            id: mac + ':' + service,
-            value: value
-        };
-        
-        storage.add(device, (err) => {
-
-            if(err)
-            {
-                logger.log('error', 'bridge', 'Bridge', mac + '.json konnte nicht aktualisiert werden! ' + err);
-            }
-
-            resolve(err ? false : true);
-        });
-    });
 }
