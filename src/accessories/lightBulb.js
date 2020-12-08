@@ -104,10 +104,10 @@ module.exports = class LightBulb extends ColoredBulbService
 				changed = true;
 			}
 			
-			super.setState(this.power, () => {});
-			super.setHue(this.hue, () => {});
-			super.setSaturation(this.saturation, () => {});
-			super.setBrightness(this.brightness, () => {});
+			super.setState(state.power, () => {});
+			super.setHue(state.hue, () => {});
+			super.setSaturation(state.saturation, () => {});
+			super.setBrightness(state.brightness, () => {});
 
 			if(changed)
 			{
