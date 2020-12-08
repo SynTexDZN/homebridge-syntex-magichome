@@ -7,7 +7,7 @@ const SynTexUniversalAccessory = require('./src/universal');
 const pluginID = 'homebridge-syntex-magichome';
 const pluginName = 'SynTexMagicHome';
 
-var homebridge, restart = true;
+var restart = true;
 
 module.exports = (homebridge) => {
 
@@ -90,6 +90,16 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 					}
 
 					response.write(state != null ? 'Success' : 'Error');
+				}
+				else if(urlParams.remove != null)
+				{
+					if(urlParams.remove == 'CONFIRM')
+					{
+						this.removeAccessory(accessory);
+					}
+
+					response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
+					response.end();
 				}
 				else
 				{
