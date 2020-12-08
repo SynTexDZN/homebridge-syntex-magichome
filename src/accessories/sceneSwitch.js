@@ -17,12 +17,12 @@ module.exports = class SceneSwitch extends SwitchService
 		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
 
 		this.changeHandler = (state) =>
-        {
-            if(state.power != null)
-            {
+		{
+			if(state.power != null)
+			{
 				this.setState(state.power, () => {});
-            }
-        };
+			}
+		};
 	}
 
 	getState(callback)

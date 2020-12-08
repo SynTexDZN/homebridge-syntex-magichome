@@ -22,30 +22,30 @@ module.exports = class LightBulb extends ColoredBulbService
 		this.updateState();
 
 		this.changeHandler = (state, refreshDevices) =>
-        {
+		{
 			if(state.hue != null)
-            {
+			{
 				this.setHue(state.hue, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).updateValue(this.hue);
 			}
 
 			if(state.saturation != null)
-            {
+			{
 				this.setSaturation(state.saturation, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
 			}
 
 			if(state.brightness != null)
-            {
+			{
 				this.setBrightness(state.brightness, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
 			}
 
 			if(state.power != null)
-            {
+			{
 				this.setState(state.power, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
@@ -91,29 +91,29 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		super.getState((value) => {
 
-            if(value != null)
-            {
-                this.power = value;
+			if(value != null)
+			{
+				this.power = value;
 
-                callback(null, this.power);
-            }
-            else
-            {
-                DeviceManager.getDevice(this.id).then((state) => {
+				callback(null, this.power);
+			}
+			else
+			{
+				DeviceManager.getDevice(this.id).then((state) => {
 
-                    if(state != null)
-                    {
-                        this.power = state.power;
+					if(state != null)
+					{
+						this.power = state.power;
 
-                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-                    
-                        super.setValue('state', this.power);
-                    }
-                    
-                    callback(null, state != null && state.power != null ? state.power : false);
-                });
-            }
-        });
+						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+					
+						super.setValue('state', this.power);
+					}
+					
+					callback(null, state != null && state.power != null ? state.power : false);
+				});
+			}
+		});
 	}
 
 	setState(value, callback)
@@ -141,29 +141,29 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		super.getHue((value) => {
 
-            if(value != null)
-            {
-                this.hue = value;
+			if(value != null)
+			{
+				this.hue = value;
 
-                callback(null, this.hue);
-            }
-            else
-            {
-                DeviceManager.getDevice(this.id).then((state) => {
+				callback(null, this.hue);
+			}
+			else
+			{
+				DeviceManager.getDevice(this.id).then((state) => {
 
-                    if(state != null)
-                    {
-                        this.hue = state.hue;
+					if(state != null)
+					{
+						this.hue = state.hue;
 
-                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-                    
-                        super.setValue('state', this.hue);
-                    }
-                    
-                    callback(null, state != null && state.hue != null ? state.hue : 0);
-                });
-            }
-        });
+						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+					
+						super.setValue('state', this.hue);
+					}
+					
+					callback(null, state != null && state.hue != null ? state.hue : 0);
+				});
+			}
+		});
 	}
 
 	setHue(value, callback)
@@ -180,29 +180,29 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		super.getSaturation((value) => {
 
-            if(value != null)
-            {
-                this.saturation = value;
+			if(value != null)
+			{
+				this.saturation = value;
 
-                callback(null, this.saturation);
-            }
-            else
-            {
-                DeviceManager.getDevice(this.id).then((state) => {
+				callback(null, this.saturation);
+			}
+			else
+			{
+				DeviceManager.getDevice(this.id).then((state) => {
 
-                    if(state != null)
-                    {
-                        this.saturation = state.saturation;
+					if(state != null)
+					{
+						this.saturation = state.saturation;
 
-                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-                    
-                        super.setValue('state', this.saturation);
-                    }
-                    
-                    callback(null, state != null && state.saturation != null ? state.saturation : 100);
-                });
-            }
-        });
+						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+					
+						super.setValue('state', this.saturation);
+					}
+					
+					callback(null, state != null && state.saturation != null ? state.saturation : 100);
+				});
+			}
+		});
 	}
 
 	setSaturation(value, callback)
@@ -219,29 +219,29 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		super.getBrightness((value) => {
 
-            if(value != null)
-            {
-                this.brightness = value;
+			if(value != null)
+			{
+				this.brightness = value;
 
-                callback(null, this.brightness);
-            }
-            else
-            {
-                DeviceManager.getDevice(this.id).then((state) => {
+				callback(null, this.brightness);
+			}
+			else
+			{
+				DeviceManager.getDevice(this.id).then((state) => {
 
-                    if(state != null)
-                    {
-                        this.brightness = state.brightness;
+					if(state != null)
+					{
+						this.brightness = state.brightness;
 
-                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-                    
-                        super.setValue('state', this.brightness);
-                    }
-                    
-                    callback(null, state != null && state.brightness != null ? state.brightness : 50);
-                });
-            }
-        });
+						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+					
+						super.setValue('state', this.brightness);
+					}
+					
+					callback(null, state != null && state.brightness != null ? state.brightness : 50);
+				});
+			}
+		});
 	}
 
 	setBrightness(value, callback)

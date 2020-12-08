@@ -7,14 +7,14 @@ var accessoryType;
 
 module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 {
-    constructor(homebridgeAccessory, deviceConfig, manager)
-    {
+	constructor(homebridgeAccessory, deviceConfig, manager)
+	{
 		accessoryType = deviceConfig.type;
 
 		super(homebridgeAccessory, deviceConfig, manager);
-    }
-    
-    setService(config, subtype)
+	}
+	
+	setService(config, subtype)
 	{
 		var name = this.name;
 		var type = config;
@@ -57,8 +57,8 @@ module.exports = class SynTexUniversalAccessory extends UniversalAccessory
 		}
 	}
 	
-    getModel()
-    {
-        return 'Magic Home ' + (accessoryType == 'light' ? 'Light Bulb' : accessoryType == 'preset-switch' ? 'Preset Switch' : accessoryType == 'scene-switch' ? 'Scene Switch' : 'Accessory');
-    }
+	getModel()
+	{
+		return 'Magic Home ' + (accessoryType == 'light' ? 'Light Bulb' : accessoryType == 'preset-switch' ? 'Preset Switch' : accessoryType == 'scene-switch' ? 'Scene Switch' : 'Accessory');
+	}
 };

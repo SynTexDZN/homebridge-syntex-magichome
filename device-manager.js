@@ -4,12 +4,12 @@ const convert = require('color-convert');
 
 module.exports = class DeviceManager
 {
-    constructor(log)
-    {
-        this.logger = log;
-    }
+	constructor(log)
+	{
+		this.logger = log;
+	}
 
-    getDevice(ip, callback)
+	getDevice(ip, callback)
 	{
 		this.executeCommand(ip, '-i', (error, stdout) => {
 
@@ -51,7 +51,7 @@ module.exports = class DeviceManager
 		})
 	}
 
-    executeCommand(address, command, callback)
+	executeCommand(address, command, callback)
 	{
 		const exec = cp.exec;
 		const cmd = path.join(__dirname, './src/flux_led.py ' + address + ' ' + command);

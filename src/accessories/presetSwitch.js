@@ -29,27 +29,27 @@ module.exports = class PresetSwitch extends SwitchService
 		this.bindEmitter();
 
 		this.changeHandler = (state) =>
-        {
-            if(state.power != null)
-            {
+		{
+			if(state.power != null)
+			{
 				this.setState(state.power, () => {});
-            }
-        };
+			}
+		};
 	}
 
 	getState(callback)
-    {
-        super.getState((value) => {
+	{
+		super.getState((value) => {
 
-            if(value != null)
-            {
+			if(value != null)
+			{
 				this.power = value;
 				
 				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
 			}
 				
 			callback(null, value != null ? value : false);
-        });
+		});
 	}
 
 	setState(value, callback)
