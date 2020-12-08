@@ -102,7 +102,16 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 				}
 				else
 				{
-					var state = accessory.homebridgeAccessory.context.data[accessory.service[1].letters];
+					var state = null;
+					
+					if(accessory.homebridgeAccessory != null
+						&& accessory.homebridgeAccessory.context != null
+						&& accessory.homebridgeAccessory.context.data != null
+						&& accessory.service[1] != null
+						&& accessory.service[1].letters != null)
+					{
+						state = accessory.homebridgeAccessory.context.data[accessory.service[1].letters];
+					}
 
 					response.write(state != null ? JSON.stringify(state) : 'Error');
 				}
@@ -122,9 +131,9 @@ class SynTexMagicHomePlatform extends DynamicPlatform
             for(const accessory of this.accessories)
             {
                 accessories.push({
-                    mac: accessory[1].id,
-                    name: accessory[1].name,
-                    services: accessory[1].services,
+                    id: accessory[1].id,
+					name: accessory[1].name,
+					services: accessory[1].services,
                     version: '99.99.99',
                     plugin: pluginName
                 });

@@ -1,4 +1,3 @@
-const lightAgent = require('./src/lib/lightAgent');
 const cp = require('child_process');
 const path = require('path');
 const convert = require('color-convert');
