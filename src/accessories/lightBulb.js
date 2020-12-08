@@ -66,22 +66,53 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		DeviceManager.getDevice(this.ip, (settings) => {
 
-			this.power = settings.power;
-			this.hue = settings.hue;
-			this.saturation = settings.saturation;
-			this.brightness = settings.brightness;
+			var changed = false;
 
+			if(this.power != value.power)
+			{
+				this.power = settings.power;
+
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
+
+				changed = true;
+			}
+
+			if(this.hue != value.hue)
+			{
+				this.hue = settings.hue;
+
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(this.hue);
+
+				changed = true;
+			}
+
+			if(this.saturation != value.saturation)
+			{
+				this.saturation = settings.saturation;
+
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
+
+				changed = true;
+			}
+
+			if(this.brightness != value.brightness)
+			{
+				this.brightness = settings.brightness;
+
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+
+				changed = true;
+			}
+			
 			super.setState(this.power, () => {});
 			super.setHue(this.hue, () => {});
 			super.setSaturation(this.saturation, () => {});
 			super.setBrightness(this.brightness, () => {});
 
-			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
-			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(this.hue);
-			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
-			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
-
-			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+			if(changed)
+			{
+				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+			}
 
 			this.startTimer();
 		});
