@@ -115,6 +115,25 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 			response.end();
 		});
 
+		this.WebServer.addPage('/accessories', (response) => {
+    
+            var accessories = [];
+
+            for(const accessory of this.accessories)
+            {
+                accessories.push({
+                    mac: accessory[1].id,
+                    name: accessory[1].name,
+                    services: accessory[1].services,
+                    version: '99.99.99',
+                    plugin: pluginName
+                });
+            }
+    
+            response.write(JSON.stringify(accessories));
+            response.end();
+        });
+
 		this.WebServer.addPage('/serverside/version', (response) => {
 
 			response.write(require('../package.json').version);
