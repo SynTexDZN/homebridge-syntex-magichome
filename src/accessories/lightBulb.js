@@ -21,40 +21,32 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		setTimeout(() => this.updateState(), 3000);
 
-		this.changeHandler = async (state, refreshDevices) =>
+		this.changeHandler = (state, refreshDevices) =>
         {
 			if(state.hue != null)
             {
-				this.hue = state.hue;
-
-				this.setHue(this.hue, () => {});
+				this.setHue(state.hue, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).updateValue(this.hue);
 			}
 
 			if(state.saturation != null)
             {
-				this.saturation = state.saturation;
-
-				this.setSaturation(this.saturation, () => {});
+				this.setSaturation(state.saturation, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
 			}
 
 			if(state.brightness != null)
             {
-				this.brightness = state.brightness;
-
-				this.setBrightness(this.brightness, () => {});
+				this.setBrightness(state.brightness, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
 			}
 
 			if(state.power != null)
             {
-				this.power = state.power;
-
-				this.setState(this.power, () => {});
+				this.setState(state.power, () => {});
 
 				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
 			}
@@ -74,10 +66,10 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		DeviceManager.getDevice(this.ip, (settings) => {
 
-			this.power = settings.on;
-			this.hue = settings.color.hue;
-			this.saturation = settings.color.saturation;
-			this.brightness = settings.color.brightness;
+			this.power = settings.power;
+			this.hue = settings.hue;
+			this.saturation = settings.saturation;
+			this.brightness = settings.brightness;
 
 			super.setState(this.power, () => {});
 			super.setHue(this.hue, () => {});

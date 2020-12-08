@@ -3,8 +3,6 @@ const cp = require('child_process');
 const path = require('path');
 const convert = require('color-convert');
 
-var accessories = [];
-
 module.exports = class DeviceManager
 {
     constructor(log)
@@ -17,8 +15,10 @@ module.exports = class DeviceManager
 		this.executeCommand(ip, '-i', (error, stdout) => {
 
 			var settings = {
-				on: false,
-				color: { hue: 255, saturation: 100, brightness: 50 }
+				power: false,
+				hue: 0,
+				saturation: 100,
+				brightness: 50
 			};
 
 			var colors = stdout.match(/\(.*,.*,.*\)/g);
@@ -43,43 +43,14 @@ module.exports = class DeviceManager
 
 				var converted = convert.rgb.hsv(rgbColors);
 
-				settings.color = {
-					hue: converted[0],
-					saturation: converted[1],
-					brightness: converted[2]
-				};
+				settings.hue = converted[0];
+				settings.saturation = converted[1];
+				settings.brightness = converted[2];
 			}
 
 			callback(settings);
 		})
 	}
-
-    setDevice(mac, service, value)
-    {
-        return new Promise(async (resolve) => {
-
-            var found = false;
-
-            for(var i = 0; i < accessories.length; i++)
-            {
-                if(accessories[i].mac == mac && accessories[i].service == service)
-                {
-                    accessories[i].value = value;
-
-                    found = true;
-                }
-            }
-
-            if(!found)
-            {
-                accessories.push({ mac : mac, service : service, value : value });
-            }
-
-            await writeFS(mac, service, value);
-
-            resolve();
-        });
-    }
 
     executeCommand(address, command, callback)
 	{
