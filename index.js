@@ -99,7 +99,6 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 					}
 
 					response.write(urlParams.remove == 'CONFIRM' ? 'Success' : 'Error');
-					response.end();
 				}
 				else
 				{
