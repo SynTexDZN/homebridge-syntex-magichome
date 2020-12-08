@@ -76,12 +76,12 @@ module.exports = class LightBulb extends ColoredBulbService
 			super.setSaturation(this.saturation, () => {});
 			super.setBrightness(this.brightness, () => {});
 
-			this.logger.debug('Updating Device ' + this.ip + ' ' + this.hue + ' ' + this.saturation + ' ' + this.brightness + ' ' + this.power);
-
 			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
 			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(this.hue);
 			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
 			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+
+			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 
 			this.startTimer();
 		});
@@ -94,6 +94,8 @@ module.exports = class LightBulb extends ColoredBulbService
 			if(value != null)
 			{
 				this.power = value;
+
+				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 
 				callback(null, this.power);
 			}
@@ -154,8 +156,6 @@ module.exports = class LightBulb extends ColoredBulbService
 					if(state != null)
 					{
 						this.hue = state.hue;
-
-						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 					
 						super.setValue('state', this.hue);
 					}
@@ -194,8 +194,6 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.saturation = state.saturation;
 
-						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-					
 						super.setValue('state', this.saturation);
 					}
 					
@@ -233,8 +231,6 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.brightness = state.brightness;
 
-						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-					
 						super.setValue('state', this.brightness);
 					}
 					

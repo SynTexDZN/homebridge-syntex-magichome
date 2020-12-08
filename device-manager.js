@@ -25,7 +25,7 @@ module.exports = class DeviceManager
 
 			if(power && power.length > 0)
 			{
-				settings.on = true;
+				settings.power = true;
 			}
 
 			if(colors && colors.length > 0)

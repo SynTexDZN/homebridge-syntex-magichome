@@ -44,12 +44,10 @@ module.exports = class PresetSwitch extends SwitchService
 			if(value != null)
 			{
 				this.power = value;
-				
-				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + this.power + '] ( ' + this.id + ' )');
 			}
 				
 			callback(null, value != null ? value : false);
-		});
+		}, true);
 	}
 
 	setState(value, callback)
@@ -64,12 +62,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '-p ' + this.sceneValue + ' ' + this.speed, () => {
 
-					super.setState(true, () => {
-
-						this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
-					
-						callback();
-					});
+					super.setState(true, () => callback(), true);
 
 				}), 1500);
 			});
@@ -95,12 +88,7 @@ module.exports = class PresetSwitch extends SwitchService
 					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}, 1500));
 				}
 				
-				super.setState(false, () => {
-
-					this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
-				
-					callback();
-				});
+				super.setState(false, () => callback(), true);
 			});
 		}
 	}
@@ -109,7 +97,7 @@ module.exports = class PresetSwitch extends SwitchService
 	{
 		this.power = value;
 
-		super.setState(this.power, () => {});
+		super.setState(this.power, () => {}, true);
 
 		this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
 	}
