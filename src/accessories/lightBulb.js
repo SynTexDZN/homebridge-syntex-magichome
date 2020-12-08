@@ -68,7 +68,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			var changed = false;
 
-			if(this.power != value.power)
+			if(this.power != settings.power)
 			{
 				this.power = settings.power;
 
@@ -77,7 +77,7 @@ module.exports = class LightBulb extends ColoredBulbService
 				changed = true;
 			}
 
-			if(this.hue != value.hue)
+			if(this.hue != settings.hue)
 			{
 				this.hue = settings.hue;
 
@@ -86,7 +86,7 @@ module.exports = class LightBulb extends ColoredBulbService
 				changed = true;
 			}
 
-			if(this.saturation != value.saturation)
+			if(this.saturation != settings.saturation)
 			{
 				this.saturation = settings.saturation;
 
@@ -95,7 +95,7 @@ module.exports = class LightBulb extends ColoredBulbService
 				changed = true;
 			}
 
-			if(this.brightness != value.brightness)
+			if(this.brightness != settings.brightness)
 			{
 				this.brightness = settings.brightness;
 
@@ -104,10 +104,10 @@ module.exports = class LightBulb extends ColoredBulbService
 				changed = true;
 			}
 			
-			super.setState(state.power, () => {});
-			super.setHue(state.hue, () => {});
-			super.setSaturation(state.saturation, () => {});
-			super.setBrightness(state.brightness, () => {});
+			super.setState(settings.power, () => {});
+			super.setHue(settings.hue, () => {});
+			super.setSaturation(settings.saturation, () => {});
+			super.setBrightness(settings.brightness, () => {});
 
 			if(changed)
 			{
