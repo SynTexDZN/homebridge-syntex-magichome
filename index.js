@@ -1,9 +1,9 @@
 let DeviceManager = require('./device-manager');
 
-const SynTexDynamicPlatform = require('homebridge-syntex-dynamic-platform').DynamicPlatform;
+const { DynamicPlatform } = require('homebridge-syntex-dynamic-platform');
+
 const SynTexUniversalAccessory = require('./src/universal');
 const lightAgent = require('./src/lib/lightAgent');
-const { access } = require('fs');
 
 const pluginID = 'homebridge-syntex-magichome';
 const pluginName = 'SynTexMagicHome';
@@ -15,7 +15,7 @@ module.exports = (homebridge) => {
     homebridge.registerPlatform(pluginID, pluginName, SynTexMagicHomePlatform, true);
 };
 
-class SynTexMagicHomePlatform extends SynTexDynamicPlatform
+class SynTexMagicHomePlatform extends DynamicPlatform
 {
     constructor(log, config, api)
     {
