@@ -1,145 +1,87 @@
+let Service, Characteristic, DeviceManager;
+
+const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
+
 const convert = require('color-convert');
-const Accessory = require('./base');
+const emitter = require('../emitter');
 
-module.exports = class LightBulb extends Accessory
+module.exports = class LightBulb extends ColoredBulbService
 {
-	constructor(config, log, homebridge, manager)
+	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		super(config, log, homebridge, manager);
+		Service = manager.platform.api.hap.Service;
+		Characteristic = manager.platform.api.hap.Characteristic;
+		DeviceManager = manager.DeviceManager;
 
-		this.name = config.name || 'LED Controller';
-		this.ip = config.ip;
-		this.color = { H: 0, S: 0, L: 100 };
-		this.purewhite = config.purewhite || false;
-		this.timeout = config.timeout != null ? config.timeout : 60000;
+		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		this.letters = '30';
+		this.ip = deviceConfig.ip;
+		this.purewhite = deviceConfig.purewhite || false;
+		this.timeout = deviceConfig.timeout || 60000;
 
-		this.DeviceManager.getDevice(this.mac, this.letters).then(function(state) {
+		this.updateState();
 
-			if(state == null)
-			{
-				this.logger.log('error', this.mac, this.letters, '[' + this.name + '] wurde nicht in der Storage gefunden! ( ' + this.mac + ' )');
-			}
-			else if(state != null)
-			{
-				this.logger.log('read', this.mac, this.letters, 'HomeKit Status für [' + this.name + '] ist [' + state + '] ( ' + this.mac + ' )');
-
-				this.isOn = state.power;
-				this.color = {
-					H : state.hue,
-					S : state.saturation,
-					L : state.brightness
-				};
-
-				this.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(this.isOn);
-				this.service[0].getCharacteristic(this.homebridge.Characteristic.Hue).updateValue(this.color.H);
-				this.service[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(this.color.S);
-				this.service[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(this.color.L);
-			}
-
-		}.bind(this));
-		
-		setTimeout(() => {
-
-			this.updateState();
-
-		}, 3000);
-
-		this.changeHandler = (function(state)
+		this.changeHandler = (state, refreshDevices) =>
 		{
-			var temp = this.isOn;
-
-			if(state.includes(':'))
+			if(state.hue != null)
 			{
-				var power = state.split(':')[0];
-				var hue = state.split(':')[1];
-				var saturation = state.split(':')[2];
-				var brightness = state.split(':')[3];
-				
-				this.color = { H: hue, S: saturation, L: brightness };
+				this.setHue(state.hue, () => {});
 
-				this.setPowerState(power == 'true' ? true : false, () => setTimeout(() => this.setToCurrentColor(), temp ? 0 : 1000));
+				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).updateValue(this.hue);
 			}
-			else
+
+			if(state.saturation != null)
 			{
-				this.setPowerState(state == 'true' ? true : false, () => {});
+				this.setSaturation(state.saturation, () => {});
+
+				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
 			}
-			
-		}.bind(this));
-	}
 
-	getAccessoryServices()
-	{
-		var lightbulbService = new this.homebridge.Service.Lightbulb(this.name);
+			if(state.brightness != null)
+			{
+				this.setBrightness(state.brightness, () => {});
 
-		lightbulbService.getCharacteristic(this.homebridge.Characteristic.On)
-			.on('get', this.getPowerState.bind(this))
-			.on('set', this.setPowerState.bind(this));
+				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+			}
 
-		lightbulbService.addCharacteristic(new this.homebridge.Characteristic.Hue())
-			.on('get', this.getHue.bind(this))
-			.on('set', this.setHue.bind(this));
+			if(state.power != null)
+			{
+				this.setState(state.power, () => {});
 
-		lightbulbService.addCharacteristic(new this.homebridge.Characteristic.Saturation())
-			.on('get', this.getSaturation.bind(this))
-			.on('set', this.setSaturation.bind(this));
-
-		lightbulbService.addCharacteristic(new this.homebridge.Characteristic.Brightness())
-			.on('get', this.getBrightness.bind(this))
-			.on('set', this.setBrightness.bind(this));
-
-		return [lightbulbService];
-	}
-
-	sendCommand(command, callback)
-	{
-		this.executeCommand(this.ip, command, callback);
-	}
-
-	getModelName()
-	{
-		return 'Magic Home Light Bulb';
-	}
-
-	logMessage(...args)
-	{
-		if(this.config.debug)
-		{
-			this.logger.debug(args);
-		}
+				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
+			}
+		};
 	}
 
 	startTimer()
 	{
-		if(this.timeout === 0) return;
+		if(this.timeout == 0) return;
 
-		setTimeout(() => {
-
-			this.updateState();
-
-		}, this.timeout);
+		setTimeout(() => this.updateState(), this.timeout);
 	}
 
 	updateState()
 	{
-		const self = this;
+		this.logger.debug('Polling Light ' + this.ip);
 
-		this.logMessage('Polling Light', this.ip);
+		DeviceManager.getDevice(this.ip, (settings) => {
 
-		self.getState((settings) => {
+			this.power = settings.power;
+			this.hue = settings.hue;
+			this.saturation = settings.saturation;
+			this.brightness = settings.brightness;
 
-			self.isOn = settings.on;
-			self.color = settings.color;
+			super.setState(this.power, () => {});
+			super.setHue(this.hue, () => {});
+			super.setSaturation(this.saturation, () => {});
+			super.setBrightness(this.brightness, () => {});
 
-			self.logMessage('Updating Device', self.ip, self.color, self.isOn);
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(this.hue);
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
 
-			self.service[0].getCharacteristic(this.homebridge.Characteristic.On).updateValue(self.isOn);
-			self.service[0].getCharacteristic(this.homebridge.Characteristic.Hue).updateValue(self.color.H);
-			self.service[0].getCharacteristic(this.homebridge.Characteristic.Saturation).updateValue(self.color.S);
-			self.service[0].getCharacteristic(this.homebridge.Characteristic.Brightness).updateValue(self.color.L);
-
-			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
+			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 
 			this.startTimer();
 		});
@@ -147,180 +89,184 @@ module.exports = class LightBulb extends Accessory
 
 	getState(callback)
 	{
-		this.sendCommand('-i', (error, stdout) => {
+		super.getState((value) => {
 
-			var settings = {
-				on: false,
-				color: { H: 255, S: 100, L: 50 }
-			};
-
-			var colors = stdout.match(/\(.*,.*,.*\)/g);
-			var isOn = stdout.match(/\] ON /g);
-
-			if(isOn && isOn.length > 0)
+			if(value != null)
 			{
-				settings.on = true;
-			}
+				this.power = value;
 
-			if(colors && colors.length > 0)
-			{
-				// Remove last char )
-				var str = colors.toString().substring(0, colors.toString().length - 1);
-				// Remove First Char (
-				str = str.substring(1, str.length);
+				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 
-				const rgbColors = str.split(',').map((item) => {
-
-					return item.trim()
-				});
-
-				var converted = convert.rgb.hsv(rgbColors);
-
-				settings.color = {
-					H: converted[0],
-					S: converted[1],
-					L: converted[2]
-				};
-			}
-
-			callback(settings);
-		})
-	}
-
-	getPowerState(callback)
-	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
-
-			callback(null, state != null ? (state.power || 0) : 0);
-	
-		}).catch(function(e) {
-	
-			this.logger.err(e);
-
-		}.bind(this));
-	}
-
-	setPowerState(value, callback)
-	{
-		const self = this;
-		var delay = false;
-
-		if(!this.isOn)
-		{
-			delay = true;
-		}
-
-		this.sendCommand(value ? '--on' : '--off', () => {
-
-			self.isOn = value;
-
-			this.logger.log('update', self.mac, self.letters, 'HomeKit Status für [' + self.name + '] geändert zu [' + self.isOn + ':' + self.color.H + ':' + self.color.S + ':' + self.color.L + '] ( ' + self.mac + ' )');
-
-			this.DeviceManager.setDevice(self.mac, self.letters, { power : self.isOn, hue : self.color.H, saturation : self.color.S, brightness : self.color.L});
-
-			if(delay)
-			{
-				setTimeout(() => self.setToCurrentColor(), 1000);
+				callback(null, this.power);
 			}
 			else
 			{
-				self.setToCurrentColor();
-			}
+				DeviceManager.getDevice(this.id).then((state) => {
 
-			callback();
+					if(state != null)
+					{
+						this.power = state.power;
+
+						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+					
+						super.setValue('state', this.power);
+					}
+					
+					callback(null, state != null && state.power != null ? state.power : false);
+				});
+			}
+		});
+	}
+
+	setState(value, callback)
+	{
+		var delay = (!this.power);
+
+		this.power = value;
+
+		DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', () => {
+
+			super.setState(value, () => {
+
+				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
+
+				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+
+				setTimeout(() => this.setToCurrentColor(), delay ? 1000 : 0);
+
+				callback();
+			});
 		});
 	}
 
 	getHue(callback)
 	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
+		super.getHue((value) => {
 
-			callback(null, state != null ? (state.hue || 0) : 0);
-	
-		}).catch(function(e) {
-	
-			this.logger.err(e);
+			if(value != null)
+			{
+				this.hue = value;
 
-		}.bind(this));
+				callback(null, this.hue);
+			}
+			else
+			{
+				DeviceManager.getDevice(this.id).then((state) => {
+
+					if(state != null)
+					{
+						this.hue = state.hue;
+					
+						super.setValue('state', this.hue);
+					}
+					
+					callback(null, state != null && state.hue != null ? state.hue : 0);
+				});
+			}
+		});
 	}
 
 	setHue(value, callback)
 	{
-		this.color.H = value;
-		
-		callback(null);
-	}
+		this.hue = value;
 
-	getBrightness(callback)
-	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
+		super.setHue(value, () => {
 
-			callback(null, state != null ? (state.brightness || 0) : 0);
-	
-		}).catch(function(e) {
-	
-			this.logger.err(e);
-
-		}.bind(this));
-	}
-
-	setBrightness(value, callback)
-	{
-		this.color.L = value;
-
-		callback(null);
+			callback();
+		});
 	}
 
 	getSaturation(callback)
 	{
-		this.DeviceManager.getDevice(this.mac, this.letters).then((state) => {
+		super.getSaturation((value) => {
 
-			callback(null, state != null ? (state.saturation || 0) : 0);
-	
-		}).catch(function(e) {
-	
-			this.logger.err(e);
-			
-		}.bind(this));
+			if(value != null)
+			{
+				this.saturation = value;
+
+				callback(null, this.saturation);
+			}
+			else
+			{
+				DeviceManager.getDevice(this.id).then((state) => {
+
+					if(state != null)
+					{
+						this.saturation = state.saturation;
+
+						super.setValue('state', this.saturation);
+					}
+					
+					callback(null, state != null && state.saturation != null ? state.saturation : 100);
+				});
+			}
+		});
 	}
 
 	setSaturation(value, callback)
 	{
-		this.color.S = value;
+		this.saturation = value;
 
-		callback(null);
+		super.setSaturation(value, () => {
+
+			callback();
+		});
+	}
+
+	getBrightness(callback)
+	{
+		super.getBrightness((value) => {
+
+			if(value != null)
+			{
+				this.brightness = value;
+
+				callback(null, this.brightness);
+			}
+			else
+			{
+				DeviceManager.getDevice(this.id).then((state) => {
+
+					if(state != null)
+					{
+						this.brightness = state.brightness;
+
+						super.setValue('state', this.brightness);
+					}
+					
+					callback(null, state != null && state.brightness != null ? state.brightness : 50);
+				});
+			}
+		});
+	}
+
+	setBrightness(value, callback)
+	{
+		this.brightness = value;
+
+		super.setBrightness(value, () => {
+
+			callback();
+		});
 	}
 
 	setToWarmWhite()
 	{
-		this.sendCommand('-w ' + this.color.L);
+		DeviceManager.executeCommand(this.ip, '-w ' + this.brightness);
 	}
 
 	setToCurrentColor()
 	{
-		var color = this.color;
-
-		if(color.S === 0 && color.H === 0 && this.purewhite)
+		if(this.saturation === 0 && this.hue === 0 && this.purewhite)
 		{
 			this.setToWarmWhite();
 			return;
 		}
 
-		var converted = convert.hsv.rgb([color.H, color.S, color.L]);
-		var setup = 'RGBW';
-
-		if(this.services == 'rgb')
-		{
-			setup = 'RGBW';
-		}
-		else if(this.services == 'rgbw')
-		{
-			setup = 'RGBWW';
-		}
-
+		var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
+		var setup = this.services == 'rgb' ? 'RGBW' : this.services == 'rgbw' ? 'RGBWW' : 'RGBW';
 		var base = '-x ' + setup + ' -c ';
 
-		this.sendCommand(base + converted[0] + ',' + converted[1] + ',' + converted[2]);
-		this.DeviceManager.setDevice(this.mac, this.letters, { power : this.isOn, hue : this.color.H, saturation : this.color.S, brightness : this.color.L });
+		DeviceManager.executeCommand(this.ip, base + converted[0] + ',' + converted[1] + ',' + converted[2]);
 	}
 }

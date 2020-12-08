@@ -1,101 +1,76 @@
-const store = require('json-fs-store');
-var logger, storage, accessories = [];
+const cp = require('child_process');
+const path = require('path');
+const convert = require('color-convert');
 
 module.exports = class DeviceManager
 {
-    constructor(log, storagePath)
-    {
-        logger = log;
-        storage = store(storagePath);
-    }
+	constructor(log)
+	{
+		this.logger = log;
+	}
 
-    getDevice(mac, service)
-    {
-        return new Promise(async (resolve) => {
+	getDevice(ip, callback)
+	{
+		this.executeCommand(ip, '-i', (error, stdout) => {
 
-            var found = false;
+			var settings = {
+				power: false,
+				hue: 0,
+				saturation: 100,
+				brightness: 50
+			};
 
-            for(var i = 0; i < accessories.length; i++)
-            {
-                if(accessories[i].mac == mac && accessories[i].service == service)
-                {
-                    found = true;
+			var colors = stdout.match(/\(.*,.*,.*\)/g);
+			var power = stdout.match(/\] ON /g);
 
-                    resolve(accessories[i].value);
-                }
-            }
+			if(power && power.length > 0)
+			{
+				settings.power = true;
+			}
 
-            if(!found)
-            {
-                var accessory = {
-                    mac : mac,
-                    service : service,
-                    value : await readFS(mac, service)
-                };
+			if(colors && colors.length > 0)
+			{
+				// Remove last char )
+				var str = colors.toString().substring(0, colors.toString().length - 1);
+				// Remove First Char (
+				str = str.substring(1, str.length);
 
-                accessories.push(accessory);
+				const rgbColors = str.split(',').map((item) => {
 
-                resolve(accessory.value);
-            }
-        });
-    }
+					return item.trim()
+				});
 
-    setDevice(mac, service, value)
-    {
-        return new Promise(async (resolve) => {
+				var converted = convert.rgb.hsv(rgbColors);
 
-            var found = false;
+				settings.hue = converted[0];
+				settings.saturation = converted[1];
+				settings.brightness = converted[2];
+			}
 
-            for(var i = 0; i < accessories.length; i++)
-            {
-                if(accessories[i].mac == mac && accessories[i].service == service)
-                {
-                    accessories[i].value = value;
+			callback(settings);
+		})
+	}
 
-                    found = true;
-                }
-            }
+	executeCommand(address, command, callback)
+	{
+		const exec = cp.exec;
+		const cmd = path.join(__dirname, './src/flux_led.py ' + address + ' ' + command);
 
-            if(!found)
-            {
-                accessories.push({ mac : mac, service : service, value : value });
-            }
+		this.logger.debug(cmd);
+		
+		exec(cmd, (err, stdOut) => {
+			
+			this.logger.debug(stdOut);
+			
+			if(err)
+			{
+				this.logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py] ' + err);
+			}
 
-            await writeFS(mac, service, value);
-
-            resolve();
-        });
-    }
-}
-
-function readFS(mac, service)
-{
-    return new Promise(resolve => {
-
-        storage.load(mac + ':' + service, (err, device) => {    
-
-            resolve(device && !err ? device.value : null);
-        });
-    });
-}
-
-function writeFS(mac, service, value)
-{
-    return new Promise(resolve => {
-        
-        var device = {
-            id: mac + ':' + service,
-            value: value
-        };
-        
-        storage.add(device, (err) => {
-
-            if(err)
-            {
-                logger.log('error', 'bridge', 'Bridge', mac + '.json konnte nicht aktualisiert werden! ' + err);
-            }
-
-            resolve(err ? false : true);
-        });
-    });
+			if(callback)
+			{
+				callback(err, stdOut);
+			}
+		});
+	}
 }

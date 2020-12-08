@@ -785,7 +785,7 @@ class  BulbScanner():
 		return self.found_bulbs
 
 	def scan(self, timeout=10):
-        #ask device for it's configuration tcp 81 8a 8b 96 
+		#ask device for it's configuration tcp 81 8a 8b 96 
 		DISCOVERY_PORT = 48900
 
 		sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
