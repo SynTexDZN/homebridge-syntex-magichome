@@ -93,11 +93,27 @@ module.exports = class LightBulb extends ColoredBulbService
 
             if(value != null)
             {
-				this.power = value;
-			}
-				
-			callback(null, value != null ? value : false);
-		});
+                this.power = value;
+
+                callback(null, this.power);
+            }
+            else
+            {
+                DeviceManager.getDevice(this.id).then((state) => {
+
+                    if(state != null)
+                    {
+                        this.power = state.power;
+
+                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+                    
+                        super.setValue('state', this.power);
+                    }
+                    
+                    callback(null, state != null && state.power != null ? state.power : false);
+                });
+            }
+        });
 	}
 
 	setState(value, callback)
@@ -127,11 +143,27 @@ module.exports = class LightBulb extends ColoredBulbService
 
             if(value != null)
             {
-				this.hue = value;
-			}
-				
-			callback(null, value != null ? value : 0);
-		});
+                this.hue = value;
+
+                callback(null, this.hue);
+            }
+            else
+            {
+                DeviceManager.getDevice(this.id).then((state) => {
+
+                    if(state != null)
+                    {
+                        this.hue = state.hue;
+
+                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+                    
+                        super.setValue('state', this.hue);
+                    }
+                    
+                    callback(null, state != null && state.hue != null ? state.hue : 0);
+                });
+            }
+        });
 	}
 
 	setHue(value, callback)
@@ -150,10 +182,26 @@ module.exports = class LightBulb extends ColoredBulbService
 
             if(value != null)
             {
-				this.saturation = value;
-			}
-				
-			callback(null, value != null ? value : 0);
+                this.saturation = value;
+
+                callback(null, this.saturation);
+            }
+            else
+            {
+                DeviceManager.getDevice(this.id).then((state) => {
+
+                    if(state != null)
+                    {
+                        this.saturation = state.saturation;
+
+                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+                    
+                        super.setValue('state', this.saturation);
+                    }
+                    
+                    callback(null, state != null && state.saturation != null ? state.saturation : 100);
+                });
+            }
         });
 	}
 
@@ -173,10 +221,26 @@ module.exports = class LightBulb extends ColoredBulbService
 
             if(value != null)
             {
-				this.brightness = value;
-			}
-				
-			callback(null, value != null ? value : 50);
+                this.brightness = value;
+
+                callback(null, this.brightness);
+            }
+            else
+            {
+                DeviceManager.getDevice(this.id).then((state) => {
+
+                    if(state != null)
+                    {
+                        this.brightness = state.brightness;
+
+                        this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+                    
+                        super.setValue('state', this.brightness);
+                    }
+                    
+                    callback(null, state != null && state.brightness != null ? state.brightness : 50);
+                });
+            }
         });
 	}
 
