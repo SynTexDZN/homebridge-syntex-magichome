@@ -3,7 +3,6 @@ let DeviceManager = require('./device-manager');
 const { DynamicPlatform } = require('homebridge-syntex-dynamic-platform');
 
 const SynTexUniversalAccessory = require('./src/universal');
-const lightAgent = require('./src/lib/lightAgent');
 
 const pluginID = 'homebridge-syntex-magichome';
 const pluginName = 'SynTexMagicHome';
@@ -28,13 +27,6 @@ class SynTexMagicHomePlatform extends DynamicPlatform
             this.api.on('didFinishLaunching', () => {
 
                 DeviceManager = new DeviceManager(this.logger);
-
-				lightAgent.setLogger(this.logger);
-
-				if(homebridge)
-				{
-					lightAgent.setPersistPath(homebridge.PersistPath);
-				}
 				
 				const { exec } = require('child_process');
 						
