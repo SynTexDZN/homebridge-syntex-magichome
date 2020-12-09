@@ -19,7 +19,7 @@ module.exports = class LightBulb extends ColoredBulbService
 		this.purewhite = deviceConfig.purewhite || false;
 		this.timeout = deviceConfig.timeout || 60000;
 
-		this.updateState();
+		//this.updateState();
 
 		this.changeHandler = (state, refreshDevices) =>
 		{
@@ -57,7 +57,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		if(this.timeout == 0) return;
 
-		setTimeout(() => this.updateState(), this.timeout);
+		//setTimeout(() => this.updateState(), this.timeout);
 	}
 
 	updateState(state)
