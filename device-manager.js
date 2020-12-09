@@ -53,7 +53,7 @@ module.exports = class DeviceManager
 
 	refreshAccessories(accessories)
 	{
-		logger.debug('Geräte Status aktualisieren ..');
+		this.logger.debug('Geräte Status aktualisieren ..');
 
 		for(const accessory of accessories)
 		{
