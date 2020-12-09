@@ -51,6 +51,46 @@ module.exports = class DeviceManager
 		})
 	}
 
+	refreshAccessories(accessories)
+    {
+        logger.debug('Geräte Status aktualisieren ..');
+
+        for(const accessory of accessories)
+		{
+			this.getDevice(accessory.ip, (state) => accessory.updateState(state));
+			/*
+			var state = { power : device.data.state };
+
+			try
+			{
+				if(device.data.state != null)
+				{
+					state.power = JSON.parse(device.data.state);
+				}
+
+				if(device.data.brightness != null)
+				{
+					state.brightness = JSON.parse(device.data.brightness) / 2.55;
+				}
+			}
+			catch(e)
+			{
+				logger.err(e);
+			}
+
+			for(const accessory of accessories)
+			{
+				if(accessory[1].id == device.id)
+				{
+					accessory[1].service[1].updateState(state);
+				}
+			}
+			*/
+		}
+
+		resolve(true);
+    }
+
 	executeCommand(address, command, callback)
 	{
 		const exec = cp.exec;

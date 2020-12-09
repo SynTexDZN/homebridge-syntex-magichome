@@ -60,62 +60,57 @@ module.exports = class LightBulb extends ColoredBulbService
 		setTimeout(() => this.updateState(), this.timeout);
 	}
 
-	updateState()
+	updateState(state)
 	{
-		this.logger.debug('Polling Light ' + this.ip);
+		var changed = false;
 
-		DeviceManager.getDevice(this.ip, (settings) => {
+		if(this.power != state.power)
+		{
+			this.power = state.power;
 
-			var changed = false;
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
 
-			if(this.power != settings.power)
-			{
-				this.power = settings.power;
+			changed = true;
+		}
 
-				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
+		if(this.hue != state.hue)
+		{
+			this.hue = state.hue;
 
-				changed = true;
-			}
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(this.hue);
 
-			if(this.hue != settings.hue)
-			{
-				this.hue = settings.hue;
+			changed = true;
+		}
 
-				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(this.hue);
+		if(this.saturation != state.saturation)
+		{
+			this.saturation = state.saturation;
 
-				changed = true;
-			}
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
 
-			if(this.saturation != settings.saturation)
-			{
-				this.saturation = settings.saturation;
+			changed = true;
+		}
 
-				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
+		if(this.brightness != state.brightness)
+		{
+			this.brightness = state.brightness;
 
-				changed = true;
-			}
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
 
-			if(this.brightness != settings.brightness)
-			{
-				this.brightness = settings.brightness;
+			changed = true;
+		}
+		
+		super.setState(state.power, () => {});
+		super.setHue(state.hue, () => {});
+		super.setSaturation(state.saturation, () => {});
+		super.setBrightness(state.brightness, () => {});
 
-				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+		if(changed)
+		{
+			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+		}
 
-				changed = true;
-			}
-			
-			super.setState(settings.power, () => {});
-			super.setHue(settings.hue, () => {});
-			super.setSaturation(settings.saturation, () => {});
-			super.setBrightness(settings.brightness, () => {});
-
-			if(changed)
-			{
-				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-			}
-
-			this.startTimer();
-		});
+		this.startTimer();
 	}
 
 	getState(callback)
