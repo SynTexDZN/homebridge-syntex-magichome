@@ -1,4 +1,3 @@
-
 module.exports = {
 	seven_color_cross_fade: 37,
 	red_gradual_change: 38,

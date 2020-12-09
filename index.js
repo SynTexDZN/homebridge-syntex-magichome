@@ -46,9 +46,9 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 				/*
 				this.refreshInterval = setInterval(() => {
 
-                    DeviceManager.refreshAccessories(this.accessories);
-    
-                }, this.pollingInterval * 1000);
+					DeviceManager.refreshAccessories(this.accessories);
+	
+				}, this.pollingInterval * 1000);
 				*/
 				restart = false;
 			});

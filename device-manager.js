@@ -52,10 +52,10 @@ module.exports = class DeviceManager
 	}
 
 	refreshAccessories(accessories)
-    {
-        logger.debug('Geräte Status aktualisieren ..');
+	{
+		logger.debug('Geräte Status aktualisieren ..');
 
-        for(const accessory of accessories)
+		for(const accessory of accessories)
 		{
 			this.getDevice(accessory.ip, (state) => accessory.updateState(state));
 			/*
@@ -89,7 +89,7 @@ module.exports = class DeviceManager
 		}
 
 		resolve(true);
-    }
+	}
 
 	executeCommand(address, command, callback)
 	{
