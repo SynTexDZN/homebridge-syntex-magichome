@@ -87,8 +87,6 @@ module.exports = class DeviceManager
 			}
 			*/
 		}
-
-		resolve(true);
 	}
 
 	executeCommand(address, command, callback)
