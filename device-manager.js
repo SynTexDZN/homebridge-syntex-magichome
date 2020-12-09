@@ -57,7 +57,7 @@ module.exports = class DeviceManager
 
 		for(const accessory of accessories)
 		{
-			this.getDevice(accessory.ip, (state) => accessory.updateState(state));
+			this.getDevice(accessory[1].ip, (state) => accessory[1].service[1].updateState(state));
 			/*
 			var state = { power : device.data.state };
 
