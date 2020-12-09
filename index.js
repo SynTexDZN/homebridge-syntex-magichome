@@ -238,7 +238,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 				return null;
 			}
 			
-			console.log(letters, letters[0].toUpperCase());
+			console.log(letters, letters[0].toUpperCase(), id);
 
 			var format = data[letters[0].toUpperCase()].format;
 
