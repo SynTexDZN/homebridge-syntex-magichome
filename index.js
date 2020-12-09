@@ -21,6 +21,8 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		super(config, api, pluginID, pluginName);
 		
 		this.devices = config['accessories'] || [];
+
+		this.pollingInterval = Math.max((config.options['pollingInterval'] || 5), 5);
 		
 		if(this.api && this.logger)
 		{
@@ -235,6 +237,8 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 				return null;
 			}
+			
+			console.log(letters, letters[0].toUpperCase());
 
 			var format = data[letters[0].toUpperCase()].format;
 
