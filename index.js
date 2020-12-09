@@ -22,7 +22,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		
 		this.devices = config['accessories'] || [];
 
-		this.pollingInterval = Math.max((config.options['pollingInterval'] || 5), 5);
+		//this.pollingInterval = Math.max((config.options['pollingInterval'] || 5), 5);
 		
 		if(this.api && this.logger)
 		{
