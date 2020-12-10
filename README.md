@@ -15,7 +15,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 1. Install homebridge using: `sudo npm install -g homebridge`
 2. Install this plugin using: `sudo npm install -g homebridge-syntex-magichome`
 3. Update your `config.json` file. See snippet below.
-4. Restart the Homebridge Service with: `sudo systemctl restart homebridge; sudo journalctl -fau homebridge`.
+4. Restart the Homebridge Service with: `sudo systemctl restart homebridge; sudo journalctl -fau homebridge`
 
 
 ## Example Config
@@ -141,24 +141,24 @@ Setting `pollingInterval` to 0, will disable polling device for status update.
 
 ## Available Presets Scenes
 ```
-	seven_color_cross_fade
-	red_gradual_change
-	green_gradual_change
-	blue_gradual_change
-	yellow_gradual_change
-	cyan_gradual_change
-	purple_gradual_change
-	white_gradual_change
-	red_green_cross_fade
-	red_blue_cross_fade
-	green_blue_cross_fade
-	seven_color_strobe_flash
-	red_strobe_flash
-	green_strobe_flash
-	blue_stobe_flash
-	yellow_strobe_flash
-	cyan_strobe_flash
-	purple_strobe_flash
-	white_strobe_flash
-	seven_color_jumping
+seven_color_cross_fade
+red_gradual_change
+green_gradual_change
+blue_gradual_change
+yellow_gradual_change
+cyan_gradual_change
+purple_gradual_change
+white_gradual_change
+red_green_cross_fade
+red_blue_cross_fade
+green_blue_cross_fade
+seven_color_strobe_flash
+red_strobe_flash
+green_strobe_flash
+blue_stobe_flash
+yellow_strobe_flash
+cyan_strobe_flash
+purple_strobe_flash
+white_strobe_flash
+seven_color_jumping
 ```
