@@ -5,6 +5,7 @@
 			"log_directory": "./SynTex/log",
 			"port": 1712,
 			"debug": false,
+			"pollingInterval": 10,
 			"accessories": [
 				{
 					"id": "light1",
