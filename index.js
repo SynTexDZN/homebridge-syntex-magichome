@@ -22,7 +22,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		
 		this.devices = config['accessories'] || [];
 
-		this.pollingInterval = Math.max((config['pollingInterval'] || 10), 10);
+		this.pollingInterval = config['pollingInterval'] == 0 ? 0 : config['pollingInterval'] || 10;
 		
 		if(this.api && this.logger)
 		{
@@ -46,11 +46,14 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 				DeviceManager.refreshAccessories(this.accessories);
 				
-				this.refreshInterval = setInterval(() => {
+				if(this.pollingInterval != 0)
+				{
+					this.refreshInterval = setInterval(() => {
 
-					DeviceManager.refreshAccessories(this.accessories);
-	
-				}, this.pollingInterval * 1000);
+						DeviceManager.refreshAccessories(this.accessories);
+		
+					}, this.pollingInterval * 1000);
+				}
 				
 				restart = false;
 			});
