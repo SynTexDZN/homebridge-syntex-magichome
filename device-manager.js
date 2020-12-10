@@ -57,35 +57,7 @@ module.exports = class DeviceManager
 
 		for(const accessory of accessories)
 		{
-			this.getDevice(accessory[1].ip, (state) => accessory[1].service[1].updateState(state));
-			/*
-			var state = { power : device.data.state };
-
-			try
-			{
-				if(device.data.state != null)
-				{
-					state.power = JSON.parse(device.data.state);
-				}
-
-				if(device.data.brightness != null)
-				{
-					state.brightness = JSON.parse(device.data.brightness) / 2.55;
-				}
-			}
-			catch(e)
-			{
-				logger.err(e);
-			}
-
-			for(const accessory of accessories)
-			{
-				if(accessory[1].id == device.id)
-				{
-					accessory[1].service[1].updateState(state);
-				}
-			}
-			*/
+			this.getDevice(accessory[1].service[1].ip, (state) => accessory[1].service[1].updateState(state));
 		}
 	}
 
@@ -94,8 +66,6 @@ module.exports = class DeviceManager
 		const exec = cp.exec;
 		const cmd = path.join(__dirname, './src/flux_led.py ' + address + ' ' + command);
 
-		this.logger.debug(cmd);
-		
 		exec(cmd, (err, stdOut) => {
 			
 			this.logger.debug(stdOut);
