@@ -5,25 +5,23 @@ It also offers some tweaks and improvements to the original devices.
 
 
 ## Description
-This plugin will create LightBulbs in Homekit capable of turning on/off, change color, change hue, change saturation.
+This plugin will create LightBulbs in Homekit capable of turning on / off, change color, change saturation, change brightness.
 This plugin can also create preset patterns Switches (color cycle, fade, strobe).
-Its a great utility tool to set house mood to party/soothing with custom music.
-Can cycle through colors, sync all lights to strobe/fade.
+Its a great utility tool to set house mood to party / soothing with custom music.
+Can cycle through colors, sync all lights to strobe / fade.
 
 
 ## Installation
 1. Install homebridge using: `sudo npm install -g homebridge`
 2. Install this plugin using: `sudo npm install -g homebridge-syntex-magichome`
 3. Update your `config.json` file. See snippet below.
-4. Restart the Homebridge Service with `sudo systemctl restart homebridge; sudo journalctl -fau homebridge`.
+4. Restart the Homebridge Service with: `sudo systemctl restart homebridge; sudo journalctl -fau homebridge`.
 
 
 ## Example Config
 **Info:** If the directory for the storage can't be created you have to do it by yourself and give it full write permissions!
 - `sudo chown -R homebridge ./SynTex/` ( *permissions only for homebridge* )
 - `sudo chmod 777 -R homebridge ./SynTex/` ( *permissions for many processes* )
-- For the id you can use a `random unique text`
-- Every device needs these configurations: `id`, `name`, `type`, `ip` and `services`
 
 ```
 "platforms": [
@@ -85,15 +83,18 @@ Can cycle through colors, sync all lights to strobe/fade.
 ]
 ```
 
+- For the id you can use a `random unique text`
+- Every device needs these configurations: `id`, `name`, `type`, `ip` and `services`
+
 
 ## Update MagicHome Devices
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&value=`  **New Value**
 2. Insert the `Bridge IP` and `Device ID`
 3. For the `New Value` you can type this pattern:
-- For all devices: `true` / `false` ( *outlet, switch, light, dimmable light* )
-- For colored lights add `&hue=`  **New Hue**  or `&saturation=`  **New Saturation**  or `&brightness=`  **New Brightness** ( *has to be numbers* )
+- For all devices: `true` / `false` ( *preset switch, reset swithc, colored light* )
+- For colored lights add `&hue=`  **New Hue**  or `&saturation=`  **New Saturation**  or `&brightness=`  **New Brightness** ( *have to be numbers* )
 
-**Example:**  `http://homebridge.local/devices?id=ABCDEF1234567890&value=true&hue=4&saturation=100&brightness=100`\
+**Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&value=true&hue=4&saturation=100&brightness=100`\
 ( *Updates the value and hue, saturation and brightness of `ABCDEF1234567890` to `turned on, orange color, 100% saturation, 100% brightness` as example* )
 
 
@@ -101,7 +102,7 @@ Can cycle through colors, sync all lights to strobe/fade.
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**
 2. Insert the `Bridge IP` and `Device ID`
 
-**Example:**  `http://homebridge.local/devices?id=ABCDEF1234567890`\
+**Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890`\
 ( *Reads the value of `ABCDEF1234567890` as example* )
 
 
@@ -109,7 +110,7 @@ Can cycle through colors, sync all lights to strobe/fade.
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&remove=CONFIRM`
 2. Insert the `Bridge IP` and `Device ID`
 
-**Example:**  `http://homebridge.local/devices?id=ABCDEF1234567890&remove=CONFIRM`\
+**Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&remove=CONFIRM`\
 ( *Removes `ABCDEF1234567890` from the home app* )
 
 
