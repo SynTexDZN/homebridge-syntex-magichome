@@ -271,11 +271,13 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setToCurrentColor()
 	{
+		/*
 		if(this.saturation === 0 && this.hue === 0 && this.purewhite)
 		{
 			this.setToWarmWhite();
 			return;
 		}
+		*/
 
 		var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
 		var setup = this.services == 'rgb' ? 'RGBW' : this.services == 'rgbw' ? 'RGBWW' : 'RGBW';
