@@ -136,6 +136,8 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		var delay = (!this.power);
 
+		console.log('SET STATE');
+
 		this.power = value;
 
 		DeviceManager.executeCommand(this.ip, this.power ? '--on' : '--off', () => {
@@ -184,7 +186,21 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		this.hue = value;
 
-		super.setHue(this.hue, () => callback());
+		console.log('SET HUE');
+
+		DeviceManager.executeCommand(this.ip, this.power ? '--on' : '--off', () => {
+
+			super.setHue(this.hue, () => {
+
+				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
+
+				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+
+				setTimeout(() => this.setToCurrentColor(), 0);
+
+				callback();
+			});
+		});
 	}
 
 	getSaturation(callback)
