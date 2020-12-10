@@ -138,9 +138,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		this.power = value;
 
-		DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', () => {
+		DeviceManager.executeCommand(this.ip, this.power ? '--on' : '--off', () => {
 
-			super.setState(value, () => {
+			super.setState(this.power, () => {
 
 				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 
@@ -184,10 +184,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		this.hue = value;
 
-		super.setHue(value, () => {
-
-			callback();
-		});
+		super.setHue(this.hue, () => callback());
 	}
 
 	getSaturation(callback)
@@ -221,10 +218,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		this.saturation = value;
 
-		super.setSaturation(value, () => {
-
-			callback();
-		});
+		super.setSaturation(this.saturation, () => callback());
 	}
 
 	getBrightness(callback)
@@ -258,10 +252,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		this.brightness = value;
 
-		super.setBrightness(value, () => {
-
-			callback();
-		});
+		super.setBrightness(this.brightness, () => callback());
 	}
 
 	setToWarmWhite()
@@ -271,6 +262,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setToCurrentColor()
 	{
+		var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
+		var setup = this.services == 'rgb' ? 'RGBW' : this.services == 'rgbw' ? 'RGBWW' : 'RGBW';
 		/*
 		if(this.saturation === 0 && this.hue === 0 && this.purewhite)
 		{
@@ -278,11 +271,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			return;
 		}
 		*/
-
-		var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
-		var setup = this.services == 'rgb' ? 'RGBW' : this.services == 'rgbw' ? 'RGBWW' : 'RGBW';
-		var base = '-x ' + setup + ' -c ';
-
-		DeviceManager.executeCommand(this.ip, base + converted[0] + ',' + converted[1] + ',' + converted[2]);
+		DeviceManager.executeCommand(this.ip, '-x ' + setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2]);
 	}
 }
