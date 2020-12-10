@@ -40,8 +40,7 @@ Can cycle through colors, sync all lights to strobe/fade.
 				"type": "light",
 				"ip": "DC4F22C5D4E1",
 				"services": "rgb",
-				"purewhite": false,
-				"timeout": 10000
+				"purewhite": false
 			},
 			{
 				"id": "light2",
@@ -49,8 +48,7 @@ Can cycle through colors, sync all lights to strobe/fade.
 				"type": "light",
 				"ip": "192.168.1.112",
 				"services": "rgbw",
-				"purewhite": true,
-				"timeout": 0
+				"purewhite": true
 			},
 			{
 				"id": "pswitch1",
@@ -110,7 +108,7 @@ You can use MAC Address instead of IP Address as well. Please note format of MAC
 
 Do note : While using MACS : This plugin auto discover connected lights on the network and map IP's to their corresponding MAC. Initially it can take time to discover all devices. All devices should be discovered and mapped in 60-120s. Once mapped IP & MACs are cached, and gets rediscovered every 30s to map new IP to the light. This feature is useful for people unable to assign Static IP to their lights.
 
-Setting Device `timeout` to 0, will disable polling device for status update.
+Setting `pollingInterval` to 0, will disable polling device for status update.
 
 
 ## Available Presets Scenes
