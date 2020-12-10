@@ -86,6 +86,33 @@ Can cycle through colors, sync all lights to strobe/fade.
 ```
 
 
+## Update MagicHome Devices
+1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&value=`  **New Value**
+2. Insert the `Bridge IP` and `Device ID`
+3. For the `New Value` you can type this pattern:
+- For all devices: `true` / `false` ( *outlet, switch, light, dimmable light* )
+- For colored lights add `&hue=`  **New Hue**  or `&saturation=`  **New Saturation**  or `&brightness=`  **New Brightness** ( *has to be numbers* )
+
+**Example:**  `http://homebridge.local/devices?id=ABCDEF1234567890&value=true&hue=4&saturation=100&brightness=100`\
+( *Updates the value and hue, saturation and brightness of `ABCDEF1234567890` to `turned on, orange color, 100% saturation, 100% brightness` as example* )
+
+
+## Read MagicHome Device Values
+1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**
+2. Insert the `Bridge IP` and `Device ID`
+
+**Example:**  `http://homebridge.local/devices?id=ABCDEF1234567890`\
+( *Reads the value of `ABCDEF1234567890` as example* )
+
+
+## Remove MagicHome Device
+1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&remove=CONFIRM`
+2. Insert the `Bridge IP` and `Device ID`
+
+**Example:**  `http://homebridge.local/devices?id=ABCDEF1234567890&remove=CONFIRM`\
+( *Removes `ABCDEF1234567890` from the home app* )
+
+
 ## Compatible Devices
 Any devices created by Zengge and running on the Magic Home Wi-Fi (or other apps by the same developer such as LED Magic Color) app should work with this plugin. Some examples of compatible devices are:
 
