@@ -55,7 +55,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		if(this.timeout == 0) return;
 
-		//setTimeout(() => this.updateState(), this.timeout);
+		setTimeout(() => this.updateState(), this.timeout);
 	}
 
 	updateState(state)
@@ -108,7 +108,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 		}
 
-		this.startTimer();
+		//this.startTimer();
 	}
 
 	getState(callback)
