@@ -27,6 +27,12 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		this.changeHandler = (state) =>
 		{
+			if(state.power != null)
+			{
+				this.setState(state.power, 
+					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(state.power));
+			}
+
 			if(state.hue != null)
 			{
 				this.setHue(state.hue,
@@ -43,12 +49,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				this.setBrightness(state.brightness, 
 					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(state.brightness));
-			}
-
-			if(state.power != null)
-			{
-				this.setState(state.power, 
-					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(state.power));
 			}
 		};
 	}
@@ -179,7 +179,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	setHue(value, callback)
 	{
 		this.setToCurrentColor(value, this.saturation, this.brightness,
-			() => super.setSaturation(this.saturation,
+			() => super.setSaturation(value,
 			() => callback()));
 	}
 
@@ -213,7 +213,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	setSaturation(value, callback)
 	{
 		this.setToCurrentColor(this.hue, value, this.brightness,
-			() => super.setSaturation(this.saturation,
+			() => super.setSaturation(value,
 			() => callback()));
 	}
 
@@ -247,7 +247,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	setBrightness(value, callback)
 	{
 		this.setToCurrentColor(this.hue, this.saturation, value,
-			() => super.setBrightness(this.brightness,
+			() => super.setBrightness(value,
 			() => callback()));
 	}
 
@@ -300,7 +300,7 @@ module.exports = class LightBulb extends ColoredBulbService
 						await new Promise((resolve) => setTimeout(() => resolve(), 1000));
 					}
 					
-					var converted = convert.hsv.rgb([hue, saturation, brightness]);
+					var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
 	
 					DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
 
@@ -313,6 +313,10 @@ module.exports = class LightBulb extends ColoredBulbService
 							callback();
 						}
 					});
+				}
+				else if(callback)
+				{
+					callback();
 				}
 	
 			}, 100);
