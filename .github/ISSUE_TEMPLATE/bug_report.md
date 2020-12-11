@@ -14,7 +14,7 @@ A clear and concise description of what the bug is.
 A clear and concise description of what you expected to happen.
 
 **Config**
-Share config.json for the plugin
+Share your config.json for the plugin
 
 **Logs**
 Share the logs with debug as true in config.json
@@ -22,7 +22,7 @@ Share the logs with debug as true in config.json
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
+**More Information**
  - OS: [e.g. iOS]
  - Node Version [e.g. 10.1]
 
