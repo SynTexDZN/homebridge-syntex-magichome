@@ -13,39 +13,42 @@ module.exports = class LightBulb extends ColoredBulbService
 		Characteristic = manager.platform.api.hap.Characteristic;
 		DeviceManager = manager.DeviceManager;
 
-		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+		var specialConfig = serviceConfig;
+
+		specialConfig.type = 'rgb';
+
+		super(homebridgeAccessory, deviceConfig, specialConfig, manager);
 
 		this.ip = deviceConfig.ip;
 		this.purewhite = deviceConfig.purewhite || false;
+		this.setup = serviceConfig.type == 'rgb' ? 'RGBW' : serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
+
+		this.running = false;
 
 		this.changeHandler = (state) =>
 		{
 			if(state.hue != null)
 			{
-				this.setHue(state.hue, () => {});
-
-				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).updateValue(this.hue);
+				this.setHue(state.hue,
+					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(state.hue));
 			}
 
 			if(state.saturation != null)
 			{
-				this.setSaturation(state.saturation, () => {});
-
-				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
+				this.setSaturation(state.saturation, 
+					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(state.saturation));
 			}
 
 			if(state.brightness != null)
 			{
-				this.setBrightness(state.brightness, () => {});
-
-				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+				this.setBrightness(state.brightness, 
+					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(state.brightness));
 			}
 
 			if(state.power != null)
 			{
-				this.setState(state.power, () => {});
-
-				homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
+				this.setState(state.power, 
+					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(state.power));
 			}
 		};
 	}
@@ -134,25 +137,16 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setState(value, callback)
 	{
-		var delay = (!this.power);
+		DeviceManager.executeCommand(this.ip, value ? '--on' : '--off',
+			() => super.setState(value,
+			() => {
 
-		console.log('SET STATE');
-
-		this.power = value;
-
-		DeviceManager.executeCommand(this.ip, this.power ? '--on' : '--off', () => {
-
-			super.setState(this.power, () => {
-
-				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
+				this.power = value;
 
 				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-
-				setTimeout(() => this.setToCurrentColor(), delay ? 1000 : 0);
-
+			
 				callback();
-			});
-		});
+			}));
 	}
 
 	getHue(callback)
@@ -184,23 +178,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setHue(value, callback)
 	{
-		this.hue = value;
-
-		console.log('SET HUE');
-
-		DeviceManager.executeCommand(this.ip, this.power ? '--on' : '--off', () => {
-
-			super.setHue(this.hue, () => {
-
-				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
-
-				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-
-				setTimeout(() => this.setToCurrentColor(), 0);
-
-				callback();
-			});
-		});
+		this.setToCurrentColor(value, this.saturation, this.brightness,
+			() => super.setSaturation(this.saturation,
+			() => callback()));
 	}
 
 	getSaturation(callback)
@@ -232,9 +212,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setSaturation(value, callback)
 	{
-		this.saturation = value;
-
-		super.setSaturation(this.saturation, () => callback());
+		this.setToCurrentColor(this.hue, value, this.brightness,
+			() => super.setSaturation(this.saturation,
+			() => callback()));
 	}
 
 	getBrightness(callback)
@@ -266,9 +246,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setBrightness(value, callback)
 	{
-		this.brightness = value;
-
-		super.setBrightness(this.brightness, () => callback());
+		this.setToCurrentColor(this.hue, this.saturation, value,
+			() => super.setBrightness(this.brightness,
+			() => callback()));
 	}
 
 	setToWarmWhite()
@@ -276,10 +256,71 @@ module.exports = class LightBulb extends ColoredBulbService
 		DeviceManager.executeCommand(this.ip, '-w ' + this.brightness);
 	}
 
-	setToCurrentColor()
+	setToCurrentColor(hue, saturation, brightness, callback)
 	{
-		var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
-		var setup = this.services == 'rgb' ? 'RGBW' : this.services == 'rgbw' ? 'RGBWW' : 'RGBW';
+		var changed = false;
+
+		if(this.hue != hue)
+		{
+			this.hue = hue;
+
+			changed = true;
+		}
+
+		if(this.saturation != saturation)
+		{
+			this.saturation = saturation;
+
+			changed = true;
+		}
+
+		if(this.brightness != brightness)
+		{
+			this.brightness = brightness;
+
+			changed = true;
+		}
+
+		if(changed)
+		{
+			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
+
+			setTimeout(async () => {
+
+				if(!this.running)
+				{
+					this.running = true;
+
+					if(!this.power)
+					{
+						this.power = true;
+
+						await this.setState(this.power, () => {});
+
+						await new Promise((resolve) => setTimeout(() => resolve(), 1000));
+					}
+					
+					var converted = convert.hsv.rgb([hue, saturation, brightness]);
+	
+					DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
+
+						this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+
+						this.running = false;
+
+						if(callback)
+						{
+							callback();
+						}
+					});
+				}
+	
+			}, 100);
+		}
+		else if(callback)
+		{
+			callback();
+		}
 		/*
 		if(this.saturation === 0 && this.hue === 0 && this.purewhite)
 		{
@@ -287,6 +328,5 @@ module.exports = class LightBulb extends ColoredBulbService
 			return;
 		}
 		*/
-		DeviceManager.executeCommand(this.ip, '-x ' + setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2]);
 	}
 }
