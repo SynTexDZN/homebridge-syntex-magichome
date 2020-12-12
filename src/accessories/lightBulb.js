@@ -137,16 +137,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setState(value, callback)
 	{
-		DeviceManager.executeCommand(this.ip, value ? '--on' : '--off',
+		this.setToCurrentColor(value, this.hue, this.saturation, this.brightness,
 			() => super.setState(value,
-			() => {
-
-				this.power = value;
-
-				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-			
-				callback();
-			}));
+			() => callback()));
 	}
 
 	getHue(callback)
@@ -178,8 +171,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setHue(value, callback)
 	{
-		this.setToCurrentColor(value, this.saturation, this.brightness,
-			() => super.setSaturation(value,
+		this.setToCurrentColor(this.power, value, this.saturation, this.brightness,
+			() => super.setHue(value,
 			() => callback()));
 	}
 
@@ -212,7 +205,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setSaturation(value, callback)
 	{
-		this.setToCurrentColor(this.hue, value, this.brightness,
+		this.setToCurrentColor(this.power, this.hue, value, this.brightness,
 			() => super.setSaturation(value,
 			() => callback()));
 	}
@@ -246,7 +239,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setBrightness(value, callback)
 	{
-		this.setToCurrentColor(this.hue, this.saturation, value,
+		this.setToCurrentColor(this.power, this.hue, this.saturation, value,
 			() => super.setBrightness(value,
 			() => callback()));
 	}
@@ -256,63 +249,108 @@ module.exports = class LightBulb extends ColoredBulbService
 		DeviceManager.executeCommand(this.ip, '-w ' + this.brightness);
 	}
 
-	setToCurrentColor(hue, saturation, brightness, callback)
+	setToCurrentColor(power, hue, saturation, brightness, callback)
 	{
 		var changed = false;
+
+		if(this.power != power)
+		{
+			this.power = power;
+
+			this.changedPower = true;
+		}
 
 		if(this.hue != hue)
 		{
 			this.hue = hue;
 
-			changed = true;
+			this.changedColor = true;
 		}
 
 		if(this.saturation != saturation)
 		{
 			this.saturation = saturation;
 
-			changed = true;
+			this.changedColor = true;
 		}
 
 		if(this.brightness != brightness)
 		{
 			this.brightness = brightness;
 
-			changed = true;
+			this.changedColor = true;
 		}
 
-		if(changed)
+		if(this.changedPower || this.changedColor)
 		{
 			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 
-			setTimeout(async () => {
+			setTimeout(() => {
 
 				if(!this.running)
 				{
 					this.running = true;
 
-					if(!this.power)
+					if(this.changedPower)
 					{
-						this.power = true;
+						DeviceManager.executeCommand(this.ip, this.power ? '--on' : '--off', () => {
 
-						await this.setState(this.power, () => {});
+							if(this.changedColor)
+							{
+								setTimeout(() => {
 
-						await new Promise((resolve) => setTimeout(() => resolve(), 1000));
+									var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
+
+									DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
+
+										this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+				
+										if(callback)
+										{
+											callback();
+										}
+
+										this.changedPower = false;
+										this.changedColor = false;
+				
+										this.running = false;
+									});
+
+								}, 2000);
+							}
+							else
+							{
+								this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+			
+								if(callback)
+								{
+									callback();
+								}
+		
+								this.changedPower = false;
+
+								this.running = false;
+							}
+						});
 					}
-					
-					var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
+					else if(this.changedColor)
+					{
+						var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
+
+						DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
+
+							this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 	
-					DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
+							if(callback)
+							{
+								callback();
+							}
 
-						this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-
-						this.running = false;
-
-						if(callback)
-						{
-							callback();
-						}
-					});
+							this.changedColor = false;
+	
+							this.running = false;
+						});
+					}
 				}
 				else if(callback)
 				{
