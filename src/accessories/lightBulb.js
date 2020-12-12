@@ -1,4 +1,4 @@
-let Service, Characteristic, DeviceManager;
+let Characteristic, DeviceManager;
 
 const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
@@ -9,7 +9,6 @@ module.exports = class LightBulb extends ColoredBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		Service = manager.platform.api.hap.Service;
 		Characteristic = manager.platform.api.hap.Characteristic;
 		DeviceManager = manager.DeviceManager;
 
@@ -57,7 +56,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		var changed = false;
 
-		if(this.power != state.power)
+		if(state.power != null && this.power != state.power)
 		{
 			this.power = state.power;
 
@@ -66,7 +65,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			changed = true;
 		}
 
-		if(this.hue != state.hue)
+		if(state.hue != null && this.hue != state.hue)
 		{
 			this.hue = state.hue;
 
@@ -75,7 +74,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			changed = true;
 		}
 
-		if(this.saturation != state.saturation)
+		if(state.saturation != null && this.saturation != state.saturation)
 		{
 			this.saturation = state.saturation;
 
@@ -84,7 +83,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			changed = true;
 		}
 
-		if(this.brightness != state.brightness)
+		if(state.brightness != null && this.brightness != state.brightness)
 		{
 			this.brightness = state.brightness;
 

@@ -1,4 +1,5 @@
 const { UniversalAccessory } = require('homebridge-syntex-dynamic-platform');
+
 const LightBulb = require('./accessories/lightBulb');
 const PresetSwitch = require('./accessories/presetSwitch');
 const SceneSwitch = require('./accessories/sceneSwitch');

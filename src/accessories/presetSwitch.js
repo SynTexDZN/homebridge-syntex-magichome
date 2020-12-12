@@ -47,6 +47,7 @@ module.exports = class PresetSwitch extends SwitchService
 			}
 				
 			callback(null, value != null ? value : false);
+
 		}, true);
 	}
 
@@ -95,7 +96,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 	updateState(state)
 	{
-		if(this.power != state.power)
+		if(state.power != null && this.power != state.power)
 		{
 			this.power = state.power;
 
