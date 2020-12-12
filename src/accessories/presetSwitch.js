@@ -95,19 +95,16 @@ module.exports = class PresetSwitch extends SwitchService
 
 	updateState(state)
 	{
-		if(state.power != null)
+		if(this.power != state.power)
 		{
-			if(this.power != state.power)
-			{
-				this.power = state.power;
+			this.power = state.power;
 
-				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
 
-				this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
-			}
-
-			super.setState(state.power, () => {});
+			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
 		}
+
+		super.setState(state.power, () => {});
 	}
 
 	bindEmitter()
