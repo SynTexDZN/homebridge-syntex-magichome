@@ -158,7 +158,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 		this.WebServer.addPage('/serverside/version', (response) => {
 
-			response.write(require('../package.json').version);
+			response.write(require('./package.json').version);
 			response.end();
 		});
 
