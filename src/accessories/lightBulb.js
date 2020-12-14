@@ -254,8 +254,6 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setToCurrentColor(power, hue, saturation, brightness, callback)
 	{
-		var changed = false;
-
 		if(this.power != power)
 		{
 			this.power = power;
