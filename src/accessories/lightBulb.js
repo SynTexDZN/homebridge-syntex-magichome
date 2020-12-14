@@ -28,26 +28,30 @@ module.exports = class LightBulb extends ColoredBulbService
 		{
 			if(state.power != null)
 			{
-				this.setState(state.power, 
-					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(state.power));
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(state.power)
+
+				this.setState(state.power, () => {});
 			}
 
 			if(state.hue != null)
 			{
-				this.setHue(state.hue,
-					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(state.hue));
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Hue).updateValue(state.hue)
+
+				this.setHue(state.hue, () => {});
 			}
 
 			if(state.saturation != null)
 			{
-				this.setSaturation(state.saturation, 
-					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(state.saturation));
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Saturation).updateValue(state.saturation)
+
+				this.setSaturation(state.saturation, () => {});
 			}
 
 			if(state.brightness != null)
 			{
-				this.setBrightness(state.brightness, 
-					() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(state.brightness));
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.Brightness).updateValue(state.brightness)
+
+				this.setBrightness(state.brightness, () => {});
 			}
 		};
 	}

@@ -32,6 +32,8 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			if(state.power != null)
 			{
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(state.power);
+
 				this.setState(state.power, () => {});
 			}
 		};

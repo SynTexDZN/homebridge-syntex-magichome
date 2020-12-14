@@ -18,8 +18,10 @@ module.exports = class SceneSwitch extends SwitchService
 
 		this.changeHandler = (state) =>
 		{
-			if(state.power != null)
+			if(state.power)
 			{
+				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(true);
+
 				this.setState(state.power, () => {});
 			}
 		};
