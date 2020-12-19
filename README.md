@@ -3,6 +3,14 @@ A simple plugin to control MagicHome devices.<br>
 This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
 It also offers some tweaks and improvements to the original devices.
 
+<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="npm downloads" src="https://badgen.net/github/closed-issues/SynTexDZN/homebridge-syntex-magichome"></a>
+<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="npm downloads" src="https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-magichome"></a>
+<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="npm downloads" src="https://badgen.net/github/tags/SynTexDZN/homebridge-syntex-magichome"></a>
+<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="npm downloads" src="https://badgen.net/github/tag/SynTexDZN/homebridge-syntex-magichome"></a>
+
+<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="npm downloads" src="https://badgen.net/github/open-issues/SynTexDZN/homebridge-syntex-magichome"></a>
+<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="npm downloads" src="https://badgen.net/github/last-commit/SynTexDZN/homebridge-syntex-magichome" ></a>
+
 
 ## Description
 This plugin will create LightBulbs in Homekit capable of turning on / off, change color, change saturation, change brightness.
