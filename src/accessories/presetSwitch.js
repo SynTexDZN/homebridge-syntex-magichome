@@ -19,7 +19,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 			this.power = power || false;
 
-			this.homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.service.getCharacteristic(Characteristic.On).updateValue(this.power);
 
 		}, true);
 		
@@ -41,7 +41,7 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			if(state.power != null)
 			{
-				this.homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state.power);
+				this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
 
 				this.setState(state.power, () => {});
 			}
@@ -116,7 +116,7 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			this.power = state.power;
 
-			this.homebridgeAccessory.getServiceById(Service.Switch, '0').getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.service.getCharacteristic(Characteristic.On).updateValue(this.power);
 
 			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
 		}
