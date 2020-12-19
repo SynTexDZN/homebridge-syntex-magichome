@@ -3,6 +3,7 @@ let Characteristic, DeviceManager;
 const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
 const preset = require('../presets');
+const custom = require('../custom');
 const emitter = require('../emitter');
 
 module.exports = class PresetSwitch extends SwitchService
@@ -13,6 +14,12 @@ module.exports = class PresetSwitch extends SwitchService
 		DeviceManager = manager.DeviceManager;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+
+		super.getState((power) => {
+
+			this.power = power || false;
+
+		}, true);
 		
 		this.ips = deviceConfig.ips;
 		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
@@ -32,7 +39,7 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			if(state.power != null)
 			{
-				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(state.power);
+				this.homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state.power);
 
 				this.setState(state.power, () => {});
 			}
@@ -63,11 +70,16 @@ module.exports = class PresetSwitch extends SwitchService
 
 			DeviceManager.executeCommand(Object.keys(this.ips), '--on', () => {
 
-				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '-p ' + this.sceneValue + ' ' + this.speed, () => {
-
-					super.setState(true, () => callback(), true);
-
-				}), 1500);
+				if(preset[this.preset] != null)
+				{
+					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '-p ' + this.sceneValue + ' ' + this.speed, 
+						() => super.setState(true, () => callback(), true)), 1500);
+				}
+				else if(custom[this.preset] != null)
+				{
+					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"', 
+						() => super.setState(true, () => callback(), true)), 1500);
+				}
 			});
 		}
 		else
@@ -102,7 +114,7 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			this.power = state.power;
 
-			this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.homebridgeAccessory.getServiceById(Service.Switch, '0').getCharacteristic(Characteristic.On).updateValue(this.power);
 
 			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
 		}
@@ -128,7 +140,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				if(updateState)
 				{
-					this.updateState(false);
+					this.updateState({ power : false });
 				}
 			}
 		})

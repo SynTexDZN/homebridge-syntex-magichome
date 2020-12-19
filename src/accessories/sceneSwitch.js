@@ -20,7 +20,7 @@ module.exports = class SceneSwitch extends SwitchService
 		{
 			if(state.power)
 			{
-				this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(true);
+				this.homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(true);
 
 				this.setState(state.power, () => {});
 			}
@@ -59,6 +59,6 @@ module.exports = class SceneSwitch extends SwitchService
 
 			callback();
 
-		}).then(() => setTimeout(() => this.homebridgeAccessory.services[1].getCharacteristic(Characteristic.On).updateValue(false), 2000));
+		}).then(() => setTimeout(() => this.homebridgeAccessory.getServiceById(Service.Switch, '0').getCharacteristic(Characteristic.On).updateValue(false), 2000));
 	}
 }
