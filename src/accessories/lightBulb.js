@@ -30,9 +30,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
 			this.service.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
 
-			this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-
-		}))));
+		}, true))));
 
 		this.ip = deviceConfig.ip;
 		this.purewhite = deviceConfig.purewhite || false;
@@ -131,8 +129,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				this.power = value;
 
-				this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-
 				callback(null, this.power);
 			}
 			else
@@ -145,13 +141,14 @@ module.exports = class LightBulb extends ColoredBulbService
 
 						this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 					
-						super.setValue('state', this.power);
+						super.setState(this.power);
 					}
 					
 					callback(null, this.power);
 				});
 			}
-		});
+
+		}, true);
 	}
 
 	setState(value, callback)
@@ -179,7 +176,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.hue = state.hue;
 					
-						super.setValue('state', this.hue);
+						super.setHue(this.hue);
 					}
 					
 					callback(null, this.hue);
@@ -213,7 +210,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.saturation = state.saturation;
 
-						super.setValue('state', this.saturation);
+						super.setSaturation(this.saturation);
 					}
 					
 					callback(null, this.saturation);
@@ -247,7 +244,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.brightness = state.brightness;
 
-						super.setValue('state', this.brightness);
+						super.setBrightness(this.brightness);
 					}
 					
 					callback(null, this.brightness);

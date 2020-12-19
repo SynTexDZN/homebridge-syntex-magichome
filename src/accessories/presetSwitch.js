@@ -27,7 +27,7 @@ module.exports = class PresetSwitch extends SwitchService
 		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
 		this.preset = deviceConfig.preset || 'seven_color_cross_fade';
 		this.speed = deviceConfig.speed || 40;
-		this.sceneValue = preset[this.preset];
+		this.sceneValue = preset[this.preset] || custom[this.preset];
 
 		if(this.sceneValue == null)
 		{
@@ -90,10 +90,8 @@ module.exports = class PresetSwitch extends SwitchService
 
 			Object.keys(this.ips).forEach((ip) => {
 
-				const newPromise = new Promise((resolve) => {
-
-					DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
-				});
+				const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], 
+					() => resolve()));
 
 				promiseArray.push(newPromise);
 			});
