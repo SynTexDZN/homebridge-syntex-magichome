@@ -75,7 +75,7 @@ module.exports = class LightBulb extends ColoredBulbService
 		{
 			this.power = state.power;
 
-			this.homebridgeAccessory.getServiceById(Service.Lightbulb, '0').getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, 'rgb-0').getCharacteristic(Characteristic.On).updateValue(this.power);
 
 			changed = true;
 		}
@@ -84,7 +84,7 @@ module.exports = class LightBulb extends ColoredBulbService
 		{
 			this.hue = state.hue;
 
-			this.homebridgeAccessory.getServiceById(Service.Lightbulb, '0').getCharacteristic(Characteristic.Hue).updateValue(this.hue);
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, 'rgb-0').getCharacteristic(Characteristic.Hue).updateValue(this.hue);
 
 			changed = true;
 		}
@@ -93,7 +93,7 @@ module.exports = class LightBulb extends ColoredBulbService
 		{
 			this.saturation = state.saturation;
 
-			this.homebridgeAccessory.getServiceById(Service.Lightbulb, '0').getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, 'rgb-0').getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
 
 			changed = true;
 		}
@@ -102,7 +102,7 @@ module.exports = class LightBulb extends ColoredBulbService
 		{
 			this.brightness = state.brightness;
 
-			this.homebridgeAccessory.getServiceById(Service.Lightbulb, '0').getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, 'rgb-0').getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
 
 			changed = true;
 		}

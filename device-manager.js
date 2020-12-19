@@ -57,7 +57,7 @@ module.exports = class DeviceManager
 
 		for(const accessory of accessories)
 		{
-			if(accessory.services == 'rgb' || accessory.services == 'rgbw')
+			if(accessory[1].services == 'rgb' || accessory[1].services == 'rgbw')
 			{
 				this.getDevice(accessory[1].service[1].ip, (state) => accessory[1].service[1].updateState(state));
 			}
