@@ -162,3 +162,12 @@ purple_strobe_flash
 white_strobe_flash
 seven_color_jumping
 ```
+
+
+## Available Custom Presets Scenes
+```
+gradual_color_fade
+dark_gradual_color_fade
+strobe_lights
+police_lights
+```

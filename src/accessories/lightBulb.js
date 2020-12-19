@@ -25,6 +25,11 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.saturation = saturation || 100;
 			this.brightness = brightness || 50;
 
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Hue).updateValue(this.hue);
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
+			this.homebridgeAccessory.getServiceById(Service.Lightbulb, serviceConfig.subtype).getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+
 			this.logger.log('read', this.id, this.letters, 'HomeKit Status für [' + this.name + '] ist [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 
 		}))));
@@ -143,7 +148,7 @@ module.exports = class LightBulb extends ColoredBulbService
 						super.setValue('state', this.power);
 					}
 					
-					callback(null, state != null && state.power != null ? state.power : false);
+					callback(null, this.power);
 				});
 			}
 		});
@@ -177,7 +182,7 @@ module.exports = class LightBulb extends ColoredBulbService
 						super.setValue('state', this.hue);
 					}
 					
-					callback(null, state != null && state.hue != null ? state.hue : 0);
+					callback(null, this.hue);
 				});
 			}
 		});
@@ -211,7 +216,7 @@ module.exports = class LightBulb extends ColoredBulbService
 						super.setValue('state', this.saturation);
 					}
 					
-					callback(null, state != null && state.saturation != null ? state.saturation : 100);
+					callback(null, this.saturation);
 				});
 			}
 		});
@@ -245,7 +250,7 @@ module.exports = class LightBulb extends ColoredBulbService
 						super.setValue('state', this.brightness);
 					}
 					
-					callback(null, state != null && state.brightness != null ? state.brightness : 50);
+					callback(null, this.brightness);
 				});
 			}
 		});
@@ -257,12 +262,12 @@ module.exports = class LightBulb extends ColoredBulbService
 			() => super.setBrightness(value,
 			() => callback()));
 	}
-
+	/*
 	setToWarmWhite()
 	{
 		DeviceManager.executeCommand(this.ip, '-w ' + this.brightness);
 	}
-
+	*/
 	setToCurrentColor(power, hue, saturation, brightness, callback)
 	{
 		if(this.power != power)

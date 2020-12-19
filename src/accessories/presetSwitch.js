@@ -19,6 +19,8 @@ module.exports = class PresetSwitch extends SwitchService
 
 			this.power = power || false;
 
+			this.homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(this.power);
+
 		}, true);
 		
 		this.ips = deviceConfig.ips;
@@ -55,7 +57,7 @@ module.exports = class PresetSwitch extends SwitchService
 				this.power = value;
 			}
 				
-			callback(null, value != null ? value : false);
+			callback(null, this.power);
 
 		}, true);
 	}

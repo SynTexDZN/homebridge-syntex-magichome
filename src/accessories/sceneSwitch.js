@@ -1,4 +1,4 @@
-let Characteristic, DeviceManager;
+let Service, Characteristic, DeviceManager;
 
 const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
@@ -8,6 +8,7 @@ module.exports = class SceneSwitch extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
+		Service = manager.platform.api.hap.Service;
 		Characteristic = manager.platform.api.hap.Characteristic;
 		DeviceManager = manager.DeviceManager;
 		
@@ -18,9 +19,9 @@ module.exports = class SceneSwitch extends SwitchService
 
 		this.changeHandler = (state) =>
 		{
-			if(state.power)
+			if(state.power == true)
 			{
-				this.homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(true);
+				this.homebridgeAccessory.getServiceById(Service.Switch, serviceConfig.subtype).getCharacteristic(Characteristic.On).updateValue(state.power);
 
 				this.setState(state.power, () => {});
 			}
@@ -40,10 +41,8 @@ module.exports = class SceneSwitch extends SwitchService
 
 		Object.keys(this.ips).forEach((ip) => {
 
-			const newPromise = new Promise((resolve) => {
-
-				DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
-			});
+			const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], 
+				() => resolve()));
 
 			promiseArray.push(newPromise);
 		});

@@ -4,9 +4,9 @@ const convert = require('color-convert');
 
 module.exports = class DeviceManager
 {
-	constructor(log)
+	constructor(logger)
 	{
-		this.logger = log;
+		this.logger = logger;
 	}
 
 	getDevice(ip, callback)
@@ -30,9 +30,7 @@ module.exports = class DeviceManager
 
 			if(colors && colors.length > 0)
 			{
-				// Remove last char )
 				var str = colors.toString().substring(0, colors.toString().length - 1);
-				// Remove First Char (
 				str = str.substring(1, str.length);
 
 				const rgbColors = str.split(',').map((item) => {
@@ -75,7 +73,7 @@ module.exports = class DeviceManager
 			
 			if(err)
 			{
-				this.logger.log('error', 'bridge', 'Bridge', 'Es fehlen Berechtigungen zum Ausführen von [flux_led.py] ' + err);
+				this.logger.log('error', 'bridge', 'Bridge', 'Fehler beim Ausführen von [flux_led.py] ' + err);
 			}
 
 			if(callback)
