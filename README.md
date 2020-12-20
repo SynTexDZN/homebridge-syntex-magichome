@@ -9,7 +9,7 @@ It also offers some tweaks and improvements to the original devices.
 [![NPM Beta Version](https://img.shields.io/npm/v/homebridge-syntex-magichome/beta?color=orange&label=beta)](https://www.npmjs.com/package/homebridge-syntex-magichome)
 [![GitHub Commits](https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-magichome?color=yellow)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
 [![npm](https://badgen.net/npm/dt/homebridge-syntex-magichome?color=purple)](https://www.npmjs.com/package/@milo526/homebridge-tuya-web)
-[![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af)](https://bunq.me/HomebridgeTuyaWeb)
+[![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af)](https://bunq.me/HomebridgeTuyaWeb)<br>
 
 </span>
 
