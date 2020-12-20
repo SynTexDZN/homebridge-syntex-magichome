@@ -1,5 +1,3 @@
-<span align="left">
-	
 # Homebridge SynTex MagicHome
 A simple plugin to control MagicHome devices.<br>
 This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
@@ -10,8 +8,6 @@ It also offers some tweaks and improvements to the original devices.
 [![GitHub Commits](https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-magichome?color=yellow)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
 [![npm](https://badgen.net/npm/dt/homebridge-syntex-magichome?color=purple)](https://www.npmjs.com/package/@milo526/homebridge-tuya-web)
 [![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af)](https://bunq.me/HomebridgeTuyaWeb)
-
-</span>
 
 <br>
 
