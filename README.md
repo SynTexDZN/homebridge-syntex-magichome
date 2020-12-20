@@ -11,10 +11,6 @@ A simple plugin to control MagicHome devices.<br>
 This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
 It also offers some tweaks and improvements to the original devices.
 
-[![GitHub Last Commit](https://badgen.net/github/last-commit/SynTexDZN/homebridge-syntex-magichome)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
-[![GitHub Issues](https://img.shields.io/github/issues/SynTexDZN/homebridge-syntex-magichome)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SynTexDZN/homebridge-syntex-magichome)](https://github.com/milo526/homebridge-tuya-web/pulls)
-
 </span>
 
 
