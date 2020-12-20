@@ -8,11 +8,9 @@
 [![npm](https://badgen.net/npm/dt/homebridge-syntex-magichome?color=purple)](https://www.npmjs.com/package/@milo526/homebridge-tuya-web)
 [![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af)](https://bunq.me/HomebridgeTuyaWeb)
 
-<br>
-A simple plugin to control MagicHome devices.<br>
+<br>A simple plugin to control MagicHome devices.<br>
 This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
-It also offers some tweaks and improvements to the original devices.
-<br><br><br>
+It also offers some tweaks and improvements to the original devices.<br><br>
 
 [![GitHub Last Commit](https://badgen.net/github/last-commit/SynTexDZN/homebridge-syntex-magichome)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
 [![GitHub Issues](https://img.shields.io/github/issues/SynTexDZN/homebridge-syntex-magichome)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
