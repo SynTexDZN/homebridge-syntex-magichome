@@ -1,18 +1,25 @@
+<span align="center">
+
 # Homebridge SynTex MagicHome
+
+[![NPM Recommended Version](https://img.shields.io/npm/v/homebridge-syntex-magichome?label=release&color=brightgreen)](https://www.npmjs.com/package/homebridge-syntex-magichome)
+[![NPM Beta Version](https://img.shields.io/npm/v/homebridge-syntex-magichome/beta?color=orange&label=beta)](https://www.npmjs.com/package/homebridge-syntex-magichome)
+[![GitHub Commits](https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-magichome?color=yellow)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
+[![npm](https://badgen.net/npm/dt/homebridge-syntex-magichome?color=purple)](https://www.npmjs.com/package/@milo526/homebridge-tuya-web)
+[![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af)](https://bunq.me/HomebridgeTuyaWeb)
+
+<br>
 A simple plugin to control MagicHome devices.<br>
 This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
 It also offers some tweaks and improvements to the original devices.
+<br><br><br>
 
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Open Issues" src="https://badgen.net/github/open-issues/SynTexDZN/homebridge-syntex-magichome"></a>
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Closed Issues" src="https://badgen.net/github/closed-issues/SynTexDZN/homebridge-syntex-magichome"></a><br>
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Total Commits" src="https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-magichome"></a>
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Last Commit" src="https://badgen.net/github/last-commit/SynTexDZN/homebridge-syntex-magichome" ></a>
+[![GitHub Last Commit](https://badgen.net/github/last-commit/SynTexDZN/homebridge-syntex-magichome)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
+[![GitHub Issues](https://img.shields.io/github/issues/SynTexDZN/homebridge-syntex-magichome)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SynTexDZN/homebridge-syntex-magichome)](https://github.com/milo526/homebridge-tuya-web/pulls)
 
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Recommended Version" src="https://badgen.net/npm/v/homebridge-syntex-magichome"></a>
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Total Downloads" src="https://badgen.net/npm/dt/homebridge-syntex-magichome"></a><br>
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Newest Beta Version" src="https://badgen.net/npm/v/homebridge-syntex-magichome/beta"></a>
-<a href="https://www.npmjs.com/package/homebridge-syntex-magichome"><img title="Node Version" src="https://badgen.net/npm/node/homebridge-syntex-magichome"></a>
-
+</span>
+<br><br><br>
 
 ## Description
 This plugin will create LightBulbs in Homekit capable of turning on / off, change color, change saturation, change brightness.
