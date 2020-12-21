@@ -42,7 +42,7 @@
 		"party",
 		"color-cycle"
 	],
-	"homepage": "https://github.com/SynTexDZN/homebridge-syntex-webhooks#readme",
+	"homepage": "https://github.com/SynTexDZN/homebridge-syntex-magichome#readme",
 	"repository": {
 		"type": "git",
 		"url": "git+ssh://git@github.com/SynTexDZN/homebridge-syntex-magichome.git"

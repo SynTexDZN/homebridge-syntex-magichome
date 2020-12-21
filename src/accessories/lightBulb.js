@@ -153,7 +153,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setState(value, callback)
 	{
-		this.setToCurrentColor(value, this.hue, this.saturation, this.brightness,
+		this.setToCurrentColor({ power : value },
 			() => super.setState(value,
 			() => callback()));
 	}
@@ -187,7 +187,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setHue(value, callback)
 	{
-		this.setToCurrentColor(this.power, value, this.saturation, this.brightness,
+		this.setToCurrentColor({ hue : value },
 			() => super.setHue(value,
 			() => callback()));
 	}
@@ -221,7 +221,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setSaturation(value, callback)
 	{
-		this.setToCurrentColor(this.power, this.hue, value, this.brightness,
+		this.setToCurrentColor({ saturation : value },
 			() => super.setSaturation(value,
 			() => callback()));
 	}
@@ -255,7 +255,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	setBrightness(value, callback)
 	{
-		this.setToCurrentColor(this.power, this.hue, this.saturation, value,
+		this.setToCurrentColor({ brightness : value },
 			() => super.setBrightness(value,
 			() => callback()));
 	}
@@ -265,32 +265,32 @@ module.exports = class LightBulb extends ColoredBulbService
 		DeviceManager.executeCommand(this.ip, '-w ' + this.brightness);
 	}
 	*/
-	setToCurrentColor(power, hue, saturation, brightness, callback)
+	setToCurrentColor(state, callback)
 	{
-		if(this.power != power)
+		if(state.power != null && this.power != state.power)
 		{
-			this.power = power;
+			this.power = state.power;
 
 			this.changedPower = true;
 		}
 
-		if(this.hue != hue)
+		if(state.hue != null && this.hue != state.hue)
 		{
-			this.hue = hue;
+			this.hue = state.hue;
 
 			this.changedColor = true;
 		}
 
-		if(this.saturation != saturation)
+		if(state.saturation != null && this.saturation != state.saturation)
 		{
-			this.saturation = saturation;
+			this.saturation = state.saturation;
 
 			this.changedColor = true;
 		}
 
-		if(this.brightness != brightness)
+		if(state.brightness != null && this.brightness != state.brightness)
 		{
-			this.brightness = brightness;
+			this.brightness = state.brightness;
 
 			this.changedColor = true;
 		}
@@ -324,9 +324,6 @@ module.exports = class LightBulb extends ColoredBulbService
 											callback();
 										}
 
-										this.changedPower = false;
-										this.changedColor = false;
-				
 										this.running = false;
 									});
 
@@ -341,10 +338,11 @@ module.exports = class LightBulb extends ColoredBulbService
 									callback();
 								}
 		
-								this.changedPower = false;
-
 								this.running = false;
 							}
+
+							this.changedPower = false;
+							this.changedColor = false;
 						});
 					}
 					else if(this.changedColor)
@@ -360,8 +358,9 @@ module.exports = class LightBulb extends ColoredBulbService
 								callback();
 							}
 
+							this.changedPower = false;
 							this.changedColor = false;
-	
+
 							this.running = false;
 						});
 					}
