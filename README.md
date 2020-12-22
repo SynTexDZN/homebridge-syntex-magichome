@@ -12,7 +12,7 @@ It also offers some tweaks and improvements to the original devices.
 <br>
 
 ## Description
-This plugin will create LightBulbs in Homekit capable of turning on / off, change color, change saturation, change brightness.
+This plugin will create LightBulbs in HomeKit capable of turning on / off, change color, change saturation, change brightness.
 This plugin can also create preset patterns Switches (color cycle, fade, strobe).
 Its a great utility tool to set house mood to party / soothing with custom music.
 Can cycle through colors, sync all lights to strobe / fade.
