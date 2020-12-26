@@ -40,11 +40,11 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		this.changeHandler = (state) =>
 		{
-			if(state.power != null)
+			if(state.value != null)
 			{
-				this.service.getCharacteristic(Characteristic.On).updateValue(state.power)
+				this.service.getCharacteristic(Characteristic.On).updateValue(state.value)
 
-				this.setState(state.power, () => {});
+				this.setState(state.value, () => {});
 			}
 
 			if(state.hue != null)

@@ -11,9 +11,8 @@
 		"node": ">=9.11.2"
 	},
 	"dependencies": {
-		"request": "^2.88.0",
 		"color-convert": "^1.5.0",
-		"homebridge-syntex-dynamic-platform": "1.0.1-b17"
+		"homebridge-syntex-dynamic-platform": "1.0.1-b21"
 	},
 	"keywords": [
 		"syntex",
