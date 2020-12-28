@@ -22,17 +22,19 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		
 		if(this.api && this.logger)
 		{
+			this.logger.log('error', 'bridge', 'Bridge', this.LanguageSwitcher.language['execution_error'] + ' [Logging Test] ');
+
 			this.api.on('didFinishLaunching', () => {
 
 				DeviceManager = new DeviceManager(this.logger);
-				
+
 				const { exec } = require('child_process');
 						
 				exec('sudo chmod 777 -R /usr/local/lib/node_modules/' + pluginID + '/src/flux_led.py', (error, stdout, stderr) => {
 
 					if(error)
 					{
-						this.logger.log('error', 'bridge', 'Bridge', '[flux_led.py] konnte nicht aktiviert werden!');
+						this.logger.log('error', 'bridge', 'Bridge', this.LanguageSwitcher.language['execution_error'] + ' [flux_led.py] ' + error);
 					}
 				});
 
