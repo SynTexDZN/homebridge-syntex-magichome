@@ -139,7 +139,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.power = state.power;
 
-						this.logger.log('read', this.id, this.letters, '%read_state][0]% [' + this.name + '] %read_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+						this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 					
 						super.setState(this.power);
 					}
