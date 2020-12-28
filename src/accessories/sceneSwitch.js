@@ -53,7 +53,7 @@ module.exports = class SceneSwitch extends SwitchService
 				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}), 3000);
 			}
 			
-			this.logger.log('update', this.id, this.letters, this.LanguageSwitcher.language['update_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['update_state'][1] + ' [triggered] ( ' + this.id + ' )');
+			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [triggered] ( ' + this.id + ' )');
 
 			callback();
 

@@ -24,7 +24,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		{
 			this.api.on('didFinishLaunching', () => {
 
-				DeviceManager = new DeviceManager(this.logger, this.LanguageSwitcher);
+				DeviceManager = new DeviceManager(this.logger);
 
 				const { exec } = require('child_process');
 						
@@ -32,7 +32,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 					if(error)
 					{
-						this.logger.log('error', 'bridge', 'Bridge', this.LanguageSwitcher.language['execution_error'] + ' [flux_led.py] ' + error);
+						this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py] ' + error);
 					}
 				});
 
@@ -60,7 +60,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		{
 			const homebridgeAccessory = this.getAccessory(device.id);
 
-			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger, LanguageSwitcher : this.LanguageSwitcher, DeviceManager : DeviceManager }));
+			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger, DeviceManager : DeviceManager }));
 		}
 	}
 }

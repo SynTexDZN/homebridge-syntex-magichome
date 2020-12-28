@@ -117,7 +117,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		if(changed)
 		{
-			this.logger.log('update', this.id, this.letters, this.LanguageSwitcher.language['update_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['update_state'][1] + ' [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 		}
 	}
 
@@ -139,7 +139,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.power = state.power;
 
-						this.logger.log('read', this.id, this.letters, this.LanguageSwitcher.language['read_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['read_state'][1] + ' [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+						this.logger.log('read', this.id, this.letters, '%read_state][0]% [' + this.name + '] %read_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 					
 						super.setState(this.power);
 					}
@@ -317,7 +317,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 									DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
 
-										this.logger.log('update', this.id, this.letters, this.LanguageSwitcher.language['update_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['update_state'][1] + ' [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+										this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				
 										if(callback)
 										{
@@ -331,7 +331,7 @@ module.exports = class LightBulb extends ColoredBulbService
 							}
 							else
 							{
-								this.logger.log('update', this.id, this.letters, this.LanguageSwitcher.language['update_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['update_state'][1] + ' [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+								this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 			
 								if(callback)
 								{
@@ -351,7 +351,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 						DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
 
-							this.logger.log('update', this.id, this.letters, this.LanguageSwitcher.language['update_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['update_state'][1] + ' [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+							this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 	
 							if(callback)
 							{
