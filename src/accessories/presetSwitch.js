@@ -116,7 +116,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 			this.service.getCharacteristic(Characteristic.On).updateValue(this.power);
 
-			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [' + this.power + '] ( ' + this.id + ' )');
+			this.logger.log('update', this.id, this.letters, this.LanguageSwitcher.language['update_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['update_state'][1] + ' [' + this.power + '] ( ' + this.id + ' )');
 		}
 
 		super.setState(state.power, () => {});

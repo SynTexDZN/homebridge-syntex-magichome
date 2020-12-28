@@ -37,6 +37,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 		"platform": "SynTexMagicHome",
 		"log_directory": "./SynTex/log",
 		"port": 1712,
+		"language": "us",
 		"debug": false,
 		"pollingInterval": 10,
 		"accessories": [

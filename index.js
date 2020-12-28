@@ -22,8 +22,6 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		
 		if(this.api && this.logger)
 		{
-			this.logger.log('error', 'bridge', 'Bridge', this.LanguageSwitcher.language['execution_error'] + ' [Logging Test] ');
-
 			this.api.on('didFinishLaunching', () => {
 
 				DeviceManager = new DeviceManager(this.logger, this.LanguageSwitcher);

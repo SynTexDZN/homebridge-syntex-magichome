@@ -53,7 +53,7 @@ module.exports = class SceneSwitch extends SwitchService
 				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}), 3000);
 			}
 			
-			this.logger.log('update', this.id, this.letters, 'HomeKit Status für [' + this.name + '] geändert zu [triggered] ( ' + this.id + ' )');
+			this.logger.log('update', this.id, this.letters, this.LanguageSwitcher.language['update_state'][0] + ' [' + this.name + '] ' + this.LanguageSwitcher.language['update_state'][1] + ' [triggered] ( ' + this.id + ' )');
 
 			callback();
 
