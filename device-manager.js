@@ -4,9 +4,10 @@ const convert = require('color-convert');
 
 module.exports = class DeviceManager
 {
-	constructor(logger)
+	constructor(logger, LanguageSwitcher)
 	{
 		this.logger = logger;
+		this.LanguageSwitcher = LanguageSwitcher;
 	}
 
 	getDevice(ip, callback)
@@ -51,7 +52,7 @@ module.exports = class DeviceManager
 
 	refreshAccessories(accessories)
 	{
-		this.logger.debug('Geräte Status aktualisieren ..');
+		this.logger.debug(this.LanguageSwitcher.language['device_refresh'] + ' ..');
 
 		for(const accessory of accessories)
 		{
@@ -73,7 +74,7 @@ module.exports = class DeviceManager
 			
 			if(err)
 			{
-				this.logger.log('error', 'bridge', 'Bridge', 'Fehler beim Ausführen von [flux_led.py] ' + err);
+				this.logger.log('error', 'bridge', 'Bridge', this.LanguageSwitcher.language['execution_error'] + ' [flux_led.py] ' + err);
 			}
 
 			if(callback)
