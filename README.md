@@ -27,7 +27,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 
 
 ## Example Config
-**Info:** If the directory for the storage can't be created you have to do it by yourself and give it full write permissions!
+**Info:** If the `log_directory` for the storage can't be created you have to do it by yourself and give it full write permissions!
 - `sudo chown -R homebridge ./SynTex/` ( *permissions only for homebridge* )
 - `sudo chmod 777 -R homebridge ./SynTex/` ( *permissions for many processes* )
 
@@ -91,13 +91,20 @@ Can cycle through colors, sync all lights to strobe / fade.
 	}
 ]
 ```
+### Required Parameters
+- `platform `, `log_directory`, `accessories`
 
-- For the `language` you can use your country initials ( *Currently supported: `us`, `en`, `de`* )
+### Optional Parameters
+- If you want to control your accessory over HTTP calls you have to add a `port` to your config
+- For the `language` you can use your country initials if you want to change it ( *Currently supported: `us`, `en`, `de`* )
 - If you need further information for troubleshooting and bug reports you can enable the `debug` attribute
 - The `polling_interval` defines how often the plugin should chech the Magic Home Device state ( *in seconds* )
----
+
+### Accessory Config
 - For the id you can use a `random unique text`
 - Every device needs these configurations: `id`, `name`, `type`, `ip` and `services`
+
+---
 
 
 ## Update MagicHome Devices
