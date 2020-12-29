@@ -92,7 +92,9 @@ Can cycle through colors, sync all lights to strobe / fade.
 ]
 ```
 ### Required Parameters
-- `platform `, `log_directory`, `accessories`
+- `platform`
+- `log_directory`
+- `accessories`
 
 ### Optional Parameters
 - If you want to control your accessory over HTTP calls you have to add a `port` to your config
