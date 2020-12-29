@@ -39,7 +39,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 		"port": 1712,
 		"language": "us",
 		"debug": false,
-		"pollingInterval": 10,
+		"polling_interval": 10,
 		"accessories": [
 			{
 				"id": "light1",
@@ -92,6 +92,10 @@ Can cycle through colors, sync all lights to strobe / fade.
 ]
 ```
 
+- For the `language` you can use your country initials ( *Currently supported: `us`, `en`, `de`* )
+- If you need further information for troubleshooting and bug reports you can enable the `debug` attribute
+- The `polling_interval` defines how often the plugin should chech the Magic Home Device state ( *in seconds* )
+---
 - For the id you can use a `random unique text`
 - Every device needs these configurations: `id`, `name`, `type`, `ip` and `services`
 
@@ -145,7 +149,7 @@ You can use MAC Address instead of IP Address as well. Please note format of MAC
 
 Do note : While using MACS : This plugin auto discover connected lights on the network and map IP's to their corresponding MAC. Initially it can take time to discover all devices. All devices should be discovered and mapped in 60-120s. Once mapped IP & MACs are cached, and gets rediscovered every 30s to map new IP to the light. This feature is useful for people unable to assign Static IP to their lights.
 
-Setting `pollingInterval` to 0, will disable polling device for status update.
+Setting `polling_interval` to 0, will disable polling device for status update.
 
 
 ## Available Presets Scenes

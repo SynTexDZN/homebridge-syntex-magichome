@@ -6,7 +6,7 @@
 			"port": 1712,
 			"language": "us",
 			"debug": false,
-			"pollingInterval": 10,
+			"polling_interval": 10,
 			"accessories": [
 				{
 					"id": "light1",

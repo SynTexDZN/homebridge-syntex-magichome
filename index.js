@@ -18,7 +18,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		
 		this.devices = config['accessories'] || [];
 
-		this.pollingInterval = config['pollingInterval'] == 0 ? 0 : config['pollingInterval'] || 10;
+		this.polling_interval = config['polling_interval'] == 0 ? 0 : config['polling_interval'] || 10;
 		
 		if(this.api && this.logger)
 		{
@@ -40,13 +40,13 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 				DeviceManager.refreshAccessories(this.accessories);
 				
-				if(this.pollingInterval != 0)
+				if(this.polling_interval != 0)
 				{
 					this.refreshInterval = setInterval(() => {
 
 						DeviceManager.refreshAccessories(this.accessories);
 		
-					}, this.pollingInterval * 1000);
+					}, this.polling_interval * 1000);
 				}
 				
 				this.finishInit();
