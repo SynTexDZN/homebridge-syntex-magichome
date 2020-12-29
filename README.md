@@ -97,10 +97,10 @@ Can cycle through colors, sync all lights to strobe / fade.
 - `accessories` For the accessory config.
 
 ### Optional Parameters
-- If you want to control your accessory over HTTP calls you have to add a `port` to your config.
-- For the `language` you can use your country initials if you want to change it *( Currently supported: `us`, `en`, `de` )*
-- If you need further information for troubleshooting and bug reports you can enable the `debug` attribute.
-- The `polling_interval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
+- `port` To control your accessory over HTTP calls.
+- `language` You can use your country initials if you want to change it *( Currently supported: `us`, `en`, `de` )*
+- `debug` For further information because of troubleshooting and bug reports.
+- `polling_interval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
 
 ### Accessory Config
 - Every device needs these configurations: `id`, `name`, `type`, `ip` and `services` *( required )*
