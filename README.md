@@ -92,14 +92,14 @@ Can cycle through colors, sync all lights to strobe / fade.
 ]
 ```
 ### Required Parameters
-- `platform`
-- `log_directory`
-- `accessories`
+- `platform` is always `SynTexMagicHome`
+- `log_directory` The path where your logs are stored.
+- `accessories` For the accessory config.
 
 ### Optional Parameters
-- If you want to control your accessory over HTTP calls you have to add a `port` to your config
+- If you want to control your accessory over HTTP calls you have to add a `port` to your config.
 - For the `language` you can use your country initials if you want to change it *( Currently supported: `us`, `en`, `de` )*
-- If you need further information for troubleshooting and bug reports you can enable the `debug` attribute
+- If you need further information for troubleshooting and bug reports you can enable the `debug` attribute.
 - The `polling_interval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
 
 ### Accessory Config
@@ -155,7 +155,7 @@ Any devices created by Zengge and running on the Magic Home Wi-Fi (or other apps
 
 ## Preset Switch Configuration
 
-`ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`.
+`ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
 Turning off Preset Pattern Switch , all lights will be reset to this color.
 
 You can use MAC Address instead of IP Address as well. Please note format of MAC Address. It should be in capital letters and `:` should not be present. e.g. `DC4F22C5XXXX`
