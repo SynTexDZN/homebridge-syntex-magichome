@@ -31,7 +31,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 		if(this.sceneValue == null)
 		{
-			this.logger.log('warn', 'bridge', 'Bridge', 'Das Preset [' + this.preset + '] wurde nicht gefunden. Es wird das Default-Preset [seven_color_cross_fade] verwendet!');
+			this.logger.log('warn', 'bridge', 'Bridge', '%preset_not_found[0]% [' + this.preset + '] %preset_not_found[1]% [seven_color_cross_fade] %preset_not_found[2]%!');
 			this.sceneValue = 37;
 		}
 
