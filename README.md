@@ -103,8 +103,9 @@ Can cycle through colors, sync all lights to strobe / fade.
 - The `polling_interval` defines how often the plugin should chech the Magic Home Device state ( *in seconds* )
 
 ### Accessory Config
-- For the id you can use a `random unique text`
-- Every device needs these configurations: `id`, `name`, `type`, `ip` and `services`
+- Every device needs these configurations: `id`, `name`, `type`, `ip` and `services` ( *required* )
+- For the id you can use a `random unique text` ( *no duplicates!* )
+
 
 ---
 
@@ -134,6 +135,9 @@ Can cycle through colors, sync all lights to strobe / fade.
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&remove=CONFIRM`\
 ( *Removes `ABCDEF1234567890` from the home app* )
+
+
+---
 
 
 ## Compatible Devices
