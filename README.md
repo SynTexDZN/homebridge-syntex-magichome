@@ -33,65 +33,65 @@ Can cycle through colors, sync all lights to strobe / fade.
 
 ```
 "platforms": [
-	{
-		"platform": "SynTexMagicHome",
-		"log_directory": "./SynTex/log",
-		"port": 1712,
-		"language": "us",
-		"debug": false,
-		"polling_interval": 10,
-		"accessories": [
-			{
-				"id": "light1",
-				"name": "Kitchen LED Strip",
-				"type": "light",
-				"ip": "DC4F22C5D4E1",
-				"services": "rgb",
-				"purewhite": false
-			},
-			{
-				"id": "light2",
-				"name": "Living Room LED Strip",
-				"type": "light",
-				"ip": "192.168.1.112",
-				"services": "rgbw",
-				"purewhite": true
-			},
-			{
-				"id": "pswitch1",
-				"name": "Kitchen Color Strobe Flash (Party)",
-				"type": "preset-switch",
-				"ips": {
-					"192.168.1.111": "255,255,255"
-				},
-				"services": "switch",
-				"preset": "seven_color_strobe_flash",
-				"speed": 60
-			},
-			{
-				"id": "pswitch2",
-				"name": "All Lights Cross Fade (Soothing)",
-				"type": "preset-switch",
-				"ips": {
-					"DC4F22C5D4E1": "0,150,255",
-					"192.168.1.112": "102,255,102"
-				},
-				"services": "switch",
-				"preset": "seven_color_cross_fade",
-				"speed": 40,
-				"shouldTurnOff": true
-			},
-			{
-				"id": "rswitch1",
-				"name": "Reset All Switches to Default",
-				"type": "scene-switch",
-				"services": "switch",
-				"ips": {
-					"192.168.1.111": "255,255,255"
-				}
-			}
-		]
-	}
+    {
+        "platform": "SynTexMagicHome",
+        "log_directory": "./SynTex/log",
+        "port": 1712,
+        "language": "us",
+        "debug": false,
+        "polling_interval": 10,
+        "accessories": [
+            {
+                "id": "light1",
+                "name": "Kitchen LED Strip",
+                "type": "light",
+                "ip": "DC4F22C5D4E1",
+                "services": "rgb",
+                "purewhite": false
+            },
+            {
+                "id": "light2",
+                "name": "Living Room LED Strip",
+                "type": "light",
+                "ip": "192.168.1.112",
+                "services": "rgbw",
+                "purewhite": true
+            },
+            {
+                "id": "pswitch1",
+                "name": "Kitchen Color Strobe Flash (Party)",
+                "type": "preset-switch",
+                "ips": {
+                    "192.168.1.111": "255,255,255"
+                },
+                "services": "switch",
+                "preset": "seven_color_strobe_flash",
+                "speed": 60
+            },
+            {
+                "id": "pswitch2",
+                "name": "All Lights Cross Fade (Soothing)",
+                "type": "preset-switch",
+                "ips": {
+                    "DC4F22C5D4E1": "0,150,255",
+                    "192.168.1.112": "102,255,102"
+                },
+                "services": "switch",
+                "preset": "seven_color_cross_fade",
+                "speed": 40,
+                "shouldTurnOff": true
+            },
+            {
+                "id": "rswitch1",
+                "name": "Reset All Switches to Default",
+                "type": "scene-switch",
+                "services": "switch",
+                "ips": {
+                    "192.168.1.111": "255,255,255"
+                }
+            }
+        ]
+    }
 ]
 ```
 ### Required Parameters
