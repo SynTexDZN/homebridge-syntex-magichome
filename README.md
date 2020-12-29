@@ -64,6 +64,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 				"ips": {
 					"192.168.1.111": "255,255,255"
 				},
+				"services": "switch",
 				"preset": "seven_color_strobe_flash",
 				"speed": 60
 			},
@@ -75,6 +76,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 					"DC4F22C5D4E1": "0,150,255",
 					"192.168.1.112": "102,255,102"
 				},
+				"services": "switch",
 				"preset": "seven_color_cross_fade",
 				"speed": 40,
 				"shouldTurnOff": true
@@ -82,7 +84,8 @@ Can cycle through colors, sync all lights to strobe / fade.
 			{
 				"id": "rswitch1",
 				"name": "Reset All Switches to Default",
-				"type": "reset-switch",
+				"type": "scene-switch",
+				"services": "switch",
 				"ips": {
 					"192.168.1.111": "255,255,255"
 				}
@@ -103,9 +106,12 @@ Can cycle through colors, sync all lights to strobe / fade.
 - `polling_interval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
 
 ### Accessory Config
-- Every device needs these configurations: `id`, `name`, `type`, `ip` and `services` *( required )*
-- For the id you can use a `random unique text` *( no duplicates! )*
-
+- Every device needs these parameters: `id`, `name`, `type`, `ip` and `services` *( required )*
+- `id` has to be a `random unique text` *( no duplicates! )*
+- `name` could be anything.
+- `type` can be: `light` / `preset-switch` / `scene-switch`
+- `ip` Use a normal ip or a mac address.
+- `services` Should be a `switch` *( for preset and reset switches )* or `rgb` / `rgbw` *( based on your device: look below )*
 
 ---
 
