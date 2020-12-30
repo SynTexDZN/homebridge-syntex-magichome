@@ -2,11 +2,11 @@
 	"platforms": [
 		{
 			"platform": "SynTexMagicHome",
-			"log_directory": "./SynTex/log",
+			"logDirectory": "./SynTex/log",
 			"port": 1712,
 			"language": "us",
 			"debug": false,
-			"polling_interval": 10,
+			"pollingInterval": 10,
 			"accessories": [
 				{
 					"id": "light1",

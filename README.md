@@ -27,7 +27,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 
 
 ## Example Config
-**Info:** If the `log_directory` for the storage can't be created you have to do it by yourself and give it full write permissions!
+**Info:** If the `logDirectory` for the storage can't be created you have to do it by yourself and give it full write permissions!
 - `sudo chown -R homebridge ./SynTex/` *( permissions only for homebridge )*
 - `sudo chmod 777 -R homebridge ./SynTex/` *( permissions for many processes )*
 
@@ -35,11 +35,11 @@ Can cycle through colors, sync all lights to strobe / fade.
 "platforms": [
     {
         "platform": "SynTexMagicHome",
-        "log_directory": "./SynTex/log",
+        "logDirectory": "./SynTex/log",
         "port": 1712,
         "language": "us",
         "debug": false,
-        "polling_interval": 10,
+        "pollingInterval": 10,
         "accessories": [
             {
                 "id": "light1",
@@ -96,14 +96,14 @@ Can cycle through colors, sync all lights to strobe / fade.
 ```
 ### Required Parameters
 - `platform` is always `SynTexMagicHome`
-- `log_directory` The path where your logs are stored.
+- `logDirectory` The path where your logs are stored.
 - `accessories` For the accessory config.
 
 ### Optional Parameters
 - `port` To control your accessory over HTTP calls.
 - `language` You can use your country initials if you want to change it *( Currently supported: `us`, `en`, `de` )*
 - `debug` For further information because of troubleshooting and bug reports.
-- `polling_interval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
+- `pollingInterval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
 
 ### Accessory Config
 - Every device needs these parameters: `id`, `name`, `type`, `ip` and `services` *( required )*
@@ -168,7 +168,7 @@ You can use MAC Address instead of IP Address as well. Please note format of MAC
 
 Do note : While using MACS : This plugin auto discover connected lights on the network and map IP's to their corresponding MAC. Initially it can take time to discover all devices. All devices should be discovered and mapped in 60-120s. Once mapped IP & MACs are cached, and gets rediscovered every 30s to map new IP to the light. This feature is useful for people unable to assign Static IP to their lights.
 
-Setting `polling_interval` to 0, will disable polling device for status update.
+Setting `pollingInterval` to 0, will disable polling device for status update.
 
 
 ## Available Presets Scenes
