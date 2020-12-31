@@ -113,6 +113,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 - `ip` Use a normal ip or a mac address.
 - `services` Should be a `switch` *( for preset and reset switches )* or `rgb` / `rgbw` *( based on your device: look below )*
 
+
 ---
 
 
