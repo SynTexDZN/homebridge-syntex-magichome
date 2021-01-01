@@ -47,6 +47,8 @@ module.exports = class LightBulb extends ColoredBulbService
 				this.setState(state.value, () => {});
 			}
 
+			console.log(1, state);
+
 			if(state.hue != null)
 			{
 				this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue)
@@ -267,6 +269,8 @@ module.exports = class LightBulb extends ColoredBulbService
 	*/
 	setToCurrentColor(state, callback)
 	{
+		console.log(2, state);
+		
 		if(state.power != null && this.power != state.power)
 		{
 			this.power = state.power;
@@ -295,19 +299,27 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.changedColor = true;
 		}
 
+		console.log(3, 'CHANGED', this.changedPower, this.changedColor);
+
 		if(this.changedPower || this.changedColor)
 		{
 			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 
 			setTimeout(() => {
 
+				console.log(4, 'RUNNING', this.running);
+
 				if(!this.running)
 				{
 					this.running = true;
 
+					console.log(5, 'CHANGED', this.changedPower, this.changedColor);
+
 					if(this.changedPower)
 					{
 						DeviceManager.executeCommand(this.ip, this.power ? '--on' : '--off', () => {
+
+							console.log(5, 'CHANGED COLOR', this.changedColor);
 
 							if(this.changedColor)
 							{
