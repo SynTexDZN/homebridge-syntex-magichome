@@ -376,6 +376,10 @@ module.exports = class LightBulb extends ColoredBulbService
 							this.running = false;
 						});
 					}
+					else
+					{
+						this.running = false;
+					}
 				}
 				else if(callback)
 				{
