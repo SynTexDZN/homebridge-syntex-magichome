@@ -38,38 +38,38 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		this.running = false;
 
-		this.changeHandler = (state) =>
-		{
+		this.changeHandler = (state) => this.setToCurrentColor(state, () => {
+
+			console.log(1, state);
+			
 			if(state.value != null)
 			{
 				this.service.getCharacteristic(Characteristic.On).updateValue(state.value)
 
-				this.setState(state.value, () => {});
+				super.setState(state.value, () => {});
 			}
-
-			console.log(1, state);
 
 			if(state.hue != null)
 			{
 				this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue)
 
-				this.setHue(state.hue, () => {});
+				super.setHue(state.hue, () => {});
 			}
 
 			if(state.saturation != null)
 			{
 				this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation)
 
-				this.setSaturation(state.saturation, () => {});
+				super.setSaturation(state.saturation, () => {});
 			}
 
 			if(state.brightness != null)
 			{
 				this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness)
 
-				this.setBrightness(state.brightness, () => {});
+				super.setBrightness(state.brightness, () => {});
 			}
-		};
+		});
 	}
 
 	updateState(state)
