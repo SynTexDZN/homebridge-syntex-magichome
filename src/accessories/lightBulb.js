@@ -38,38 +38,43 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		this.running = false;
 
-		this.changeHandler = (state) => this.setToCurrentColor(state, () => {
+		this.changeHandler = (state) => {
 
-			console.log(1, state);
-			
-			if(state.value != null)
-			{
-				this.service.getCharacteristic(Characteristic.On).updateValue(state.value)
+			state.power = state.value;
 
-				super.setState(state.value, () => {});
-			}
+			this.setToCurrentColor(state, () => {
 
-			if(state.hue != null)
-			{
-				this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue)
+				console.log(1, state);
 
-				super.setHue(state.hue, () => {});
-			}
+				if(state.value != null)
+				{
+					this.service.getCharacteristic(Characteristic.On).updateValue(state.value)
 
-			if(state.saturation != null)
-			{
-				this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation)
+					super.setState(state.value, () => {});
+				}
 
-				super.setSaturation(state.saturation, () => {});
-			}
+				if(state.hue != null)
+				{
+					this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue)
 
-			if(state.brightness != null)
-			{
-				this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness)
+					super.setHue(state.hue, () => {});
+				}
 
-				super.setBrightness(state.brightness, () => {});
-			}
-		});
+				if(state.saturation != null)
+				{
+					this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation)
+
+					super.setSaturation(state.saturation, () => {});
+				}
+
+				if(state.brightness != null)
+				{
+					this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness)
+
+					super.setBrightness(state.brightness, () => {});
+				}
+			});
+		};
 	}
 
 	updateState(state)
