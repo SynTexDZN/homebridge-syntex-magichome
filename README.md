@@ -141,7 +141,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 2. Insert the `Bridge IP` and `Device ID`
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&remove=CONFIRM`\
-*( Removes `ABCDEF1234567890` from the home app )*
+*( Removes `ABCDEF1234567890` from the Home app )*
 
 
 ---
