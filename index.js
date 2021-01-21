@@ -22,19 +22,19 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		
 		if(this.api && this.logger)
 		{
+			const { exec } = require('child_process');
+						
+			exec('sudo chmod 777 -R /usr/local/lib/node_modules/' + pluginID + '/src/flux_led.py', (error, stdout, stderr) => {
+
+				if(error)
+				{
+					this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py] ' + error);
+				}
+			});
+			
 			this.api.on('didFinishLaunching', () => {
 
 				DeviceManager = new DeviceManager(this.logger);
-
-				const { exec } = require('child_process');
-						
-				exec('sudo chmod 777 -R /usr/local/lib/node_modules/' + pluginID + '/src/flux_led.py', (error, stdout, stderr) => {
-
-					if(error)
-					{
-						this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py] ' + error);
-					}
-				});
 
 				this.loadAccessories();
 

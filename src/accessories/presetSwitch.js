@@ -57,7 +57,7 @@ module.exports = class PresetSwitch extends SwitchService
 			{
 				this.power = value;
 			}
-				
+
 			callback(null, this.power);
 
 		}, true);
@@ -69,8 +69,6 @@ module.exports = class PresetSwitch extends SwitchService
 
 		if(value == true)
 		{
-			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
-
 			DeviceManager.executeCommand(Object.keys(this.ips), '--on', () => {
 
 				if(preset[this.preset] != null)
@@ -84,6 +82,8 @@ module.exports = class PresetSwitch extends SwitchService
 						() => super.setState(true, () => callback(), true)), 1500);
 				}
 			});
+
+			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 		}
 		else
 		{
@@ -99,12 +99,14 @@ module.exports = class PresetSwitch extends SwitchService
 
 			Promise.all(promiseArray).then(() => {
 
-				super.setState(false, () => callback(), true);
+				callback();
 
 				if(this.shouldTurnOff)
 				{
 					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}, 1500));
 				}
+
+				super.setState(false, () => {}, true);
 			});
 		}
 	}
@@ -113,9 +115,9 @@ module.exports = class PresetSwitch extends SwitchService
 	{
 		if(state.power != null && this.power != state.power)
 		{
-			this.power = state.power;
+			this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
 
-			this.service.getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.power = state.power;
 
 			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.power + '] ( ' + this.id + ' )');
 		}
@@ -144,6 +146,6 @@ module.exports = class PresetSwitch extends SwitchService
 					this.updateState({ power : false });
 				}
 			}
-		})
+		});
 	}
 }

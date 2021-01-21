@@ -81,36 +81,36 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		if(state.power != null && this.power != state.power)
 		{
-			this.power = state.power;
+			this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
 
-			this.service.getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.power = state.power;
 
 			changed = true;
 		}
 
 		if(state.hue != null && this.hue != state.hue)
 		{
-			this.hue = state.hue;
+			this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue);
 
-			this.service.getCharacteristic(Characteristic.Hue).updateValue(this.hue);
+			this.hue = state.hue;
 
 			changed = true;
 		}
 
 		if(state.saturation != null && this.saturation != state.saturation)
 		{
-			this.saturation = state.saturation;
+			this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation);
 
-			this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
+			this.saturation = state.saturation;
 
 			changed = true;
 		}
 
 		if(state.brightness != null && this.brightness != state.brightness)
 		{
-			this.brightness = state.brightness;
+			this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
 
-			this.service.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+			this.brightness = state.brightness;
 
 			changed = true;
 		}
@@ -132,9 +132,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(value != null)
 			{
-				this.power = value;
+				callback(null, value);
 
-				callback(null, this.power);
+				this.power = value;
 			}
 			else
 			{
@@ -169,9 +169,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(value != null)
 			{
-				this.hue = value;
+				callback(null, value);
 
-				callback(null, this.hue);
+				this.hue = value;
 			}
 			else
 			{
@@ -203,9 +203,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(value != null)
 			{
-				this.saturation = value;
+				callback(null, value);
 
-				callback(null, this.saturation);
+				this.saturation = value;
 			}
 			else
 			{
@@ -237,9 +237,9 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(value != null)
 			{
-				this.brightness = value;
+				callback(null, value);
 
-				callback(null, this.brightness);
+				this.brightness = value;
 			}
 			else
 			{
@@ -302,8 +302,6 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		if(this.changedPower || this.changedColor)
 		{
-			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
-
 			setTimeout(() => {
 
 				if(!this.running)
@@ -382,6 +380,8 @@ module.exports = class LightBulb extends ColoredBulbService
 				}
 	
 			}, 10);
+
+			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 		}
 		else if(callback)
 		{

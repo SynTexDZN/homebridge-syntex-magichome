@@ -46,7 +46,7 @@ module.exports = class DeviceManager
 			}
 
 			callback(settings);
-		})
+		});
 	}
 
 	refreshAccessories(accessories)
