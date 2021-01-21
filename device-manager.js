@@ -69,16 +69,16 @@ module.exports = class DeviceManager
 
 		exec(cmd, (err, stdOut) => {
 			
+			if(callback)
+			{
+				callback(err, stdOut);
+			}
+
 			this.logger.debug(stdOut);
 			
 			if(err)
 			{
 				this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py] ' + err);
-			}
-
-			if(callback)
-			{
-				callback(err, stdOut);
 			}
 		});
 	}

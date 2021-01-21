@@ -144,9 +144,9 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.power = state.power;
 
-						this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-					
 						super.setState(this.power);
+
+						this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 					}
 					
 					callback(null, this.power);
@@ -322,28 +322,28 @@ module.exports = class LightBulb extends ColoredBulbService
 
 									DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
 
-										this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-				
 										if(callback)
 										{
 											callback();
 										}
 
 										this.running = false;
+
+										this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 									});
 
 								}, 2000);
 							}
 							else
 							{
-								this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-			
 								if(callback)
 								{
 									callback();
 								}
 		
 								this.running = false;
+
+								this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 							}
 
 							this.changedPower = false;
@@ -352,12 +352,12 @@ module.exports = class LightBulb extends ColoredBulbService
 					}
 					else if(this.changedColor)
 					{
+						//this.logger.debug(this.hue, this.saturation, this.brightness);
+
 						var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
 
 						DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
 
-							this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-	
 							if(callback)
 							{
 								callback();
@@ -367,6 +367,8 @@ module.exports = class LightBulb extends ColoredBulbService
 							this.changedColor = false;
 
 							this.running = false;
+
+							this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 						});
 					}
 					else
@@ -379,7 +381,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					callback();
 				}
 	
-			}, 100);
+			}, 10);
 		}
 		else if(callback)
 		{

@@ -48,14 +48,14 @@ module.exports = class SceneSwitch extends SwitchService
 
 		Promise.all(promiseArray).then(() => {
 
+			callback();
+			
 			if(this.shouldTurnOff)
 			{
 				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}), 3000);
 			}
-			
-			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [triggered] ( ' + this.id + ' )');
 
-			callback();
+			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [triggered] ( ' + this.id + ' )');
 
 		}).then(() => setTimeout(() => this.service.getCharacteristic(Characteristic.On).updateValue(false), 2000));
 	}
