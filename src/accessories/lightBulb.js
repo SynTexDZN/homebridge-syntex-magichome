@@ -1,4 +1,4 @@
-let Characteristic, DeviceManager;
+let Characteristic, DeviceManager, AutomationSystem;
 
 const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
@@ -11,6 +11,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
 		DeviceManager = manager.DeviceManager;
+		AutomationSystem = manager.AutomationSystem;
 
 		var specialConfig = serviceConfig;
 
@@ -373,6 +374,10 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						this.running = false;
 					}
+
+					emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
+
+					AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.power, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
 				}
 				else if(callback)
 				{
@@ -380,8 +385,6 @@ module.exports = class LightBulb extends ColoredBulbService
 				}
 	
 			}, 10);
-
-			emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 		}
 		else if(callback)
 		{
