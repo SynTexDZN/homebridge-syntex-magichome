@@ -351,8 +351,6 @@ module.exports = class LightBulb extends ColoredBulbService
 					}
 					else if(this.changedColor)
 					{
-						//this.logger.debug(this.hue, this.saturation, this.brightness);
-
 						var converted = convert.hsv.rgb([this.hue, this.saturation, this.brightness]);
 
 						DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], () => {
