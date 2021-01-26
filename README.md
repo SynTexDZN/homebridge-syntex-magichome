@@ -200,6 +200,10 @@ To enable the automation module you have to create a file named `automation.json
   }
 }
 ```
+### Supported Plugins
+- SynTexMagicHome *( `homebridge-syntex-magichome` )*
+- SynTexTuya *( `homebridge-syntex-tuya` )*
+- SynTexWebHooks *( `homebridge-syntex-webhooks` )*
 
 
 ---
