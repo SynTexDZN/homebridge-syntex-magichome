@@ -149,7 +149,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 
 
 ## Automation
-To enable the automation module you have to create a file named `automation.json` in your `automationDirectory` or install the `homebridge-syntex` plugin to create them via UI *( only between syntex plugins )*<br>
+To enable the automation module you have to create a file named `automation.json` in your `automationDirectory` or install the `homebridge-syntex` plugin to create them via UI *( only between syntex plugins )*<br><br>
 **Example:**  For manual configuration update your `automation.json` file. See snippet below.   
 
 ```
