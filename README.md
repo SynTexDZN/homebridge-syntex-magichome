@@ -200,6 +200,45 @@ To enable the automation module you have to create a file named `automation.json
   }
 }
 ```
+### Required Parameters
+- `id` is the same like in your config file.
+- `name` The name of the accessory.
+- `letters` See letter configuration below.
+- `operation` Use the logical operands *( `>`, `<`, `=` )*
+- `value` The state of your accessory.
+
+
+### Required Parameters
+- `plugin` Use the platform name of the plugin *( see supported plugins below )*
+
+
+### Letter Configuration
+The letters are split into two parts *( numbers )*
+1. Service Type
+- A : Contact
+- B : Motion
+- C : Temperature
+- D : Humidity
+- E : Rain
+- F : Light
+- 0 : Occupancy
+- 1 : Smoke
+- 2 : Airquality
+- 3 : RGB
+- 4 : Switch
+- 5 : Relais
+- 6 : Stateless Switch
+- 7 : Outlet
+- 8 : LED
+- 9 : Dimmer
+
+2. Duplicate Counter
+- If there are more services of the same type the counter indicates which is which
+- Simply count from top to bottom.
+
+**Example:**  -  
+
+
 ### Supported Plugins
 - SynTexMagicHome *( `homebridge-syntex-magichome` )*
 - SynTexTuya *( `homebridge-syntex-tuya` )*
