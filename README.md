@@ -90,7 +90,8 @@ Can cycle through colors, sync all lights to strobe / fade.
                 "ips": {
                     "192.168.1.111": "255,255,255"
                 }
-            }
+            },
+            { ... }
         ]
     }
 ]
@@ -196,7 +197,8 @@ To enable the automation module you have to create a file named `automation.json
           "url": "http://192.168.188.179:1713/devices?id=58747402d8bfc008d0dc&value=true&brightness=100"
         }
       ]
-    }
+    },
+    { ... }
   }
 }
 ```
