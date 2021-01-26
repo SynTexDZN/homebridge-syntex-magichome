@@ -36,6 +36,7 @@ Can cycle through colors, sync all lights to strobe / fade.
     {
         "platform": "SynTexMagicHome",
         "logDirectory": "./SynTex/log",
+        "automationDirectory": "./SynTex/automation",
         "port": 1712,
         "language": "us",
         "debug": false,
@@ -142,6 +143,62 @@ Can cycle through colors, sync all lights to strobe / fade.
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&remove=CONFIRM`\
 *( Removes `ABCDEF1234567890` from the Home app )*
+
+
+---
+
+
+## Automation
+To enable the automation module you have to create `automation.json` in your `automationDirectory` or install the `homebridge-syntex` plugin to create them via UI *( only between syntex plugins )*
+
+```
+{
+  "id": "automation",
+  "automation": [
+    {
+      "id": 0,
+      "name": "Demo Automation",
+      "active": true,
+      "trigger": [
+        {
+          "id": "multi2",
+          "name": "Multi Device",
+          "letters": "F0",
+          "plugin": "SynTexWebHooks",
+          "operation": "<",
+          "value": "1000"
+        }
+      ],
+      "condition": [
+        {
+          "id": "multi1",
+          "name": "Multi Switch",
+          "letters": "41",
+          "plugin": "SynTexWebHooks",
+          "operation": "=",
+          "value": "false"
+        }
+      ],
+      "result": [
+        {
+          "id": "light1",
+          "name": "Kitchen LED Strip",
+          "letters": "30",
+          "plugin": "SynTexMagicHome",
+          "operation": "=",
+          "value": "true",
+          "hue": "4",
+          "saturation": "100",
+          "brightness": "100"
+        },
+        {
+          "url": "http://192.168.188.179:1713/devices?id=58747402d8bfc008d0dc&value=true&brightness=100"
+        }
+      ]
+    }
+  }
+}
+```
 
 
 ---
