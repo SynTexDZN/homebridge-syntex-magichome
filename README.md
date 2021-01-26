@@ -214,7 +214,8 @@ To enable the automation module you have to create a file named `automation.json
 
 ### Letter Configuration
 The letters are split into two parts *( numbers )*
-1. Service Type
+
+**1. Service Type**
 - A : Contact
 - B : Motion
 - C : Temperature
@@ -232,11 +233,11 @@ The letters are split into two parts *( numbers )*
 - 8 : LED
 - 9 : Dimmer
 
-2. Duplicate Counter
+**2. Duplicate Counter**
 - If there are more services of the same type the counter indicates which is which
 - Simply count from top to bottom.
 
-**Example:**  -  
+**Example:**  The first switch in your config has the letters `40`, the second `41` and so on ..
 
 
 ### Supported Plugins
