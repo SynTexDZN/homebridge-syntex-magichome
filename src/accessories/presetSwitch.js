@@ -72,16 +72,27 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			DeviceManager.executeCommand(Object.keys(this.ips), '--on', () => {
 
-				if(preset[this.preset] != null)
-				{
-					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '-p ' + this.sceneValue + ' ' + this.speed, 
-						() => super.setState(true, () => callback(), true)), 1500);
-				}
-				else if(custom[this.preset] != null)
-				{
-					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"', 
-						() => super.setState(true, () => callback(), true)), 1500);
-				}
+				var promiseArray = [];
+
+				Object.keys(this.ips).forEach((ip) => {
+					
+					if(preset[this.preset] != null)
+					{
+						const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, '-p ' + this.sceneValue + ' ' + this.speed, 
+							() => resolve()));
+
+						promiseArray.push(newPromise);
+					}
+					else if(custom[this.preset] != null)
+					{
+						const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"',
+							() => resolve()));
+
+						promiseArray.push(newPromise);
+					}
+				});
+
+				setTimeout(() => Promise.all(promiseArray).then(() => super.setState(true, () => callback(), true)), 1500);
 			});
 		}
 		else
