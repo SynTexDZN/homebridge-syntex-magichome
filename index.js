@@ -38,17 +38,14 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 				AutomationSystem = new AutomationSystem(this.logger, this.automationDirectory, this, pluginName, this.api.user.storagePath());
 
 				this.loadAccessories();
-				this.initWebServer();
 
 				DeviceManager.refreshAccessories(this.accessories);
-				
+
+				this.initWebServer();
+
 				if(this.pollingInterval != 0)
 				{
-					this.refreshInterval = setInterval(() => {
-
-						DeviceManager.refreshAccessories(this.accessories);
-		
-					}, this.pollingInterval * 1000);
+					this.refreshInterval = setInterval(() => DeviceManager.refreshAccessories(this.accessories), this.pollingInterval * 1000);
 				}
 				
 				this.finishInit();

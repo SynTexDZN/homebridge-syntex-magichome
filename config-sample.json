@@ -3,6 +3,7 @@
 		{
 			"platform": "SynTexMagicHome",
 			"logDirectory": "./SynTex/log",
+			"automationDirectory": "./SynTex/automation",
 			"port": 1712,
 			"language": "us",
 			"debug": false,

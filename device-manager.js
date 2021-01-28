@@ -35,7 +35,7 @@ module.exports = class DeviceManager
 
 				const rgbColors = str.split(',').map((item) => {
 
-					return item.trim()
+					return item.trim();
 				});
 
 				var converted = convert.rgb.hsv(rgbColors);
