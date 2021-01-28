@@ -119,8 +119,7 @@ module.exports = class PresetSwitch extends SwitchService
 				{
 					Object.keys(this.ips).forEach((ip) => {
 
-						setTimeout(() => DeviceManager.executeCommand(ip, '--off', 
-							() => resolve()), 1500);
+						setTimeout(() => DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
 					});
 				}
 

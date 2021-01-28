@@ -51,7 +51,10 @@ module.exports = class SceneSwitch extends SwitchService
 
 			if(this.shouldTurnOff)
 			{
-				setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}), 3000);
+				Object.keys(this.ips).forEach((ip) => {
+
+					setTimeout(() => DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
+				});
 			}
 
 			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [triggered] ( ' + this.id + ' )');
