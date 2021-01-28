@@ -70,30 +70,34 @@ module.exports = class PresetSwitch extends SwitchService
 
 		if(value == true)
 		{
-			DeviceManager.executeCommand(Object.keys(this.ips), '--on', () => {
+			var promiseArray = [];
 
-				var promiseArray = [];
+			Object.keys(this.ips).forEach((ip) => {
 
-				Object.keys(this.ips).forEach((ip) => {
-					
-					if(preset[this.preset] != null)
-					{
-						const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, '-p ' + this.sceneValue + ' ' + this.speed, 
-							() => resolve()));
+				const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, '--on', 
+					() => resolve()));
 
-						promiseArray.push(newPromise);
-					}
-					else if(custom[this.preset] != null)
-					{
-						const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"',
-							() => resolve()));
+				promiseArray.push(newPromise);
 
-						promiseArray.push(newPromise);
-					}
-				});
+				// TODO : Remove Timeout When LED is Already On
 
-				setTimeout(() => Promise.all(promiseArray).then(() => super.setState(true, () => callback(), true)), 1500);
+				if(preset[this.preset] != null)
+				{
+					const newPresetPromise = new Promise((resolve) => setTimeout(() => DeviceManager.executeCommand(ip, '-p ' + this.sceneValue + ' ' + this.speed, 
+						() => resolve()), 1500));
+
+					promiseArray.push(newPresetPromise);
+				}
+				else if(custom[this.preset] != null)
+				{
+					const newPresetPromise = new Promise((resolve) => setTimeout(() => DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"',
+						() => resolve()), 1500));
+
+					promiseArray.push(newPresetPromise);
+				}
 			});
+
+			Promise.all(promiseArray).then(() => super.setState(true, () => callback(), true));
 		}
 		else
 		{
@@ -113,7 +117,11 @@ module.exports = class PresetSwitch extends SwitchService
 
 				if(this.shouldTurnOff)
 				{
-					setTimeout(() => DeviceManager.executeCommand(Object.keys(this.ips), '--off', () => {}, 1500));
+					Object.keys(this.ips).forEach((ip) => {
+
+						setTimeout(() => DeviceManager.executeCommand(ip, '--off', 
+							() => resolve()), 1500);
+					});
 				}
 
 				super.setState(false, () => {}, true);
