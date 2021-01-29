@@ -90,8 +90,7 @@ Can cycle through colors, sync all lights to strobe / fade.
                 "ips": {
                     "192.168.1.111": "255,255,255"
                 }
-            },
-            { ... }
+            }
         ]
     }
 ]
@@ -194,24 +193,26 @@ To enable the automation module you have to create a file named `automation.json
           "brightness": "100"
         },
         {
-          "url": "http://192.168.188.179:1713/devices?id=58747402d8bfc008d0dc&value=true&brightness=100"
+          "url": "http://192.168.178.100:1713/devices?id=58747407d8cfc108d0dc&value=true&brightness=100"
         }
       ]
-    },
-    { ... }
+    }
   }
 }
 ```
 ### Required Parameters
-- `id` is the same like in your config file.
+- `id` is the same like in your config file *( or in your log )*
 - `name` The name of the accessory.
 - `letters` See letter configuration below.
 - `operation` Use the logical operands *( `>`, `<`, `=` )*
 - `value` The state of your accessory.
 
 
-### Required Parameters
+### Optional Parameters
 - `plugin` Use the platform name of the plugin *( see supported plugins below )*
+- `hue` is used for RGB lights.
+- `saturation` is used for RGB lights.
+- `brightness` is used for dimmable lights.
 
 
 ### Letter Configuration
