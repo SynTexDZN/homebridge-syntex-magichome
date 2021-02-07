@@ -79,7 +79,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				promiseArray.push(newPromise);
 
-				// TODO : Remove Timeout When LED is Already On
+				// OPTIMIZE: Remove Timeout When LED is Already On
 
 				if(preset[this.preset] != null)
 				{
