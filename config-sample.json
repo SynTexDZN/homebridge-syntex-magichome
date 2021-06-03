@@ -2,8 +2,8 @@
 	"platforms": [
 		{
 			"platform": "SynTexMagicHome",
-			"logDirectory": "./SynTex/log",
-			"automationDirectory": "./SynTex/automation",
+			"logDirectory": "/var/homebridge/SynTex/log",
+			"automationDirectory": "/var/homebridge/SynTex/automation",
 			"port": 1712,
 			"language": "us",
 			"debug": false,
