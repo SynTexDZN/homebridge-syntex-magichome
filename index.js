@@ -1,6 +1,6 @@
 let DeviceManager = require('./device-manager'), AutomationSystem = require('syntex-automation');
 
-const { DynamicPlatform } = require('homebridge-syntex-dynamic-platform');
+const { DynamicPlatform, ContextManager } = require('homebridge-syntex-dynamic-platform');
 
 const SynTexUniversalAccessory = require('./src/universal');
 
@@ -59,7 +59,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 			device.manufacturer = pluginName;
 
-			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger, DeviceManager : DeviceManager, AutomationSystem : AutomationSystem }));
+			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, logger : this.logger, DeviceManager, AutomationSystem, ContextManager }));
 		}
 	}
 
