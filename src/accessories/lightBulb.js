@@ -139,13 +139,13 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id).then((state) => {
+				DeviceManager.getDevice(this.id, (state) => {
 
 					if(state != null)
 					{
 						this.power = state.power;
 
-						super.setState(this.power);
+						super.setState(this.power, () => {});
 
 						this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 					}
@@ -176,7 +176,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id).then((state) => {
+				DeviceManager.getDevice(this.id, (state) => {
 
 					if(state != null)
 					{
@@ -210,7 +210,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id).then((state) => {
+				DeviceManager.getDevice(this.id, (state) => {
 
 					if(state != null)
 					{
@@ -244,7 +244,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id).then((state) => {
+				DeviceManager.getDevice(this.id, (state) => {
 
 					if(state != null)
 					{
