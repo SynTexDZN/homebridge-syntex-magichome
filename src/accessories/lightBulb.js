@@ -141,7 +141,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && !isNaN(state.power))
+					if(state != null && state.power != null && !isNaN(state.power))
 					{
 						this.power = state.power;
 
@@ -178,7 +178,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && !isNaN(state.hue))
+					if(state != null && state.hue != null && !isNaN(state.hue))
 					{
 						this.hue = state.hue;
 					
@@ -212,7 +212,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && !isNaN(state.saturation))
+					if(state != null && state.saturation != null && !isNaN(state.saturation))
 					{
 						this.saturation = state.saturation;
 
@@ -246,7 +246,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && !isNaN(state.brightness))
+					if(state != null && state.brightness != null && !isNaN(state.brightness))
 					{
 						this.brightness = state.brightness;
 
