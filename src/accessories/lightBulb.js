@@ -80,7 +80,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		var changed = false;
 
-		if(state.power != null && this.power != state.power)
+		if(state.power != null && !isNaN(state.power) && this.power != state.power)
 		{
 			this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
 
@@ -89,7 +89,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			changed = true;
 		}
 
-		if(state.hue != null && this.hue != state.hue)
+		if(state.hue != null && !isNaN(state.hue) && this.hue != state.hue)
 		{
 			this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue);
 
@@ -98,7 +98,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			changed = true;
 		}
 
-		if(state.saturation != null && this.saturation != state.saturation)
+		if(state.saturation != null && !isNaN(state.saturation) && this.saturation != state.saturation)
 		{
 			this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation);
 
@@ -107,7 +107,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			changed = true;
 		}
 
-		if(state.brightness != null && this.brightness != state.brightness)
+		if(state.brightness != null && !isNaN(state.brightness) && this.brightness != state.brightness)
 		{
 			this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
 

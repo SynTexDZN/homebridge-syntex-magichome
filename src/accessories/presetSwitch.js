@@ -134,7 +134,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 	updateState(state)
 	{
-		if(state.power != null && this.power != state.power)
+		if(state.power != null && !isNaN(state.power) && this.power != state.power)
 		{
 			this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
 
