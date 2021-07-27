@@ -71,7 +71,7 @@ module.exports = class DeviceManager
 			
 			if(callback)
 			{
-				callback(err, stdOut);
+				callback(err != null || (stdOut != null && stdOut.includes('Errno 113')), stdOut);
 			}
 
 			this.logger.debug(stdOut);
