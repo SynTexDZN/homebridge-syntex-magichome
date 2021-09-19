@@ -3,12 +3,11 @@ A simple plugin to control MagicHome devices.<br>
 This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
 It also offers some tweaks and improvements to the original devices.
 
-[![NPM Recommended Version](https://img.shields.io/npm/v/homebridge-syntex-magichome?label=release&color=brightgreen)](https://www.npmjs.com/package/homebridge-syntex-magichome)
-[![NPM Beta Version](https://img.shields.io/npm/v/homebridge-syntex-magichome/beta?color=orange&label=beta)](https://www.npmjs.com/package/homebridge-syntex-magichome)
-[![GitHub Commits](https://badgen.net/github/commits/SynTexDZN/homebridge-syntex-magichome?color=yellow)](https://github.com/SynTexDZN/homebridge-syntex-magichome/commits)
-[![NPM Downloads](https://badgen.net/npm/dt/homebridge-syntex-magichome?color=purple)](https://www.npmjs.com/package/homebridge-syntex-magichome)
-[![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af)](https://github.com/SynTexDZN/homebridge-syntex-magichome)
-[![Discord](https://img.shields.io/discord/442095224953634828?color=728ED5&label=discord)](https://discord.gg/XUqghtw4DE)
+[![NPM Recommended Version](https://img.shields.io/npm/v/homebridge-syntex-magichome?label=release&color=brightgree&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
+[![NPM Beta Version](https://img.shields.io/npm/v/homebridge-syntex-magichome/beta?color=orange&label=beta&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
+[![NPM Downloads](https://img.shields.io/npm/dt/homebridge-syntex-magichome?color=9944ee&&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
+[![GitHub Commits](https://img.shields.io/github/commits-since/SynTexDZN/homebridge-syntex-magichome/1.0.0?color=yellow&label=commits&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome/commits)
+[![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome)
 
 <br>
 
@@ -17,6 +16,16 @@ This plugin will create LightBulbs in HomeKit capable of turning on / off, chang
 This plugin can also create preset patterns Switches (color cycle, fade, strobe).
 Its a great utility tool to set house mood to party / soothing with custom music.
 Can cycle through colors, sync all lights to strobe / fade.
+
+
+## Troubleshooting
+#### [![GitHub Issues](https://img.shields.io/github/issues-raw/SynTexDZN/homebridge-syntex-magichome?logo=github&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
+- `Report` us your `Issues`
+- `Join` our `Discord Server`
+#### [![Discord](https://img.shields.io/discord/442095224953634828?color=5865F2&logoColor=white&label=discord&logo=discord&style=for-the-badge)](https://discord.gg/XUqghtw4DE)
+
+
+---
 
 
 ## Installation
