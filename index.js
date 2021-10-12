@@ -28,7 +28,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 				if(error)
 				{
-					this.logger.log('error', 'bridge', 'Bridge', '%permission_error% [flux_led.py] ' + error);
+					this.logger.log('error', 'bridge', 'Bridge', '%permission_error% [flux_led.py]', error);
 				}
 			});
 			

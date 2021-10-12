@@ -78,7 +78,7 @@ module.exports = class DeviceManager
 			
 			if(err)
 			{
-				this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py] ' + err);
+				this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py]', err);
 			}
 		});
 	}
