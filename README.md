@@ -53,16 +53,14 @@ It also offers some tweaks and improvements to the original devices.
                 "name": "Kitchen LED Strip",
                 "type": "light",
                 "ip": "DC4F22C5D4E1",
-                "services": "rgb",
-                "purewhite": false
+                "services": "rgb"
             },
             {
                 "id": "light2",
                 "name": "Living Room LED Strip",
                 "type": "light",
                 "ip": "192.168.1.112",
-                "services": "rgbw",
-                "purewhite": true
+                "services": "rgbw"
             },
             {
                 "id": "pswitch1",
@@ -211,7 +209,7 @@ To enable the automation module you have to create a file named `automation.json
         }
       ]
     }
-  }
+  ]
 }
 ```
 ### Required Parameters
