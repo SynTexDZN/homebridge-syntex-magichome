@@ -35,6 +35,52 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		}, true))));
 
+		setInterval(() => {
+
+			if(this.lastState != null && !this.running)
+			{
+				var converted = convert.hsv.rgb([this.lastState.hue, this.lastState.saturation, this.lastState.brightness]);
+
+				this.lastState = null;
+
+				if(converted != null)
+				{
+					this.running = true;
+
+					DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor, outputColor) => {
+
+						this.offline = errorColor;
+
+						this.running = false;
+
+						if(!this.offline)
+						{
+							try
+							{
+								var rgb = outputColor.split('(')[1].split(')')[0].split(', '), hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
+
+								this.tempState.hue = hsl[0];
+								this.tempState.saturation = hsl[1];
+								this.tempState.brightness = hsl[2];
+							}
+							catch(e)
+							{
+								console.log('ERROR');
+							}
+
+							for(const i in this.tempState)
+							{
+								this[i] = this.tempState[i];
+							}
+
+							this.logger.log('warn', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+						}
+					});
+				}
+			}
+
+		}, 1000);
+
 		this.ip = deviceConfig.ip;
 		this.purewhite = deviceConfig.purewhite || false;
 		this.setup = serviceConfig.type == 'rgb' ? 'RGBW' : serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
@@ -307,6 +353,8 @@ module.exports = class LightBulb extends ColoredBulbService
 	*/
 	setToCurrentColor(state, callback)
 	{
+		this.lastState = null;
+
 		if(state.power != null && this.power != state.power)
 		{
 			this.tempState.power = state.power;
@@ -443,6 +491,8 @@ module.exports = class LightBulb extends ColoredBulbService
 				}
 				else if(callback)
 				{
+					this.lastState = state;
+
 					callback(this.offline);
 				}
 	
