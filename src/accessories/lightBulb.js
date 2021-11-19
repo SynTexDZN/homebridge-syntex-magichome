@@ -183,7 +183,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				callback(null, value);
 
-				this.tempState.power = this.power = value;
+				this.power = value;
 			}
 			else
 			{
@@ -191,7 +191,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(state != null && state.power != null && !isNaN(state.power))
 					{
-						this.tempState.power = this.power = state.power;
+						this.power = state.power;
 
 						super.setState(this.power, () => {});
 
@@ -228,7 +228,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				callback(null, value);
 
-				this.tempState.hue = this.hue = value;
+				this.hue = value;
 			}
 			else
 			{
@@ -236,7 +236,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(state != null && state.hue != null && !isNaN(state.hue))
 					{
-						this.tempState.hue = this.hue = state.hue;
+						this.hue = state.hue;
 					
 						super.setHue(this.hue, () => {});
 					}
@@ -270,7 +270,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				callback(null, value);
 
-				this.tempState.saturation = this.saturation = value;
+				this.saturation = value;
 			}
 			else
 			{
@@ -278,7 +278,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(state != null && state.saturation != null && !isNaN(state.saturation))
 					{
-						this.tempState.saturation = this.saturation = state.saturation;
+						this.saturation = state.saturation;
 
 						super.setSaturation(this.saturation, () => {});
 					}
@@ -312,7 +312,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				callback(null, value);
 
-				this.tempState.brightness = this.brightness = value;
+				this.brightness = value;
 			}
 			else
 			{
@@ -320,7 +320,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(state != null && state.brightness != null && !isNaN(state.brightness))
 					{
-						this.tempState.brightness = this.brightness = state.brightness;
+						this.brightness = state.brightness;
 
 						super.setBrightness(this.brightness, () => {});
 					}
