@@ -393,7 +393,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(this.changedPower)
 					{
-						DeviceManager.executeCommand(this.ip, this.tempState.power ? '--on' : '--off', (errorPower) => {
+						DeviceManager.executeCommand(this.ip, this.tempState.power ? '--on' : '--off', (errorPower, outputPower) => {
 
 							if(this.changedColor)
 							{
@@ -401,7 +401,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 									var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
 
-									DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor) => {
+									DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor, outputColor) => {
 
 										this.offline = errorPower || errorColor;
 
@@ -414,6 +414,19 @@ module.exports = class LightBulb extends ColoredBulbService
 
 										if(!this.offline)
 										{
+											try
+											{
+												var rgb = outputColor.split('(')[1].split(')')[0].split(', '), hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
+
+												this.tempState.hue = hsl[0];
+												this.tempState.saturation = hsl[1];
+												this.tempState.brightness = hsl[2];
+											}
+											catch(e)
+											{
+												// Nothing
+											}
+											
 											for(const i in this.tempState)
 											{
 												this[i] = this.tempState[i];
@@ -438,6 +451,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 								if(!this.offline)
 								{
+									this.tempState.power = outputPower.includes('Turning on') ? true : outputPower.includes('Turning off') ? false : this.tempState.power;
+
 									for(const i in this.tempState)
 									{
 										this[i] = this.tempState[i];
@@ -455,7 +470,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					{
 						var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
 
-						DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor) => {
+						DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor, outputColor) => {
 
 							this.offline = errorColor;
 
@@ -471,6 +486,19 @@ module.exports = class LightBulb extends ColoredBulbService
 
 							if(!this.offline)
 							{
+								try
+								{
+									var rgb = outputColor.split('(')[1].split(')')[0].split(', '), hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
+
+									this.tempState.hue = hsl[0];
+									this.tempState.saturation = hsl[1];
+									this.tempState.brightness = hsl[2];
+								}
+								catch(e)
+								{
+									// Nothing
+								}
+
 								for(const i in this.tempState)
 								{
 									this[i] = this.tempState[i];
