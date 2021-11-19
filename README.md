@@ -1,22 +1,19 @@
 # Homebridge SynTex MagicHome
-A simple plugin to control MagicHome devices.<br>
-This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
-It also offers some tweaks and improvements to the original devices.
-
 [![NPM Recommended Version](https://img.shields.io/npm/v/homebridge-syntex-magichome?label=release&color=brightgree&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
 [![NPM Beta Version](https://img.shields.io/npm/v/homebridge-syntex-magichome/beta?color=orange&label=beta&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
 [![NPM Downloads](https://img.shields.io/npm/dt/homebridge-syntex-magichome?color=9944ee&&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
 [![GitHub Commits](https://img.shields.io/github/commits-since/SynTexDZN/homebridge-syntex-magichome/1.0.0?color=yellow&label=commits&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome/commits)
 [![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome)
 
-<br>
+A simple plugin to control MagicHome devices.<br>
+This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
+It also offers some tweaks and improvements to the original devices.
 
-## Description
-This plugin will create LightBulbs in HomeKit capable of turning on / off, change color, change saturation, change brightness.
-This plugin can also create preset patterns Switches (color cycle, fade, strobe).
-Its a great utility tool to set house mood to party / soothing with custom music.
-Can cycle through colors, sync all lights to strobe / fade.
-
+## Core Features
+- **Device Control** *( view and control your lights color, saturarion, brightness )*
+- **Scene Support** *( use colorful scenes from MagicHome or some custom ones )*
+- **Color Switches** *( set the color of your own light groups by value )*
+- **HTTP Access** *( update and read device states via HTTP calls )*
 
 ## Troubleshooting
 #### [![GitHub Issues](https://img.shields.io/github/issues-raw/SynTexDZN/homebridge-syntex-magichome?logo=github&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
@@ -41,7 +38,7 @@ Can cycle through colors, sync all lights to strobe / fade.
 - `sudo chown -R homebridge /var/homebridge/SynTex/` *( permissions only for homebridge )*
 - `sudo chmod 777 -R homebridge /var/homebridge/SynTex/` *( permissions for many processes )*
 
-```
+```json
 "platforms": [
     {
         "platform": "SynTexMagicHome",
@@ -169,7 +166,7 @@ https://github.com/SynTexDZN/homebridge-syntex
 To enable the automation module you have to create a file named `automation.json` in your `baseDirectory >> automation` or install the `homebridge-syntex` plugin to create them via UI *( only between syntex plugins )*<br><br>
 **Example:**  For manual configuration update your `automation.json` file. See snippet below.   
 
-```
+```json
 {
   "id": "automation",
   "automation": [
@@ -224,13 +221,11 @@ To enable the automation module you have to create a file named `automation.json
 - `operation` Use the logical operands *( `>`, `<`, `=` )*
 - `value` The state of your accessory.
 
-
 ### Optional Parameters
 - `plugin` Use the platform name of the plugin *( see supported plugins below )*
 - `hue` is used for RGB lights.
 - `saturation` is used for RGB lights.
 - `brightness` is used for dimmable lights.
-
 
 ### Letter Configuration
 The letters are split into two parts *( numbers )*
@@ -259,7 +254,6 @@ The letters are split into two parts *( numbers )*
 
 **Example:**  The first switch in your config has the letters `40`, the second `41` and so on ..
 
-
 ### Supported Plugins
 - SynTexMagicHome *( `homebridge-syntex-magichome` )*
 - SynTexTuya *( `homebridge-syntex-tuya` )*
@@ -283,7 +277,6 @@ Any devices created by Zengge and running on the Magic Home Wi-Fi (or other apps
 
 
 ## Preset Switch Configuration
-
 `ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
 Turning off Preset Pattern Switch , all lights will be reset to this color.
 
@@ -293,8 +286,7 @@ Do note : While using MACS : This plugin auto discover connected lights on the n
 
 Setting `pollingInterval` to 0, will disable polling device for status update.
 
-
-## Available Presets Scenes
+### Available Presets Scenes
 ```
 seven_color_cross_fade
 red_gradual_change
@@ -318,8 +310,7 @@ white_strobe_flash
 seven_color_jumping
 ```
 
-
-## Available Custom Presets Scenes
+### Available Custom Presets Scenes
 ```
 gradual_color_fade
 dark_gradual_color_fade
