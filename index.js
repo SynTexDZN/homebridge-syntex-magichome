@@ -20,7 +20,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 		this.pollingInterval = config['pollingInterval'] == 0 ? 0 : config['pollingInterval'] || 10;
 		
-		if(this.api && this.logger)
+		if(this.api != null && this.logger != null && this.files != null)
 		{
 			const { exec } = require('child_process');
 
@@ -38,16 +38,19 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 				AutomationSystem = new AutomationSystem(this.logger, this.files, this, pluginName, this.api.user.storagePath());
 
 				this.loadAccessories();
+				this.initWebServer();
 
 				DeviceManager.refreshAccessories(this.accessories);
 
-				this.initWebServer();
-
-				if(this.pollingInterval != 0)
+				if(this.pollingInterval > 0)
 				{
 					this.refreshInterval = setInterval(() => DeviceManager.refreshAccessories(this.accessories), this.pollingInterval * 1000);
 				}
 			});
+		}
+		else
+		{
+			throw new Error('Minimal parameters not configurated. Please check the README! https://github.com/SynTexDZN/homebridge-syntex-magichome/blob/master/README.md');
 		}
 	}
 
