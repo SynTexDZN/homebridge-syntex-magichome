@@ -15,6 +15,7 @@ It also offers some tweaks and improvements to the original devices.
 - **Color Switches** *( set the color of your own light groups by value )*
 - **HTTP Access** *( update and read device states via HTTP calls )*
 
+
 ## Troubleshooting
 #### [![GitHub Issues](https://img.shields.io/github/issues-raw/SynTexDZN/homebridge-syntex-magichome?logo=github&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome/issues)
 - `Report` us your `Issues`
