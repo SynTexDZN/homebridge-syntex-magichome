@@ -2,7 +2,7 @@
 [![NPM Recommended Version](https://img.shields.io/npm/v/homebridge-syntex-magichome?label=release&color=brightgree&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
 [![NPM Beta Version](https://img.shields.io/npm/v/homebridge-syntex-magichome/beta?color=orange&label=beta&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
 [![NPM Downloads](https://img.shields.io/npm/dt/homebridge-syntex-magichome?color=9944ee&&style=for-the-badge)](https://www.npmjs.com/package/homebridge-syntex-magichome)
-[![GitHub Commits](https://img.shields.io/github/commits-since/SynTexDZN/homebridge-syntex-magichome/1.0.0?color=yellow&label=commits&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome/commits)
+[![GitHub Commits](https://img.shields.io/github/commits-since/SynTexDZN/homebridge-syntex-magichome/0.0.0?color=yellow&label=commits&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome/commits)
 [![GitHub Code Size](https://img.shields.io/github/languages/code-size/SynTexDZN/homebridge-syntex-magichome?color=0af&style=for-the-badge)](https://github.com/SynTexDZN/homebridge-syntex-magichome)
 
 A simple plugin to control MagicHome devices.<br>
