@@ -9,6 +9,7 @@ A simple plugin to control MagicHome devices.<br>
 This plugin is made to cooperate with Homebridge: https://github.com/nfarina/homebridge<br>
 It also offers some tweaks and improvements to the original devices.
 
+
 ## Core Features
 - **Device Control** *( view and control your lights color, saturarion, brightness )*
 - **Scene Support** *( use colorful scenes from MagicHome or some custom ones )*
@@ -100,6 +101,7 @@ It also offers some tweaks and improvements to the original devices.
     }
 ]
 ```
+
 ### Required Parameters
 - `platform` is always `SynTexMagicHome`
 - `baseDirectory` The path where cache data is stored.
@@ -213,6 +215,7 @@ To enable the automation module you have to create a file named `automation.json
   ]
 }
 ```
+
 ### Required Parameters
 - `id` is the same like in your config file *( or in your log )*
 - `name` The name of the accessory.
