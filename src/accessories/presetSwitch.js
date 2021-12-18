@@ -34,7 +34,7 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			this.sceneValue = 37;
 
-			this.logger.log('warn', 'bridge', 'Bridge', '%preset_not_found[0]% [' + this.preset + '] %preset_not_found[1]% [seven_color_cross_fade] %preset_not_found[2]%!');
+			this.logger.log('warn', this.id, this.letters, '%preset_not_found[0]% [' + this.preset + '] %preset_not_found[1]% [seven_color_cross_fade] %preset_not_found[2]%!');
 		}
 
 		this.bindEmitter();

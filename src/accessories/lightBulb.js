@@ -65,7 +65,7 @@ module.exports = class LightBulb extends ColoredBulbService
 							}
 							catch(e)
 							{
-								console.log('ERROR');
+								// Nothing
 							}
 
 							for(const i in this.tempState)
