@@ -72,8 +72,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		{
 			this.WebServer.addPage('/reload-automation', async (response) => {
 
-				response.write(await AutomationSystem.LogikEngine.loadAutomation() ? 'Success' : 'Error');
-				response.end();
+				response.end(await AutomationSystem.LogikEngine.loadAutomation() ? 'Success' : 'Error');
 			});
 		}
 	}
