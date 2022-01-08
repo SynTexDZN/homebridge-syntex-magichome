@@ -55,9 +55,22 @@ module.exports = class DeviceManager
 
 		for(const accessory of accessories)
 		{
-			if(accessory[1].services == 'rgb' || accessory[1].services == 'rgbw')
+			if(Array.isArray(accessory[1].services))
 			{
-				this.getDevice(accessory[1].service[1].ip, (state) => accessory[1].service[1].updateState(state));
+				for(const i in accessory[1].services)
+				{
+					if(accessory[1].services[i].type == 'rgb' || accessory[1].services[i].type == 'rgbw')
+					{
+						this.getDevice(accessory[1].services[i].ip, (state) => accessory[1].service[parseInt(i) + 1].updateState(state));
+					}
+				}
+			}
+			else if(accessory[1].services instanceof Object)
+			{
+				if(accessory[1].services.type == 'rgb' || accessory[1].services.type == 'rgbw')
+				{
+					this.getDevice(accessory[1].services.ip, (state) => accessory[1].service[1].updateState(state));
+				}
 			}
 		}
 	}

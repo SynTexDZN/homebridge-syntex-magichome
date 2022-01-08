@@ -14,8 +14,8 @@ module.exports = class SceneSwitch extends SwitchService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		this.ips = deviceConfig.ips;
-		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
+		this.ips = serviceConfig.ips;
+		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
 
 		this.changeHandler = (state) =>
 		{

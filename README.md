@@ -50,54 +50,96 @@ It also offers some tweaks and improvements to the original devices.
         "debug": false,
         "pollingInterval": 10,
         "accessories": [
-            {
-                "id": "light1",
-                "name": "Kitchen LED Strip",
-                "type": "light",
-                "ip": "DC4F22C5D4E1",
-                "services": "rgb"
-            },
-            {
-                "id": "light2",
-                "name": "Living Room LED Strip",
-                "type": "light",
-                "ip": "192.168.1.112",
-                "services": "rgbw"
-            },
-            {
-                "id": "pswitch1",
-                "name": "Kitchen Color Strobe Flash (Party)",
-                "type": "preset-switch",
-                "ips": {
-                    "192.168.1.111": "255,255,255"
-                },
-                "services": "switch",
-                "preset": "seven_color_strobe_flash",
-                "speed": 60
-            },
-            {
-                "id": "pswitch2",
-                "name": "All Lights Cross Fade (Soothing)",
-                "type": "preset-switch",
-                "ips": {
-                    "DC4F22C5D4E1": "0,150,255",
-                    "192.168.1.112": "102,255,102"
-                },
-                "services": "switch",
-                "preset": "seven_color_cross_fade",
-                "speed": 40,
-                "shouldTurnOff": true
-            },
-            {
-                "id": "rswitch1",
-                "name": "Reset All Switches to Default",
-                "type": "scene-switch",
-                "services": "switch",
-                "ips": {
-                    "192.168.1.111": "255,255,255"
-                }
-            }
-        ]
+			{
+				"id": "light1",
+				"name": "Kitchen LED Strip",
+				"services": [
+					{
+						"type": "rgb",
+						"function": "light",
+						"ip": "DC4F22C5D4E1"
+					}
+				]
+			},
+			{
+				"id": "light2",
+				"name": "Living Room LED Strip",
+				"services": [
+					{
+						"type": "rgbw",
+						"function": "light",
+						"ip": "192.168.1.112"
+					}
+				]
+			},
+			{
+				"id": "pswitch1",
+				"name": "Kitchen Color Strobe Flash (Party)",
+				"services": [
+					{
+						"type": "switch",
+						"function": "preset-switch",
+						"ips": {
+							"192.168.1.111": "255,255,255"
+						},
+						"preset": "seven_color_strobe_flash",
+						"speed": 60
+					}
+				]
+			},
+			{
+				"id": "pswitch2",
+				"name": "All Lights Cross Fade (Soothing)",
+				"services": [
+					{
+						"type": "switch",
+						"function": "preset-switch",
+						"ips": {
+							"DC4F22C5D4E1": "0,150,255",
+							"192.168.1.112": "102,255,102"
+						},
+						"preset": "seven_color_cross_fade",
+						"speed": 40,
+						"shouldTurnOff": true
+					}
+				]
+			},
+			{
+				"id": "rswitch1",
+				"name": "Reset All Switches to Default",
+				"services": [
+					{
+						"type": "switch",
+						"function": "scene-switch",
+						"ips": {
+							"192.168.1.111": "255,255,255"
+						}
+					}
+				]
+			},
+			{
+				"id": "multi1",
+				"name": "Multi Accessory",
+				"services": [
+					{
+						"type": "rgbw",
+						"function": "light",
+						"name": "Single Color",
+						"ip": "192.168.1.112"
+					},
+					{
+						"type": "switch",
+						"function": "preset-switch",
+						"name": "Color Fade",
+						"ips": {
+							"192.168.1.112": "255,255,255"
+						},
+						"preset": "seven_color_strobe_flash",
+						"speed": 60
+					}
+				]
+			}
+		]
     }
 ]
 ```
@@ -114,12 +156,29 @@ It also offers some tweaks and improvements to the original devices.
 - `pollingInterval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
 
 ### Accessory Config
-- Every device needs these parameters: `id`, `name`, `type`, `ip` and `services` *( required )*
+- Every device needs these parameters: `id`, `name` and `services` *( required )*
 - `id` has to be a `random unique text` *( no duplicates! )*
 - `name` could be anything.
-- `type` can be: `light` / `preset-switch` / `scene-switch`
-- `ip` Use a normal ip or a mac address.
-- `services` Should be a `switch` *( for preset and reset switches )* or `rgb` / `rgbw` *( based on your device: look below )*
+- `services` choose a device config from below.
+
+### Light Config
+- `type` must be either `rgb` / `rgbw` *( based on your device: look below )*
+- `function` is always `light`
+- `ip` use a normal ip or a mac address.
+
+### Preset Switch Config
+- `type` must be a `switch` *( for preset and reset switches )*
+- `function` is always `preset-switch`
+- `ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
+- `preset` is the name of the preset you want to use for the effect *( see `Available Presets Scenes` below )*
+- `speed` defines the speed of the effect *( from 0 to 100 )*
+
+### Scene Switch Config
+- `type` must be a `switch` *( for preset and reset switches )*
+- `function` is always `scene-switch`
+- `ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
+
+You can use MAC Address instead of IP Address as well. Please note format of MAC Address. It should be in capital letters and `:` should not be present. e.g. `DC4F22C5XXXX`
 
 
 ---
@@ -137,7 +196,7 @@ https://github.com/SynTexDZN/homebridge-syntex
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&value=`  **New Value**
 2. Insert the `Bridge IP` and `Device ID`
 3. For the `New Value` you can type this pattern:
-- For all devices: `true` / `false` *( preset switch, reset swithc, colored light )*
+- For all devices: `true` / `false` *( preset switch, reset switch, colored light )*
 - For colored lights add `&hue=`  **New Hue**  or `&saturation=`  **New Saturation**  or `&brightness=`  **New Brightness** *( have to be numbers )*
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&value=true&hue=4&saturation=100&brightness=100`\
@@ -257,6 +316,7 @@ The letters are split into two parts *( numbers )*
 **Example:**  The first switch in your config has the letters `40`, the second `41` and so on ..
 
 ### Supported Plugins
+- SynTexKNX *( `homebridge-syntex-knx` )*
 - SynTexMagicHome *( `homebridge-syntex-magichome` )*
 - SynTexTuya *( `homebridge-syntex-tuya` )*
 - SynTexWebHooks *( `homebridge-syntex-webhooks` )*
@@ -276,17 +336,6 @@ Any devices created by Zengge and running on the Magic Home Wi-Fi (or other apps
 - [Fen-Yi Light Bulb](http://amzn.to/2ehjP3s)
 - [Waterproof RGB LED Strips WIFI Controller](http://amzn.to/2eoDQZx) `rgb`
 - [Eastlion RGB Wi-Fi Strip Controller](http://amzn.to/2eCF8wV)
-
-
-## Preset Switch Configuration
-`ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
-Turning off Preset Pattern Switch , all lights will be reset to this color.
-
-You can use MAC Address instead of IP Address as well. Please note format of MAC Address. It should be in capital letters and `:` should not be present. e.g. `DC4F22C5XXXX`
-
-Do note : While using MACS : This plugin auto discover connected lights on the network and map IP's to their corresponding MAC. Initially it can take time to discover all devices. All devices should be discovered and mapped in 60-120s. Once mapped IP & MACs are cached, and gets rediscovered every 30s to map new IP to the light. This feature is useful for people unable to assign Static IP to their lights.
-
-Setting `pollingInterval` to 0, will disable polling device for status update.
 
 ### Available Presets Scenes
 ```

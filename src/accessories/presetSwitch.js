@@ -24,10 +24,10 @@ module.exports = class PresetSwitch extends SwitchService
 
 		}, true);
 		
-		this.ips = deviceConfig.ips;
-		this.shouldTurnOff = deviceConfig.shouldTurnOff || false;
-		this.preset = deviceConfig.preset || 'seven_color_cross_fade';
-		this.speed = deviceConfig.speed || 40;
+		this.ips = serviceConfig.ips;
+		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
+		this.preset = serviceConfig.preset || 'seven_color_cross_fade';
+		this.speed = serviceConfig.speed || 40;
 		this.sceneValue = preset[this.preset] || custom[this.preset];
 
 		if(this.sceneValue == null)

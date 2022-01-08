@@ -35,6 +35,12 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		}, true))));
 
+		this.ip = serviceConfig.ip;
+		this.setup = serviceConfig.type == 'rgb' ? 'RGBW' : serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
+		//this.purewhite = serviceConfig.purewhite || false;
+
+		this.running = false;
+
 		setInterval(() => {
 
 			if(this.lastState != null && !this.running)
@@ -80,12 +86,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 
 		}, 1000);
-
-		this.ip = deviceConfig.ip;
-		this.purewhite = deviceConfig.purewhite || false;
-		this.setup = serviceConfig.type == 'rgb' ? 'RGBW' : serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
-
-		this.running = false;
 
 		this.changeHandler = (state) => {
 
