@@ -68,7 +68,7 @@ It also offers some tweaks and improvements to the original devices.
 					{
 						"type": "rgbw",
 						"function": "light",
-						"ip": "192.168.1.112"
+						"ip": "192.168.1.100"
 					}
 				]
 			},
@@ -80,7 +80,7 @@ It also offers some tweaks and improvements to the original devices.
 						"type": "switch",
 						"function": "preset-switch",
 						"ips": {
-							"192.168.1.111": "255,255,255"
+							"192.168.1.100": "255,255,255"
 						},
 						"preset": "seven_color_strobe_flash",
 						"speed": 60
@@ -96,7 +96,7 @@ It also offers some tweaks and improvements to the original devices.
 						"function": "preset-switch",
 						"ips": {
 							"DC4F22C5D4E1": "0,150,255",
-							"192.168.1.112": "102,255,102"
+							"192.168.1.100": "102,255,102"
 						},
 						"preset": "seven_color_cross_fade",
 						"speed": 40,
@@ -112,7 +112,7 @@ It also offers some tweaks and improvements to the original devices.
 						"type": "switch",
 						"function": "scene-switch",
 						"ips": {
-							"192.168.1.111": "255,255,255"
+							"192.168.1.100": "255,255,255"
 						}
 					}
 				]
@@ -125,14 +125,14 @@ It also offers some tweaks and improvements to the original devices.
 						"type": "rgbw",
 						"function": "light",
 						"name": "Single Color",
-						"ip": "192.168.1.112"
+						"ip": "192.168.1.100"
 					},
 					{
 						"type": "switch",
 						"function": "preset-switch",
 						"name": "Color Fade",
 						"ips": {
-							"192.168.1.112": "255,255,255"
+							"192.168.1.100": "255,255,255"
 						},
 						"preset": "seven_color_strobe_flash",
 						"speed": 60
@@ -169,14 +169,14 @@ It also offers some tweaks and improvements to the original devices.
 ### Preset Switch Config
 - `type` must be a `switch` *( for preset and reset switches )*
 - `function` is always `preset-switch`
-- `ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
+- `ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.100` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
 - `preset` is the name of the preset you want to use for the effect *( see `Available Presets Scenes` below )*
 - `speed` defines the speed of the effect *( from 0 to 100 )*
 
 ### Scene Switch Config
 - `type` must be a `switch` *( for preset and reset switches )*
 - `function` is always `scene-switch`
-- `ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.11` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
+- `ips` must be a key-value object where `key` is MagicHome LED IP Address e.g. `192.168.1.100` or `DC4F22C5XXXX` MAC Address & `value` is default rgb color of the light. e.g. `"255,255,255" (White)`
 
 You can use MAC Address instead of IP Address as well. Please note format of MAC Address. It should be in capital letters and `:` should not be present. e.g. `DC4F22C5XXXX`
 
@@ -267,7 +267,7 @@ To enable the automation module you have to create a file named `automation.json
           "brightness": "100"
         },
         {
-          "url": "http://192.168.178.100:1713/devices?id=58747407d8cfc108d0dc&value=true&brightness=100"
+          "url": "http://192.168.1.100:1712/devices?id=58747407d8cfc108d0dc&value=true&brightness=100"
         }
       ]
     }
