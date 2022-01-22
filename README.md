@@ -196,7 +196,7 @@ https://github.com/SynTexDZN/homebridge-syntex
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&value=`  **New Value**
 2. Insert the `Bridge IP` and `Device ID`
 3. For the `New Value` you can type this pattern:
-- For all devices: `true` / `false` *( preset switch, reset switch, colored light )*
+- For all devices: `true` / `false` *( colored light, preset switch, reset switch )*
 - For colored lights add `&hue=`  **New Hue**  or `&saturation=`  **New Saturation**  or `&brightness=`  **New Brightness** *( have to be numbers )*
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&value=true&hue=4&saturation=100&brightness=100`\
