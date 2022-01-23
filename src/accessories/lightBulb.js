@@ -355,32 +355,44 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		this.lastState = null;
 
-		if(state.power != null && this.power != state.power)
+		if(state.power != null)
 		{
 			this.tempState.power = state.power;
 
+			if(this.power != state.power)
+			{
 			this.changedPower = true;
 		}
+		}
 
-		if(state.hue != null && this.hue != state.hue)
+		if(state.hue != null)
 		{
 			this.tempState.hue = state.hue;
 
+			if(this.hue != state.hue)
+			{
 			this.changedColor = true;
 		}
+		}
 
-		if(state.saturation != null && this.saturation != state.saturation)
+		if(state.saturation != null)
 		{
 			this.tempState.saturation = state.saturation;
 
+			if(this.saturation != state.saturation)
+			{
 			this.changedColor = true;
 		}
+		}
 
-		if(state.brightness != null && this.brightness != state.brightness)
+		if(state.brightness != null)
 		{
 			this.tempState.brightness = state.brightness;
 
+			if(this.brightness != state.brightness)
+			{
 			this.changedColor = true;
+		}
 		}
 
 		if(this.changedPower || this.changedColor)
