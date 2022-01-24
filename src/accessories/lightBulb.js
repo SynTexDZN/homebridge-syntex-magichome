@@ -43,45 +43,36 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		setInterval(() => {
 
-			if(this.lastState != null && !this.running)
+			if(!this.running && (this.power != this.tempState.power || this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness))
 			{
-				var converted = convert.hsv.rgb([this.lastState.hue, this.lastState.saturation, this.lastState.brightness]);
-
-				this.lastState = null;
-
-				if(converted != null)
+				this.running = true;
+				
+				if(this.power != this.tempState.power)
 				{
-					this.running = true;
-
-					DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor, outputColor) => {
-
-						this.offline = errorColor;
+					this.setPower(this.tempState.power).then(() => {
 
 						this.running = false;
-
-						if(!this.offline)
-						{
-							try
-							{
-								var rgb = outputColor.split('(')[1].split(')')[0].split(', '), hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
-
-								this.tempState.hue = hsl[0];
-								this.tempState.saturation = hsl[1];
-								this.tempState.brightness = hsl[2];
-							}
-							catch(e)
-							{
-								// Nothing
-							}
-
-							for(const i in this.tempState)
-							{
-								this[i] = this.tempState[i];
-							}
-
-							this.logger.log('warn', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-						}
 					});
+				}
+				else if(this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness)
+				{
+					var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
+
+					if(converted != null)
+					{
+						this.setColor(converted[0], converted[1], converted[2]).then(() => {
+
+							this.running = false;
+						});
+					}
+					else
+					{
+						this.running = false;
+					}
+				}
+				else
+				{
+					this.running = false;
 				}
 			}
 
@@ -353,16 +344,14 @@ module.exports = class LightBulb extends ColoredBulbService
 	*/
 	setToCurrentColor(state, callback)
 	{
-		this.lastState = null;
-
 		if(state.power != null)
 		{
 			this.tempState.power = state.power;
 
 			if(this.power != state.power)
 			{
-			this.changedPower = true;
-		}
+				this.changedPower = true;
+			}
 		}
 
 		if(state.hue != null)
@@ -371,8 +360,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(this.hue != state.hue)
 			{
-			this.changedColor = true;
-		}
+				this.changedColor = true;
+			}
 		}
 
 		if(state.saturation != null)
@@ -381,8 +370,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(this.saturation != state.saturation)
 			{
-			this.changedColor = true;
-		}
+				this.changedColor = true;
+			}
 		}
 
 		if(state.brightness != null)
@@ -391,157 +380,80 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(this.brightness != state.brightness)
 			{
-			this.changedColor = true;
-		}
+				this.changedColor = true;
+			}
 		}
 
-		if(this.changedPower || this.changedColor)
-		{
-			setTimeout(() => {
+		setTimeout(() => {
 
-				if(!this.running)
+			if(!this.running)
+			{
+				this.running = true;
+
+				if(this.changedPower)
 				{
-					this.running = true;
+					this.setPower(this.tempState.power).then((offline) => {
 
-					if(this.changedPower)
+						this.running = false;
+
+						this.changedPower = false;
+
+						if(callback != null)
+						{
+							callback(offline);
+						}
+					});
+				}
+				else if(this.changedColor)
+				{
+					var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
+
+					if(converted != null)
 					{
-						DeviceManager.executeCommand(this.ip, this.tempState.power ? '--on' : '--off', (errorPower, outputPower) => {
-
-							if(this.changedColor)
-							{
-								setTimeout(() => {
-
-									var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
-
-									DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor, outputColor) => {
-
-										this.offline = errorPower || errorColor;
-
-										if(callback)
-										{
-											callback(this.offline);
-										}
-
-										this.running = false;
-
-										if(!this.offline)
-										{
-											try
-											{
-												var rgb = outputColor.split('(')[1].split(')')[0].split(', '), hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
-
-												this.tempState.hue = hsl[0];
-												this.tempState.saturation = hsl[1];
-												this.tempState.brightness = hsl[2];
-											}
-											catch(e)
-											{
-												// Nothing
-											}
-											
-											for(const i in this.tempState)
-											{
-												this[i] = this.tempState[i];
-											}
-											
-											this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-										}
-									});
-
-								}, 2000);
-							}
-							else
-							{
-								this.offline = errorPower;
-
-								if(callback)
-								{
-									callback(this.offline);
-								}
-		
-								this.running = false;
-
-								if(!this.offline)
-								{
-									this.tempState.power = outputPower.includes('Turning on') ? true : outputPower.includes('Turning off') ? false : this.tempState.power;
-
-									for(const i in this.tempState)
-									{
-										this[i] = this.tempState[i];
-									}
-									
-									this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-								}
-							}
-
-							this.changedPower = false;
-							this.changedColor = false;
-						});
-					}
-					else if(this.changedColor)
-					{
-						var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
-
-						DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (errorColor, outputColor) => {
-
-							this.offline = errorColor;
-
-							if(callback)
-							{
-								callback(this.offline);
-							}
-
-							this.changedPower = false;
-							this.changedColor = false;
+						this.setColor(converted[0], converted[1], converted[2]).then((offline) => {
 
 							this.running = false;
-
-							if(!this.offline)
+		
+							this.changedColor = false;
+		
+							if(callback != null)
 							{
-								try
-								{
-									var rgb = outputColor.split('(')[1].split(')')[0].split(', '), hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
-
-									this.tempState.hue = hsl[0];
-									this.tempState.saturation = hsl[1];
-									this.tempState.brightness = hsl[2];
-								}
-								catch(e)
-								{
-									// Nothing
-								}
-
-								for(const i in this.tempState)
-								{
-									this[i] = this.tempState[i];
-								}
-
-								this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+								callback(offline);
 							}
 						});
 					}
 					else
 					{
 						this.running = false;
+
+						this.changedColor = false;
+		
+						if(callback != null)
+						{
+							callback(this.offline);
+						}
 					}
-
-					emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
-
-					AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.power, hue : this.tempState.hue, saturation : this.tempState.saturation, brightness : this.tempState.brightness });
 				}
-				else if(callback)
+				else
 				{
-					this.lastState = state;
-
-					callback(this.offline);
+					this.running = false;
+					
+					if(callback != null)
+					{
+						callback(this.offline);
+					}
 				}
-	
-			}, 10);
-		}
-		else if(callback)
-		{
-			callback(this.offline);
-		}
+
+				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
+
+				AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.power, hue : this.tempState.hue, saturation : this.tempState.saturation, brightness : this.tempState.brightness });
+			}
+			else if(callback != null)
+			{
+				callback(this.offline);
+			}
+
+		}, 10);
 		/*
 		if(this.saturation === 0 && this.hue === 0 && this.purewhite)
 		{
@@ -549,5 +461,72 @@ module.exports = class LightBulb extends ColoredBulbService
 			return;
 		}
 		*/
+	}
+
+	setPower(power)
+	{
+		return new Promise((resolve) => {
+
+			DeviceManager.executeCommand(this.ip, power ? '--on' : '--off', (error, output) => {
+
+				this.offline = error;
+
+				resolve(error);
+
+				if(!error)
+				{
+					this.power = output.includes('Turning on') ? true : output.includes('Turning off') ? false : power;
+
+					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+				}
+			});
+		});
+	}
+
+	setColor(red, green, blue)
+	{
+		return new Promise((resolve) => {
+
+			DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (error, output) => {
+
+				this.offline = error;
+	
+				resolve(error);
+	
+				if(!error)
+				{
+					var rgb = null, hsl = null;
+
+					if(output.includes('('))
+					{
+						rgb = output.split('(')[1];
+					}
+
+					if(rgb.includes(')'))
+					{
+						rgb = rgb.split(')')[0];
+					}
+
+					if(rgb.includes(', '))
+					{
+						rgb = rgb.split(', ');
+					}
+
+					if(rgb != null && Array.isArray(rgb) && rgb.length == 3)
+					{
+						hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
+					}
+
+					if(hsl != null)
+					{
+						this.hue = hsl[0];
+						this.saturation = hsl[1];
+						this.brightness = hsl[2];
+					}
+	
+					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+				}
+			});
+		});
 	}
 }
