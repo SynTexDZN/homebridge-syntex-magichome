@@ -3,10 +3,12 @@
 		{
 			"platform": "SynTexMagicHome",
 			"baseDirectory": "/var/homebridge/SynTex",
-			"port": 1712,
-			"language": "us",
-			"debug": false,
-			"pollingInterval": 10,
+			"options": {
+				"port": 1712,
+				"language": "us",
+				"debug": false,
+				"pollingInterval": 10
+			},
 			"accessories": [
 				{
 					"id": "light1",

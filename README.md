@@ -45,101 +45,103 @@ It also offers some tweaks and improvements to the original devices.
     {
         "platform": "SynTexMagicHome",
         "baseDirectory": "/var/homebridge/SynTex",
-        "port": 1712,
-        "language": "us",
-        "debug": false,
-        "pollingInterval": 10,
+        "options": {
+            "port": 1712,
+            "language": "us",
+            "debug": false,
+            "pollingInterval": 10
+        },
         "accessories": [
-			{
-				"id": "light1",
-				"name": "Kitchen LED Strip",
-				"services": [
-					{
-						"type": "rgb",
-						"function": "light",
-						"ip": "DC4F22C5D4E1"
-					}
-				]
-			},
-			{
-				"id": "light2",
-				"name": "Living Room LED Strip",
-				"services": [
-					{
-						"type": "rgbw",
-						"function": "light",
-						"ip": "192.168.1.100"
-					}
-				]
-			},
-			{
-				"id": "pswitch1",
-				"name": "Kitchen Color Strobe Flash (Party)",
-				"services": [
-					{
-						"type": "switch",
-						"function": "preset-switch",
-						"ips": {
-							"192.168.1.100": "255,255,255"
-						},
-						"preset": "seven_color_strobe_flash",
-						"speed": 60
-					}
-				]
-			},
-			{
-				"id": "pswitch2",
-				"name": "All Lights Cross Fade (Soothing)",
-				"services": [
-					{
-						"type": "switch",
-						"function": "preset-switch",
-						"ips": {
-							"DC4F22C5D4E1": "0,150,255",
-							"192.168.1.100": "102,255,102"
-						},
-						"preset": "seven_color_cross_fade",
-						"speed": 40,
-						"shouldTurnOff": true
-					}
-				]
-			},
-			{
-				"id": "rswitch1",
-				"name": "Reset All Switches to Default",
-				"services": [
-					{
-						"type": "switch",
-						"function": "scene-switch",
-						"ips": {
-							"192.168.1.100": "255,255,255"
-						}
-					}
-				]
-			},
-			{
-				"id": "multi1",
-				"name": "Multi Accessory",
-				"services": [
-					{
-						"type": "rgbw",
-						"function": "light",
-						"name": "Single Color",
-						"ip": "192.168.1.100"
-					},
-					{
-						"type": "switch",
-						"function": "preset-switch",
-						"name": "Color Fade",
-						"ips": {
-							"192.168.1.100": "255,255,255"
-						},
-						"preset": "seven_color_strobe_flash",
-						"speed": 60
-					}
-				]
-			}
-		]
+            {
+                "id": "light1",
+                "name": "Kitchen LED Strip",
+                "services": [
+                    {
+                        "type": "rgb",
+                        "function": "light",
+                        "ip": "DC4F22C5D4E1"
+                    }
+                ]
+            },
+            {
+                "id": "light2",
+                "name": "Living Room LED Strip",
+                "services": [
+                    {
+                        "type": "rgbw",
+                        "function": "light",
+                        "ip": "192.168.1.100"
+                    }
+                ]
+            },
+            {
+                "id": "pswitch1",
+                "name": "Kitchen Color Strobe Flash (Party)",
+                "services": [
+                    {
+                        "type": "switch",
+                        "function": "preset-switch",
+                        "ips": {
+                            "192.168.1.100": "255,255,255"
+                        },
+                        "preset": "seven_color_strobe_flash",
+                        "speed": 60
+                    }
+                ]
+            },
+            {
+                "id": "pswitch2",
+                "name": "All Lights Cross Fade (Soothing)",
+                "services": [
+                    {
+                        "type": "switch",
+                        "function": "preset-switch",
+                        "ips": {
+                            "DC4F22C5D4E1": "0,150,255",
+                            "192.168.1.100": "102,255,102"
+                        },
+                        "preset": "seven_color_cross_fade",
+                        "speed": 40,
+                        "shouldTurnOff": true
+                    }
+                ]
+            },
+            {
+                "id": "rswitch1",
+                "name": "Reset All Switches to Default",
+                "services": [
+                    {
+                        "type": "switch",
+                        "function": "scene-switch",
+                        "ips": {
+                            "192.168.1.100": "255,255,255"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "multi1",
+                "name": "Multi Accessory",
+                "services": [
+                    {
+                        "type": "rgbw",
+                        "function": "light",
+                        "name": "Single Color",
+                        "ip": "192.168.1.100"
+                    },
+                    {
+                        "type": "switch",
+                        "function": "preset-switch",
+                        "name": "Color Fade",
+                        "ips": {
+                            "192.168.1.100": "255,255,255"
+                        },
+                        "preset": "seven_color_strobe_flash",
+                        "speed": 60
+                    }
+                ]
+            }
+        ]
     }
 ]
 ```
