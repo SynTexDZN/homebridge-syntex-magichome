@@ -18,7 +18,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		
 		this.devices = config['accessories'] || [];
 
-		this.pollingInterval = config['pollingInterval'] == 0 ? 0 : config['pollingInterval'] || 10;
+		this.pollingInterval = this.options['pollingInterval'] || 10;
 		
 		if(this.api != null && this.logger != null && this.files != null)
 		{
