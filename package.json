@@ -49,5 +49,8 @@
 	"bugs": {
 		"url": "https://github.com/SynTexDZN/homebridge-syntex-magichome/issues"
 	},
-	"license": "ISC"
+	"license": "ISC",
+	"devDependencies": {
+		"eslint": "^8.7.0"
+	}
 }
