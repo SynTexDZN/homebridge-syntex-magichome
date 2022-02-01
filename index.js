@@ -1,5 +1,7 @@
 let DeviceManager = require('./src/device-manager'), AutomationSystem = require('syntex-automation');
 
+const fs = require('fs'), path = require('path');
+
 const { DynamicPlatform, ContextManager } = require('homebridge-syntex-dynamic-platform');
 
 const SynTexUniversalAccessory = require('./src/universal');
@@ -22,15 +24,22 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 		if(this.api != null && this.logger != null && this.files != null)
 		{
-			const { exec } = require('child_process');
+			try
+			{
+				fs.accessSync(path.join(__dirname + '/src/flux_led.py'), fs.constants.X_OK);
+			}
+			catch(e)
+			{
+				const { exec } = require('child_process');
 
-			exec('sudo chmod 777 -R ' + __dirname + '/src/flux_led.py', (error) => {
+				exec('sudo chmod 777 ' + path.join(__dirname + '/src/flux_led.py'), (error) => {
 
-				if(error)
-				{
-					this.logger.log('error', 'bridge', 'Bridge', '%permission_error% [flux_led.py]', error);
-				}
-			});
+					if(error)
+					{
+						this.logger.log('error', 'bridge', 'Bridge', '%permission_error% [flux_led.py]', error);
+					}
+				});
+			}
 			
 			this.api.on('didFinishLaunching', () => {
 
