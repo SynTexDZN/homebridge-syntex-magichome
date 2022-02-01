@@ -117,52 +117,55 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	updateState(state)
 	{
-		var changed = false;
-
-		if(state.power != null && !isNaN(state.power) && this.power != state.power)
+		if(!this.running)
 		{
-			this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
+			var changed = false;
 
-			this.tempState.power = this.power = state.power;
+			if(state.power != null && !isNaN(state.power) && this.power != state.power)
+			{
+				this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
 
-			changed = true;
-		}
+				this.tempState.power = this.power = state.power;
 
-		if(state.hue != null && !isNaN(state.hue) && this.hue != state.hue)
-		{
-			this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue);
+				changed = true;
+			}
 
-			this.tempState.hue = this.hue = state.hue;
+			if(state.hue != null && !isNaN(state.hue) && this.hue != state.hue)
+			{
+				this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue);
 
-			changed = true;
-		}
+				this.tempState.hue = this.hue = state.hue;
 
-		if(state.saturation != null && !isNaN(state.saturation) && this.saturation != state.saturation)
-		{
-			this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation);
+				changed = true;
+			}
 
-			this.tempState.saturation = this.saturation = state.saturation;
+			if(state.saturation != null && !isNaN(state.saturation) && this.saturation != state.saturation)
+			{
+				this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation);
 
-			changed = true;
-		}
+				this.tempState.saturation = this.saturation = state.saturation;
 
-		if(state.brightness != null && !isNaN(state.brightness) && this.brightness != state.brightness)
-		{
-			this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
+				changed = true;
+			}
 
-			this.tempState.brightness = this.brightness = state.brightness;
+			if(state.brightness != null && !isNaN(state.brightness) && this.brightness != state.brightness)
+			{
+				this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
 
-			changed = true;
-		}
-		
-		super.setState(state.power, () => {});
-		super.setHue(state.hue, () => {});
-		super.setSaturation(state.saturation, () => {});
-		super.setBrightness(state.brightness, () => {});
+				this.tempState.brightness = this.brightness = state.brightness;
 
-		if(changed)
-		{
-			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+				changed = true;
+			}
+			
+			super.setState(state.power, () => {});
+			super.setHue(state.hue, () => {});
+			super.setSaturation(state.saturation, () => {});
+			super.setBrightness(state.brightness, () => {});
+
+			if(changed)
+			{
+				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+			}
 		}
 	}
 
@@ -471,14 +474,14 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				this.offline = error;
 
-				resolve(error);
-
 				if(!error)
 				{
 					this.power = output.includes('Turning on') ? true : output.includes('Turning off') ? false : power;
 
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
+
+				resolve(error);
 			});
 		});
 	}
@@ -490,8 +493,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (error, output) => {
 
 				this.offline = error;
-	
-				resolve(error);
 	
 				if(!error)
 				{
@@ -526,6 +527,8 @@ module.exports = class LightBulb extends ColoredBulbService
 	
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
+
+				resolve(error);
 			});
 		});
 	}

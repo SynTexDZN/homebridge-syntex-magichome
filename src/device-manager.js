@@ -13,12 +13,7 @@ module.exports = class DeviceManager
 	{
 		this.executeCommand(ip, '-i', (error, stdout) => {
 
-			var settings = {
-				power: false,
-				hue: 0,
-				saturation: 100,
-				brightness: 50
-			};
+			var settings = {};
 
 			var colors = stdout.match(/\(.*,.*,.*\)/g);
 			var power = stdout.match(/\] ON /g);
@@ -33,10 +28,7 @@ module.exports = class DeviceManager
 				var str = colors.toString().substring(0, colors.toString().length - 1);
 				str = str.substring(1, str.length);
 
-				const rgbColors = str.split(',').map((item) => {
-
-					return item.trim();
-				});
+				const rgbColors = str.split(',').map((item) => { return item.trim() });
 
 				var converted = convert.rgb.hsv(rgbColors);
 
