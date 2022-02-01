@@ -24,7 +24,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		{
 			const { exec } = require('child_process');
 
-			exec('sudo chmod 777 -R ' + __dirname + '/src/flux_led.py', (error, stdout, stderr) => {
+			exec('sudo chmod 777 -R ' + __dirname + '/src/flux_led.py', (error) => {
 
 				if(error)
 				{

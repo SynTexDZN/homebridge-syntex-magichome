@@ -66,12 +66,12 @@ module.exports = class PresetSwitch extends SwitchService
 
 	setState(value, callback)
 	{
+		var promiseArray = [];
+
 		this.power = value;
 
 		if(value == true)
 		{
-			var promiseArray = [];
-
 			Object.keys(this.ips).forEach((ip) => {
 
 				const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, '--on', 
@@ -101,8 +101,6 @@ module.exports = class PresetSwitch extends SwitchService
 		}
 		else
 		{
-			var promiseArray = [];
-
 			Object.keys(this.ips).forEach((ip) => {
 
 				const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], 
@@ -129,7 +127,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 
-		AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : value });
+		AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value });
 	}
 
 	updateState(state)
