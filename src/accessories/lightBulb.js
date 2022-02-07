@@ -117,8 +117,6 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	updateState(state)
 	{
-		console.log(state, this.running);
-
 		if(!this.running)
 		{
 			var changed = false;
