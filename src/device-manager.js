@@ -18,10 +18,7 @@ module.exports = class DeviceManager
 			var colors = stdout.match(/\(.*,.*,.*\)/g);
 			var power = stdout.match(/\] ON /g);
 
-			if(power && power.length > 0)
-			{
-				settings.power = true;
-			}
+			settings.power = (power && power.length > 0);
 
 			if(colors && colors.length > 0)
 			{
