@@ -11,8 +11,8 @@ module.exports = class PresetSwitch extends SwitchService
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
+		AutomationSystem = manager.platform.AutomationSystem;
 		DeviceManager = manager.DeviceManager;
-		AutomationSystem = manager.AutomationSystem;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 

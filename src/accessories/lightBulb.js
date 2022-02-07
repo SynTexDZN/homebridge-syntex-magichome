@@ -10,8 +10,8 @@ module.exports = class LightBulb extends ColoredBulbService
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
 		Characteristic = manager.platform.api.hap.Characteristic;
+		AutomationSystem = manager.platform.AutomationSystem;
 		DeviceManager = manager.DeviceManager;
-		AutomationSystem = manager.AutomationSystem;
 
 		var specialConfig = serviceConfig;
 
@@ -117,6 +117,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	updateState(state)
 	{
+		console.log(state, this.running);
+
 		if(!this.running)
 		{
 			var changed = false;
