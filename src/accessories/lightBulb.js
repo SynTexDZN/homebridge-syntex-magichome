@@ -1,9 +1,8 @@
-let Characteristic, DeviceManager, AutomationSystem;
-
 const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
-const convert = require('color-convert');
-const emitter = require('../emitter');
+const convert = require('color-convert'), emitter = require('../emitter');
+
+let Characteristic, DeviceManager, AutomationSystem;
 
 module.exports = class LightBulb extends ColoredBulbService
 {

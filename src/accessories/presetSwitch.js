@@ -1,10 +1,8 @@
-let Characteristic, DeviceManager, AutomationSystem;
-
 const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
-const preset = require('../presets');
-const custom = require('../custom');
-const emitter = require('../emitter');
+const preset = require('../presets'), custom = require('../custom'), emitter = require('../emitter');
+
+let Characteristic, DeviceManager, AutomationSystem;
 
 module.exports = class PresetSwitch extends SwitchService
 {

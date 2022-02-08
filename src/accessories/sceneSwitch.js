@@ -1,8 +1,8 @@
-let Characteristic, DeviceManager, AutomationSystem;
-
 const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
 const emitter = require('../emitter');
+
+let Characteristic, DeviceManager, AutomationSystem;
 
 module.exports = class SceneSwitch extends SwitchService
 {
