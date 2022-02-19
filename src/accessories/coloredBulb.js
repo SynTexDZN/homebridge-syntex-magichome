@@ -30,6 +30,8 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
 			this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
 
+			this.logger.debug('Get State From Cache', this.tempState);
+
 		}, true))));
 
 		this.ip = serviceConfig.ip;
@@ -43,6 +45,8 @@ module.exports = class LightBulb extends ColoredBulbService
 			if(!this.running && (this.power != this.tempState.power || this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness))
 			{
 				this.running = true;
+
+				this.logger.debug('Refresh To Last State', this.power != this.tempState.power, this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness);
 				
 				if(this.power != this.tempState.power)
 				{
@@ -79,6 +83,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			state.power = state.value;
 
+			this.logger.debug('Change Handler', state);
+
 			this.setToCurrentColor(state, () => {
 
 				if(state.value != null)
@@ -114,6 +120,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	updateState(state)
 	{
+		this.logger.debug('Update State', state, this.running);
+		
 		if(!this.running)
 		{
 			var changed = false;
@@ -162,6 +170,10 @@ module.exports = class LightBulb extends ColoredBulbService
 			if(changed)
 			{
 				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [power: ' + this.power + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+			}
+			else
+			{
+				this.logger.log('debug', this.id, this.letters, '%update_state[0]% [' + this.name + '] was not changed! ( ' + this.id + ' )');
 			}
 		}
 	}
@@ -344,6 +356,8 @@ module.exports = class LightBulb extends ColoredBulbService
 	*/
 	setToCurrentColor(state, callback)
 	{
+		this.logger.debug('Set To Current Color', state);
+
 		if(state.power != null)
 		{
 			this.tempState.power = state.power;
