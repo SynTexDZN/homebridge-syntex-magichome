@@ -2,14 +2,12 @@ const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
 const convert = require('color-convert'), emitter = require('../emitter');
 
-let Characteristic, DeviceManager, AutomationSystem;
+let DeviceManager;
 
 module.exports = class LightBulb extends ColoredBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		Characteristic = manager.platform.api.hap.Characteristic;
-		AutomationSystem = manager.platform.AutomationSystem;
 		DeviceManager = manager.DeviceManager;
 
 		var specialConfig = serviceConfig;
@@ -27,10 +25,10 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.tempState.saturation = this.saturation = saturation || 100;
 			this.tempState.brightness = this.brightness = brightness || 50;
 
-			this.service.getCharacteristic(Characteristic.On).updateValue(this.power);
-			this.service.getCharacteristic(Characteristic.Hue).updateValue(this.hue);
-			this.service.getCharacteristic(Characteristic.Saturation).updateValue(this.saturation);
-			this.service.getCharacteristic(Characteristic.Brightness).updateValue(this.brightness);
+			this.service.getCharacteristic(this.Characteristic.On).updateValue(this.power);
+			this.service.getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
+			this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
+			this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
 
 		}, true))));
 
@@ -85,28 +83,28 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				if(state.value != null)
 				{
-					this.service.getCharacteristic(Characteristic.On).updateValue(state.value)
+					this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value)
 
 					super.setState(state.value, () => {});
 				}
 
 				if(state.hue != null)
 				{
-					this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue)
+					this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue)
 
 					super.setHue(state.hue, () => {});
 				}
 
 				if(state.saturation != null)
 				{
-					this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation)
+					this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation)
 
 					super.setSaturation(state.saturation, () => {});
 				}
 
 				if(state.brightness != null)
 				{
-					this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness)
+					this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness)
 
 					super.setBrightness(state.brightness, () => {});
 				}
@@ -122,7 +120,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(state.power != null && !isNaN(state.power) && this.power != state.power)
 			{
-				this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
+				this.service.getCharacteristic(this.Characteristic.On).updateValue(state.power);
 
 				this.tempState.power = this.power = state.power;
 
@@ -131,7 +129,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(state.hue != null && !isNaN(state.hue) && this.hue != state.hue)
 			{
-				this.service.getCharacteristic(Characteristic.Hue).updateValue(state.hue);
+				this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue);
 
 				this.tempState.hue = this.hue = state.hue;
 
@@ -140,7 +138,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(state.saturation != null && !isNaN(state.saturation) && this.saturation != state.saturation)
 			{
-				this.service.getCharacteristic(Characteristic.Saturation).updateValue(state.saturation);
+				this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation);
 
 				this.tempState.saturation = this.saturation = state.saturation;
 
@@ -149,7 +147,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(state.brightness != null && !isNaN(state.brightness) && this.brightness != state.brightness)
 			{
-				this.service.getCharacteristic(Characteristic.Brightness).updateValue(state.brightness);
+				this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness);
 
 				this.tempState.brightness = this.brightness = state.brightness;
 
@@ -448,7 +446,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 
-				AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.power, hue : this.tempState.hue, saturation : this.tempState.saturation, brightness : this.tempState.brightness });
+				this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.power, hue : this.tempState.hue, saturation : this.tempState.saturation, brightness : this.tempState.brightness });
 			}
 			else if(callback != null)
 			{

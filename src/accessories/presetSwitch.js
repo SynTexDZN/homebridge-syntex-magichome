@@ -2,14 +2,12 @@ const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
 const preset = require('../presets'), custom = require('../custom'), emitter = require('../emitter');
 
-let Characteristic, DeviceManager, AutomationSystem;
+let DeviceManager;
 
 module.exports = class PresetSwitch extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		Characteristic = manager.platform.api.hap.Characteristic;
-		AutomationSystem = manager.platform.AutomationSystem;
 		DeviceManager = manager.DeviceManager;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
@@ -18,7 +16,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 			this.power = power || false;
 
-			this.service.getCharacteristic(Characteristic.On).updateValue(this.power);
+			this.service.getCharacteristic(this.Characteristic.On).updateValue(this.power);
 
 		}, true);
 		
@@ -41,7 +39,7 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			if(state.value != null)
 			{
-				this.service.getCharacteristic(Characteristic.On).updateValue(state.value);
+				this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
 
 				this.setState(state.value, () => {});
 			}
@@ -125,18 +123,18 @@ module.exports = class PresetSwitch extends SwitchService
 
 		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 
-		AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value });
+		this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value });
 	}
 
 	updateState(state)
 	{
 		if(state.power != null && !isNaN(state.power) && this.power != state.power)
 		{
-			this.service.getCharacteristic(Characteristic.On).updateValue(state.power);
+			this.service.getCharacteristic(this.Characteristic.On).updateValue(state.power);
 
 			this.power = state.power;
 
-			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.power + '] ( ' + this.id + ' )');
+			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + state.power + '] ( ' + this.id + ' )');
 		}
 
 		super.setState(state.power, () => {});

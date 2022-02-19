@@ -2,14 +2,12 @@ const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
 const emitter = require('../emitter');
 
-let Characteristic, DeviceManager, AutomationSystem;
+let DeviceManager;
 
 module.exports = class SceneSwitch extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		Characteristic = manager.platform.api.hap.Characteristic;
-		AutomationSystem = manager.platform.AutomationSystem;
 		DeviceManager = manager.DeviceManager;
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
@@ -21,7 +19,7 @@ module.exports = class SceneSwitch extends SwitchService
 		{
 			if(state.value == true)
 			{
-				this.service.getCharacteristic(Characteristic.On).updateValue(state.value);
+				this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
 
 				this.setState(state.value, () => {});
 			}
@@ -59,10 +57,10 @@ module.exports = class SceneSwitch extends SwitchService
 
 			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [triggered] ( ' + this.id + ' )');
 
-		}).then(() => setTimeout(() => this.service.getCharacteristic(Characteristic.On).updateValue(false), 2000));
+		}).then(() => setTimeout(() => this.service.getCharacteristic(this.Characteristic.On).updateValue(false), 2000));
 	
 		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 
-		AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : value });
+		this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value });
 	}
 }

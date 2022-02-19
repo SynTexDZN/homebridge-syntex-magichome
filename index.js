@@ -18,8 +18,6 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 	{
 		super(config, api, pluginID, pluginName, pluginVersion);
 		
-		this.devices = config['accessories'] || [];
-
 		this.pollingInterval = this.options['pollingInterval'] == 0 ? 0 : (this.options['pollingInterval'] || 10);
 
 		if(this.api != null && this.logger != null && this.files != null)
@@ -46,7 +44,6 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 				DeviceManager = new DeviceManager(this.logger);
 
 				this.loadAccessories();
-				this.initWebServer();
 
 				DeviceManager.refreshAccessories(this.accessories);
 
@@ -71,17 +68,6 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 			device.manufacturer = pluginName;
 
 			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, DeviceManager, ContextManager }));
-		}
-	}
-
-	initWebServer()
-	{
-		if(this.port != null)
-		{
-			this.WebServer.addPage('/reload-automation', async (response) => {
-
-				response.end(await this.AutomationSystem.LogikEngine.loadAutomation() ? 'Success' : 'Error');
-			});
 		}
 	}
 }

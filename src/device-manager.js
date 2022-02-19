@@ -1,6 +1,4 @@
-const cp = require('child_process');
-const path = require('path');
-const convert = require('color-convert');
+const cp = require('child_process'), path = require('path'), convert = require('color-convert');
 
 module.exports = class DeviceManager
 {
