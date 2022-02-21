@@ -12,11 +12,11 @@ module.exports = class PresetSwitch extends SwitchService
 		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		super.getState((power) => {
+		super.getState((value) => {
 
-			this.power = power || false;
+			this.value = value || false;
 
-			this.service.getCharacteristic(this.Characteristic.On).updateValue(this.power);
+			this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
 
 		}, true);
 		
@@ -52,10 +52,10 @@ module.exports = class PresetSwitch extends SwitchService
 
 			if(value != null)
 			{
-				this.power = value;
+				this.value = value;
 			}
 
-			callback(null, this.power);
+			callback(null, this.value);
 
 		}, true);
 	}
@@ -64,7 +64,7 @@ module.exports = class PresetSwitch extends SwitchService
 	{
 		var promiseArray = [];
 
-		this.power = value;
+		this.value = value;
 
 		if(value == true)
 		{
@@ -128,16 +128,16 @@ module.exports = class PresetSwitch extends SwitchService
 
 	updateState(state)
 	{
-		if(state.power != null && !isNaN(state.power) && this.power != state.power)
+		if(state.value != null && !isNaN(state.value) && this.value != state.value)
 		{
-			this.service.getCharacteristic(this.Characteristic.On).updateValue(state.power);
+			this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
 
-			this.power = state.power;
+			this.value = state.value;
 
-			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + state.power + '] ( ' + this.id + ' )');
+			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + state.value + '] ( ' + this.id + ' )');
 		}
 
-		super.setState(state.power, () => {});
+		super.setState(state.value, () => {});
 	}
 
 	bindEmitter()
@@ -158,7 +158,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 				if(updateState)
 				{
-					this.updateState({ power : false });
+					this.updateState({ value : false });
 				}
 			}
 		});
