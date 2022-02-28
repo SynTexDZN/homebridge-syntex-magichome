@@ -30,8 +30,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
 			this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
 
-			this.logger.debug('Get State From Cache ' + JSON.stringify(this.tempState));
-
 		}, true))));
 
 		this.ip = serviceConfig.ip;
@@ -46,8 +44,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				this.running = true;
 
-				this.logger.debug('Refresh To Last State ' + (this.value != this.tempState.value) + ' ' + (this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness));
-				
 				if(this.value != this.tempState.value)
 				{
 					this.setPower(this.tempState.value).then(() => {
@@ -85,8 +81,6 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		this.changeHandler = (state) => {
 
-			this.logger.debug('Change Handler ' + JSON.stringify(state));
-
 			this.setToCurrentColor(state, () => {
 
 				if(state.value != null)
@@ -122,8 +116,6 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	updateState(state)
 	{
-		this.logger.debug('Update State ' + JSON.stringify(state) + ' ' + this.running);
-		
 		if(!this.running)
 		{
 			var changed = false;
@@ -358,8 +350,6 @@ module.exports = class LightBulb extends ColoredBulbService
 	*/
 	setToCurrentColor(state, callback)
 	{
-		this.logger.debug('Set To Current Color ' + JSON.stringify(state));
-
 		if(state.value != null)
 		{
 			this.tempState.value = state.value;
