@@ -54,6 +54,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 						this.running = false;
 					});
+
+					this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.value });
 				}
 				else if(this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness)
 				{
@@ -65,6 +67,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 							this.running = false;
 						});
+
+						this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.value, hue : converted[0], saturation : converted[1], brightness : converted[2] });
 					}
 					else
 					{

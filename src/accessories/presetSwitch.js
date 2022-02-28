@@ -134,10 +134,11 @@ module.exports = class PresetSwitch extends SwitchService
 
 			this.value = state.value;
 
-			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + state.value + '] ( ' + this.id + ' )');
+			super.setState(state.value,
+				() => this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + state.value + '] ( ' + this.id + ' )'));
 		}
 
-		super.setState(state.value, () => {});
+		this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, state);
 	}
 
 	bindEmitter()
