@@ -48,8 +48,10 @@ It also offers some tweaks and improvements to the original devices.
         "options": {
             "port": 1712,
             "language": "us",
-            "debug": false,
             "pollingInterval": 10
+        },
+        "log": {
+            "debug": false
         },
         "accessories": [
             {

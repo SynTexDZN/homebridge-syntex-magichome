@@ -6,8 +6,10 @@
 			"options": {
 				"port": 1712,
 				"language": "us",
-				"debug": false,
 				"pollingInterval": 10
+			},
+			"log": {
+				"debug": false
 			},
 			"accessories": [
 				{
