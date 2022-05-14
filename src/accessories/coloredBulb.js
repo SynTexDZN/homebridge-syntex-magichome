@@ -501,6 +501,8 @@ module.exports = class LightBulb extends ColoredBulbService
 				{
 					var rgb = null, hsl = null;
 
+					console.log(error, output);
+
 					if(output.includes('('))
 					{
 						rgb = output.split('(')[1];
