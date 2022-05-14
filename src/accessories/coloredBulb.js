@@ -495,7 +495,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (error, output) => {
 
-				this.offline = error;
+				this.offline = error || output.includes('Unable to connect to bulb');
 	
 				if(!error && !output.includes('Unable to connect to bulb'))
 				{
