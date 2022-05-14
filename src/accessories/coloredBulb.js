@@ -497,25 +497,13 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				this.offline = error;
 	
-				if(!error)
+				if(!error && !output.includes('Unable to connect to bulb'))
 				{
 					var rgb = null, hsl = null;
 
-					console.log(error, output);
-
-					if(output.includes('('))
+					if(output.includes('(') && output.includes(')') && output.includes(', '))
 					{
-						rgb = output.split('(')[1];
-					}
-
-					if(rgb.includes(')'))
-					{
-						rgb = rgb.split(')')[0];
-					}
-
-					if(rgb.includes(', '))
-					{
-						rgb = rgb.split(', ');
+						rgb = output.split('(')[1].split(')')[0].split(', ');
 					}
 
 					if(rgb != null && Array.isArray(rgb) && rgb.length == 3)
