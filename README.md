@@ -11,10 +11,11 @@ It also offers some tweaks and improvements to the original devices.
 
 
 ## Core Features
-- **Device Control** *( view and control your lights color, saturarion, brightness )*
-- **Scene Support** *( use colorful scenes from MagicHome or some custom ones )*
-- **Color Switches** *( set the color of your own light groups by value )*
-- **HTTP Access** *( update and read device states via HTTP calls )*
+- **Device Control:** View and control your lights color, saturarion, brightness.
+- **Scene Support:** Use colorful scenes from MagicHome or some custom ones.
+- **Color Switches:** Set the color of your own light groups by value.
+- **HTTP Access:** Update and read device states via HTTP calls.
+- **Automation:** We integrated our powerful automation API for fast and complex automation.
 
 
 ## Troubleshooting
@@ -156,8 +157,10 @@ It also offers some tweaks and improvements to the original devices.
 ### Optional Parameters
 - `port` To control your accessory over HTTP calls.
 - `language` You can use your country initials if you want to change it *( Currently supported: `us`, `en`, `de` )*
-- `debug` For further information because of troubleshooting and bug reports.
-- `pollingInterval` defines how often the plugin should chech the Magic Home Device state *( in seconds )*
+- `pollingInterval` defines how often the plugin should chech the Magic Home device state *( in seconds )*
+
+### Log Parameters
+- Disable certain log level: `error`, `warn`, `info`, `read`, `update`, `success` and `debug` *( for example `debug: false` )*
 
 ### Accessory Config
 - Every device needs these parameters: `id`, `name` and `services` *( required )*
@@ -202,17 +205,23 @@ https://github.com/SynTexDZN/homebridge-syntex
 3. For the `New Value` you can type this pattern:
 - For all devices: `true` / `false` *( colored light, preset switch, reset switch )*
 - For colored lights add `&hue=`  **New Hue**  or `&saturation=`  **New Saturation**  or `&brightness=`  **New Brightness** *( have to be numbers )*
+- For accessories with multiple service types add `&type=`  **SERVICETYPE**
+- For accessories with multiple services with more than one of the same service types add `&counter=`  **SERVICENUMBER**\
+*( First of that type = 0, second = 1 .. )*
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&value=true&hue=4&saturation=100&brightness=100`\
-*( Updates the value and hue, saturation and brightness of `ABCDEF1234567890` to `turned on, orange color, 100% saturation, 100% brightness` as example )*
+*( Updates the value and hue, saturation and brightness of `ABCDEF1234567890` to `turned on, orange color, 100% saturation, 100% brightness` for example )*
 
 
 ## Read MagicHome Device Values
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**
 2. Insert the `Bridge IP` and `Device ID`
+- For accessories with multiple service types add `&type=`  **SERVICETYPE**
+- For accessories with multiple services with more than one of the same service types add `&counter=`  **SERVICENUMBER**\
+*( First of that type = 0, second = 1 .. )*
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890`\
-*( Reads the value of `ABCDEF1234567890` as example )*
+*( Reads the value of `ABCDEF1234567890` for example )*
 
 
 ## Remove MagicHome Device
@@ -302,6 +311,7 @@ The letters are split into two parts *( numbers )*
 - D : Humidity
 - E : Rain
 - F : Light
+- G : Blind
 - 0 : Occupancy
 - 1 : Smoke
 - 2 : Airquality
