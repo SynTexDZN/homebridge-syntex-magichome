@@ -2,24 +2,14 @@ const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
 const preset = require('../presets'), custom = require('../custom'), emitter = require('../emitter');
 
-let DeviceManager;
-
 module.exports = class PresetSwitch extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		DeviceManager = manager.DeviceManager;
-		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		super.getState((value) => {
+		this.DeviceManager = manager.DeviceManager;
 
-			this.value = value || false;
-
-			this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
-
-		}, true);
-		
 		this.ips = serviceConfig.ips;
 		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
 		this.preset = serviceConfig.preset || 'seven_color_cross_fade';
@@ -35,13 +25,12 @@ module.exports = class PresetSwitch extends SwitchService
 
 		this.bindEmitter();
 
-		this.changeHandler = (state) =>
-		{
+		this.changeHandler = (state) => {
+
 			if(state.value != null)
 			{
-				this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
-
-				this.setState(state.value, () => {});
+				this.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
 			}
 		};
 	}
@@ -50,12 +39,9 @@ module.exports = class PresetSwitch extends SwitchService
 	{
 		super.getState((value) => {
 
-			if(value != null)
-			{
-				this.value = value;
-			}
+			this.value = value;
 
-			callback(null, this.value);
+			callback(null, value);
 
 		}, true);
 	}
@@ -70,26 +56,26 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			Object.keys(this.ips).forEach((ip) => {
 
-				const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, '--on', 
-					() => resolve()));
-
-				promiseArray.push(newPromise);
+				promiseArray.push(new Promise((resolve) => {
+					
+					this.DeviceManager.executeCommand(ip, '--on', () => resolve());
+				}));
 
 				// OPTIMIZE: Remove Timeout When LED is Already On
 
 				if(preset[this.preset] != null)
 				{
-					const newPresetPromise = new Promise((resolve) => setTimeout(() => DeviceManager.executeCommand(ip, '-p ' + this.sceneValue + ' ' + this.speed, 
-						() => resolve()), 1500));
-
-					promiseArray.push(newPresetPromise);
+					promiseArray.push(new Promise((resolve) => {
+						
+						setTimeout(() => this.DeviceManager.executeCommand(ip, '-p ' + this.sceneValue + ' ' + this.speed, () => resolve()), 1500);
+					}));
 				}
 				else if(custom[this.preset] != null)
 				{
-					const newPresetPromise = new Promise((resolve) => setTimeout(() => DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"',
-						() => resolve()), 1500));
-
-					promiseArray.push(newPresetPromise);
+					promiseArray.push(new Promise((resolve) => {
+						
+						setTimeout(() => this.DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"', () => resolve()), 1500);
+					}));
 				}
 			});
 
@@ -99,10 +85,10 @@ module.exports = class PresetSwitch extends SwitchService
 		{
 			Object.keys(this.ips).forEach((ip) => {
 
-				const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], 
-					() => resolve()));
-
-				promiseArray.push(newPromise);
+				promiseArray.push(new Promise((resolve) => {
+					
+					this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
+				}));
 			});
 
 			Promise.all(promiseArray).then(() => {
@@ -113,7 +99,7 @@ module.exports = class PresetSwitch extends SwitchService
 				{
 					Object.keys(this.ips).forEach((ip) => {
 
-						setTimeout(() => DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
+						setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
 					});
 				}
 
@@ -128,14 +114,12 @@ module.exports = class PresetSwitch extends SwitchService
 
 	updateState(state)
 	{
-		if(state.value != null && !isNaN(state.value) && this.value != state.value)
+		if(state.value != null && !isNaN(state.value) && (!super.hasState('value') || this.value != state.value))
 		{
-			this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
-
 			this.value = state.value;
 
 			super.setState(state.value,
-				() => this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + state.value + '] ( ' + this.id + ' )'));
+				() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), true);
 		}
 
 		this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, state);

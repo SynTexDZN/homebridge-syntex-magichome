@@ -2,35 +2,24 @@ const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
 const convert = require('color-convert'), emitter = require('../emitter');
 
-let DeviceManager;
-
 module.exports = class LightBulb extends ColoredBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		DeviceManager = manager.DeviceManager;
-
 		var specialConfig = serviceConfig;
 
 		specialConfig.type = 'rgb';
 
 		super(homebridgeAccessory, deviceConfig, specialConfig, manager);
 
-		super.getState((value) => super.getHue((hue) => super.getSaturation((saturation) => super.getBrightness((brightness) => {
+		this.tempState = {
+			value : this.value,
+			hue : this.hue,
+			saturation : this.saturation,
+			brightness : this.brightness
+		};
 
-			this.tempState = {};
-
-			this.tempState.value = this.value = value || false;
-			this.tempState.hue = this.hue = hue || 0;
-			this.tempState.saturation = this.saturation = saturation || 100;
-			this.tempState.brightness = this.brightness = brightness || 50;
-
-			this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
-			this.service.getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
-			this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
-			this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
-
-		}, true))));
+		this.DeviceManager = manager.DeviceManager;
 
 		this.ip = serviceConfig.ip;
 		this.setup = serviceConfig.type == 'rgb' ? 'RGBW' : serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
@@ -85,30 +74,26 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				if(state.value != null)
 				{
-					this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value)
-
-					super.setState(state.value, () => {});
+					super.setState(state.value,
+						() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
 				}
 
 				if(state.hue != null)
 				{
-					this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue)
-
-					super.setHue(state.hue, () => {});
+					super.setHue(state.hue,
+						() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue));
 				}
 
 				if(state.saturation != null)
 				{
-					this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation)
-
-					super.setSaturation(state.saturation, () => {});
+					super.setSaturation(state.saturation,
+						() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation));
 				}
 
 				if(state.brightness != null)
 				{
-					this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness)
-
-					super.setBrightness(state.brightness, () => {});
+					super.setBrightness(state.brightness,
+						() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
 				}
 			});
 		};
@@ -120,47 +105,58 @@ module.exports = class LightBulb extends ColoredBulbService
 		{
 			var changed = false;
 
-			if(state.value != null && !isNaN(state.value) && this.value != state.value)
+			if(state.value != null && !isNaN(state.value))
 			{
-				this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
+				if(!super.hasState('value') || this.value != state.value)
+				{
+					changed = true;
+				}
 
 				this.tempState.value = this.value = state.value;
 
-				changed = true;
+				super.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
 			}
 
-			if(state.hue != null && !isNaN(state.hue) && this.hue != state.hue)
+			if(state.hue != null && !isNaN(state.hue))
 			{
-				this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue);
+				if(!super.hasState('hue') || this.hue != state.hue)
+				{
+					changed = true;
+				}
 
 				this.tempState.hue = this.hue = state.hue;
 
-				changed = true;
+				super.setHue(state.hue,
+					() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue));
 			}
 
-			if(state.saturation != null && !isNaN(state.saturation) && this.saturation != state.saturation)
+			if(state.saturation != null && !isNaN(state.saturation))
 			{
-				this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation);
+				if(!super.hasState('saturation') || this.saturation != state.saturation)
+				{
+					changed = true;
+				}
 
 				this.tempState.saturation = this.saturation = state.saturation;
 
-				changed = true;
+				super.setSaturation(state.saturation,
+					() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation));
 			}
 
-			if(state.brightness != null && !isNaN(state.brightness) && this.brightness != state.brightness)
+			if(state.brightness != null && !isNaN(state.brightness))
 			{
-				this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness);
+				if(!super.hasState('brightness') || this.brightness != state.brightness)
+				{
+					changed = true;
+				}
 
 				this.tempState.brightness = this.brightness = state.brightness;
 
-				changed = true;
+				super.setBrightness(state.brightness,
+					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
 			}
 			
-			super.setState(state.value, () => {});
-			super.setHue(state.hue, () => {});
-			super.setSaturation(state.saturation, () => {});
-			super.setBrightness(state.brightness, () => {});
-
 			if(changed)
 			{
 				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
@@ -169,6 +165,8 @@ module.exports = class LightBulb extends ColoredBulbService
 			{
 				this.logger.log('debug', this.id, this.letters, '%update_state[0]% [' + this.name + '] was not changed! ( ' + this.id + ' )');
 			}
+
+			this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, state);
 		}
 	}
 
@@ -176,30 +174,30 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		super.getState((value) => {
 
-			if(value != null)
+			if(super.hasState('value'))
 			{
-				callback(null, value);
-
 				this.value = value;
+
+				this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [value: ' + value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+
+				callback(null, value);
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && state.value != null && !isNaN(state.value))
+					if(state.value != null && !isNaN(state.value))
 					{
 						this.value = state.value;
 
-						super.setState(this.value, () => {});
-
-						this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
+						super.setState(state.value,
+							() => this.logger.log('read', this.id, this.letters, '%read_state[0]% [' + this.name + '] %read_state[1]% [value: ' + state.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )'));
 					}
 					
 					callback(null, this.value);
 				});
 			}
-
-		}, true);
+		});
 	}
 
 	setState(value, callback)
@@ -219,23 +217,23 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	getHue(callback)
 	{
-		super.getHue((value) => {
+		super.getHue((hue) => {
 
-			if(value != null)
+			if(super.hasState('hue'))
 			{
-				callback(null, value);
+				this.hue = hue;
 
-				this.hue = value;
+				callback(null, hue);
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && state.hue != null && !isNaN(state.hue))
+					if(state.hue != null && !isNaN(state.hue))
 					{
 						this.hue = state.hue;
 					
-						super.setHue(this.hue, () => {});
+						super.setHue(state.hue, () => {});
 					}
 					
 					callback(null, this.hue);
@@ -244,13 +242,13 @@ module.exports = class LightBulb extends ColoredBulbService
 		});
 	}
 
-	setHue(value, callback)
+	setHue(hue, callback)
 	{
-		this.setToCurrentColor({ hue : value }, (offline) => {
+		this.setToCurrentColor({ hue }, (offline) => {
 			
 			if(!offline)
 			{
-				super.setHue(value, () => callback());
+				super.setHue(hue, () => callback());
 			}
 			else
 			{
@@ -261,23 +259,23 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	getSaturation(callback)
 	{
-		super.getSaturation((value) => {
+		super.getSaturation((saturation) => {
 
-			if(value != null)
+			if(super.hasState('saturation'))
 			{
-				callback(null, value);
+				this.saturation = saturation;
 
-				this.saturation = value;
+				callback(null, saturation);
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && state.saturation != null && !isNaN(state.saturation))
+					if(state.saturation != null && !isNaN(state.saturation))
 					{
 						this.saturation = state.saturation;
 
-						super.setSaturation(this.saturation, () => {});
+						super.setSaturation(state.saturation, () => {});
 					}
 					
 					callback(null, this.saturation);
@@ -286,13 +284,13 @@ module.exports = class LightBulb extends ColoredBulbService
 		});
 	}
 
-	setSaturation(value, callback)
+	setSaturation(saturation, callback)
 	{
-		this.setToCurrentColor({ saturation : value }, (offline) => {
+		this.setToCurrentColor({ saturation }, (offline) => {
 			
 			if(!offline)
 			{
-				super.setSaturation(value, () => callback());
+				super.setSaturation(saturation, () => callback());
 			}
 			else
 			{
@@ -303,23 +301,23 @@ module.exports = class LightBulb extends ColoredBulbService
 
 	getBrightness(callback)
 	{
-		super.getBrightness((value) => {
+		super.getBrightness((brightness) => {
 
-			if(value != null)
+			if(super.hasState('brightness'))
 			{
-				callback(null, value);
+				this.brightness = brightness;
 
-				this.brightness = value;
+				callback(null, brightness);
 			}
 			else
 			{
-				DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this.id, (state) => {
 
-					if(state != null && state.brightness != null && !isNaN(state.brightness))
+					if(state.brightness != null && !isNaN(state.brightness))
 					{
 						this.brightness = state.brightness;
 
-						super.setBrightness(this.brightness, () => {});
+						super.setBrightness(state.brightness, () => {});
 					}
 					
 					callback(null, this.brightness);
@@ -328,13 +326,13 @@ module.exports = class LightBulb extends ColoredBulbService
 		});
 	}
 
-	setBrightness(value, callback)
+	setBrightness(brightness, callback)
 	{
-		this.setToCurrentColor({ brightness : value }, (offline) => {
+		this.setToCurrentColor({ brightness }, (offline) => {
 
 			if(!offline)
 			{
-				super.setBrightness(value, () => callback());
+				super.setBrightness(brightness, () => callback());
 			}
 			else
 			{
@@ -473,7 +471,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		return new Promise((resolve) => {
 
-			DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', (error, output) => {
+			this.DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', (error, output) => {
 
 				this.offline = error;
 
@@ -493,7 +491,7 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		return new Promise((resolve) => {
 
-			DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (error, output) => {
+			this.DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (error, output) => {
 
 				this.offline = error || output.includes('Unable to connect to bulb');
 	

@@ -2,26 +2,23 @@ const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
 const emitter = require('../emitter');
 
-let DeviceManager;
-
 module.exports = class SceneSwitch extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		DeviceManager = manager.DeviceManager;
-		
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
+
+		this.DeviceManager = manager.DeviceManager;
 
 		this.ips = serviceConfig.ips;
 		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
 
-		this.changeHandler = (state) =>
-		{
+		this.changeHandler = (state) => {
+
 			if(state.value == true)
 			{
-				this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
-
-				this.setState(state.value, () => {});
+				this.setState(state.value,
+					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
 			}
 		};
 	}
@@ -37,10 +34,10 @@ module.exports = class SceneSwitch extends SwitchService
 
 		Object.keys(this.ips).forEach((ip) => {
 
-			const newPromise = new Promise((resolve) => DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], 
-				() => resolve()));
-
-			promiseArray.push(newPromise);
+			promiseArray.push(new Promise((resolve) => {
+				
+				this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
+			}));
 		});
 
 		Promise.all(promiseArray).then(() => {
@@ -50,8 +47,8 @@ module.exports = class SceneSwitch extends SwitchService
 			if(this.shouldTurnOff)
 			{
 				Object.keys(this.ips).forEach((ip) => {
-
-					setTimeout(() => DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
+					
+					setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
 				});
 			}
 
