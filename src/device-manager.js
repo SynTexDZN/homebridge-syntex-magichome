@@ -11,12 +11,12 @@ module.exports = class DeviceManager
 	{
 		this.executeCommand(ip, '-i', (error, stdout) => {
 
-			var settings = {};
+			var state = {};
 
 			var colors = stdout.match(/\(.*,.*,.*\)/g);
 			var power = stdout.match(/\] ON /g);
 
-			settings.value = (power != null && power.length > 0);
+			state.value = (power != null && power.length > 0);
 
 			if(colors && colors.length > 0)
 			{
@@ -27,12 +27,12 @@ module.exports = class DeviceManager
 
 				var converted = convert.rgb.hsv(rgbColors);
 
-				settings.hue = converted[0];
-				settings.saturation = converted[1];
-				settings.brightness = converted[2];
+				state.hue = converted[0];
+				state.saturation = converted[1];
+				state.brightness = converted[2];
 			}
 
-			callback(settings);
+			callback(state);
 		});
 	}
 
