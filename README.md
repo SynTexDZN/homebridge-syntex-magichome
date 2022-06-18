@@ -241,50 +241,50 @@ To enable the automation module you have to create a file named `automation.json
 
 ```json
 {
-  "id": "automation",
-  "automation": [
-    {
-      "id": 0,
-      "name": "Demo Automation",
-      "active": true,
-      "trigger": [
+    "id": "automation",
+    "automation": [
         {
-          "id": "multi2",
-          "name": "Multi Device",
-          "letters": "F0",
-          "plugin": "SynTexWebHooks",
-          "operation": "<",
-          "value": "1000"
+            "id": 0,
+            "name": "Demo Automation",
+            "active": true,
+            "trigger": [
+                {
+                    "id": "multi2",
+                    "name": "Multi Device",
+                    "letters": "F0",
+                    "plugin": "SynTexWebHooks",
+                    "operation": "<",
+                    "value": "1000"
+                }
+            ],
+            "condition": [
+                {
+                    "id": "multi1",
+                    "name": "Multi Switch",
+                    "letters": "41",
+                    "plugin": "SynTexWebHooks",
+                    "operation": "=",
+                    "value": "false"
+                }
+            ],
+            "result": [
+                {
+                    "id": "light1",
+                    "name": "Kitchen LED Strip",
+                    "letters": "30",
+                    "plugin": "SynTexMagicHome",
+                    "operation": "=",
+                    "value": "true",
+                    "hue": "4",
+                    "saturation": "100",
+                    "brightness": "100"
+                },
+                {
+                    "url": "http://192.168.1.100:1712/devices?id=58747407d8cfc108d0dc&value=true&brightness=100"
+                }
+            ]
         }
-      ],
-      "condition": [
-        {
-          "id": "multi1",
-          "name": "Multi Switch",
-          "letters": "41",
-          "plugin": "SynTexWebHooks",
-          "operation": "=",
-          "value": "false"
-        }
-      ],
-      "result": [
-        {
-          "id": "light1",
-          "name": "Kitchen LED Strip",
-          "letters": "30",
-          "plugin": "SynTexMagicHome",
-          "operation": "=",
-          "value": "true",
-          "hue": "4",
-          "saturation": "100",
-          "brightness": "100"
-        },
-        {
-          "url": "http://192.168.1.100:1712/devices?id=58747407d8cfc108d0dc&value=true&brightness=100"
-        }
-      ]
-    }
-  ]
+    ]
 }
 ```
 
