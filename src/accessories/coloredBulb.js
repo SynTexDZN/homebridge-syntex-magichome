@@ -473,16 +473,17 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			this.DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', (error, output) => {
 
-				this.offline = error;
+				this.offline = error || output.includes('Unable to connect to bulb');
 
-				if(!error)
+				if(!this.offline)
 				{
 					this.value = output.includes('Turning on') ? true : output.includes('Turning off') ? false : value;
 
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
 
-				resolve(error);
+				this.setConnectionState(!output.includes('Unable to connect to bulb'),
+					() => resolve(this.offline), true);
 			});
 		});
 	}
@@ -494,8 +495,8 @@ module.exports = class LightBulb extends ColoredBulbService
 			this.DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (error, output) => {
 
 				this.offline = error || output.includes('Unable to connect to bulb');
-	
-				if(!error && !output.includes('Unable to connect to bulb'))
+
+				if(!this.offline)
 				{
 					var rgb = null, hsl = null;
 
@@ -519,7 +520,8 @@ module.exports = class LightBulb extends ColoredBulbService
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
 
-				resolve(error);
+				this.setConnectionState(!output.includes('Unable to connect to bulb'),
+					() => resolve(this.offline), true);
 			});
 		});
 	}

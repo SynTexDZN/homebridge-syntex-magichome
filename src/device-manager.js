@@ -32,6 +32,8 @@ module.exports = class DeviceManager
 				state.brightness = converted[2];
 			}
 
+			state.connection = !stdout.includes('Unable to connect to bulb');
+
 			callback(state);
 		});
 	}
@@ -48,7 +50,11 @@ module.exports = class DeviceManager
 				{
 					if(accessory[1].services[i].type == 'rgb' || accessory[1].services[i].type == 'rgbw')
 					{
-						this.getDevice(accessory[1].services[i].ip, (state) => accessory[1].service[parseInt(i) + 1].updateState(state));
+						this.getDevice(accessory[1].services[i].ip, (state) => {
+							
+							accessory[1].service[parseInt(i) + 1].setConnectionState(state.connection,
+								() => accessory[1].service[parseInt(i) + 1].updateState(state), true);
+						});
 					}
 				}
 			}
@@ -56,7 +62,11 @@ module.exports = class DeviceManager
 			{
 				if(accessory[1].services.type == 'rgb' || accessory[1].services.type == 'rgbw')
 				{
-					this.getDevice(accessory[1].services.ip, (state) => accessory[1].service[1].updateState(state));
+					this.getDevice(accessory[1].services.ip, (state) => {
+						
+						accessory[1].service[1].setConnectionState(state.connection,
+							() => accessory[1].service[1].updateState(state), true);
+					});
 				}
 			}
 		}
