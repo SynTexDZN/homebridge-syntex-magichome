@@ -2,7 +2,7 @@ let DeviceManager = require('./src/device-manager');
 
 const fs = require('fs'), path = require('path');
 
-const { DynamicPlatform, ContextManager } = require('homebridge-syntex-dynamic-platform');
+const { DynamicPlatform } = require('homebridge-syntex-dynamic-platform');
 
 const SynTexUniversalAccessory = require('./src/universal');
 
@@ -67,7 +67,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 
 			device.manufacturer = pluginName;
 
-			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, DeviceManager, ContextManager }));
+			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, DeviceManager }));
 		}
 	}
 }
