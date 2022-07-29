@@ -109,7 +109,7 @@ module.exports = class PresetSwitch extends SwitchService
 
 		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 
-		this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value });
+		this.AutomationSystem.LogikEngine.runAutomation(this, { value });
 	}
 
 	updateState(state)
@@ -122,7 +122,7 @@ module.exports = class PresetSwitch extends SwitchService
 				() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), true);
 		}
 
-		this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, state);
+		this.AutomationSystem.LogikEngine.runAutomation(this, state);
 	}
 
 	bindEmitter()

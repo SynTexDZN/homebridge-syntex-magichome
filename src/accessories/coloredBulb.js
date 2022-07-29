@@ -40,7 +40,7 @@ module.exports = class LightBulb extends ColoredBulbService
 						this.running = false;
 					});
 
-					this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.value });
+					this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.tempState.value });
 				}
 				else if(this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness)
 				{
@@ -53,7 +53,7 @@ module.exports = class LightBulb extends ColoredBulbService
 							this.running = false;
 						});
 
-						this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.value, hue : converted[0], saturation : converted[1], brightness : converted[2] });
+						this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.tempState.value, hue : converted[0], saturation : converted[1], brightness : converted[2] });
 					}
 					else
 					{
@@ -166,7 +166,7 @@ module.exports = class LightBulb extends ColoredBulbService
 				this.logger.log('debug', this.id, this.letters, '%update_state[0]% [' + this.name + '] was not changed! ( ' + this.id + ' )');
 			}
 
-			this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, state);
 		}
 	}
 
@@ -450,7 +450,7 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 
-				this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value : this.tempState.value, hue : this.tempState.hue, saturation : this.tempState.saturation, brightness : this.tempState.brightness });
+				this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.tempState.value, hue : this.tempState.hue, saturation : this.tempState.saturation, brightness : this.tempState.brightness });
 			}
 			else if(callback != null)
 			{

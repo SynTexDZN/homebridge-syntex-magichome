@@ -58,6 +58,6 @@ module.exports = class SceneSwitch extends SwitchService
 	
 		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
 
-		this.AutomationSystem.LogikEngine.runAutomation(this.id, this.letters, { value });
+		this.AutomationSystem.LogikEngine.runAutomation(this, { value });
 	}
 }
