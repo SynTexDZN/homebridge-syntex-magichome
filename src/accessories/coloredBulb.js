@@ -531,37 +531,26 @@ module.exports = class LightBulb extends ColoredBulbService
 		});
 	}
 
-	setChannels(converted)
+	setChannels(color)
 	{
-		var convertedNew = [ ...converted ];
+		var converted = [ ...color ];
+
+		for(const x in this.pins)
+		{
+			if(this.pins[x] == 'r')
+			{
+				converted[x] = color[0];
+			}
+			else if(this.pins[x] == 'g')
+			{
+				converted[x] = color[1];
+			}
+			else if(this.pins[x] == 'b')
+			{
+				converted[x] = color[2];
+			}
+		}
 					
-		if(this.pins[0] == 'g')
-		{
-			convertedNew[0] = converted[1];
-		}
-		else if(this.pins[0] == 'b')
-		{
-			convertedNew[0] = converted[2];
-		}
-
-		if(this.pins[1] == 'r')
-		{
-			convertedNew[1] = converted[0];
-		}
-		else if(this.pins[1] == 'b')
-		{
-			convertedNew[1] = converted[2];
-		}
-
-		if(this.pins[2] == 'r')
-		{
-			convertedNew[2] = converted[0];
-		}
-		else if(this.pins[2] == 'g')
-		{
-			convertedNew[2] = converted[1];
-		}
-
-		return convertedNew;
+		return converted;
 	}
 }
