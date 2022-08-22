@@ -61,6 +61,7 @@ It also offers some tweaks and improvements to the original devices.
                 "services": [
                     {
                         "type": "rgb",
+                        "pins": "rgb",
                         "function": "light",
                         "ip": "DC4F22C5D4E1"
                     }
@@ -72,6 +73,7 @@ It also offers some tweaks and improvements to the original devices.
                 "services": [
                     {
                         "type": "rgbw",
+                        "pins": "grb",
                         "function": "light",
                         "ip": "192.168.1.100"
                     }
@@ -170,6 +172,7 @@ It also offers some tweaks and improvements to the original devices.
 
 ### Light Config
 - `type` must be either `rgb` / `rgbw` *( based on your device: look below )*
+- `pins` can change the order of your pin setup `rgb` / `grb` / `brg` *( every possible combination )*
 - `function` is always `light`
 - `name` could be anything.
 - `ip` use a normal ip or a mac address.

@@ -22,7 +22,8 @@ module.exports = class LightBulb extends ColoredBulbService
 		this.DeviceManager = manager.DeviceManager;
 
 		this.ip = serviceConfig.ip;
-		this.setup = serviceConfig.type == 'rgb' ? 'RGBW' : serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
+		this.setup = serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
+		this.pins = serviceConfig.pins || 'rgb';
 		//this.purewhite = serviceConfig.purewhite || false;
 
 		this.running = false;
@@ -48,6 +49,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(converted != null)
 					{
+						converted = this.setChannels(converted);
+
 						this.setColor(converted[0], converted[1], converted[2]).then(() => {
 
 							this.running = false;
@@ -184,7 +187,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this, (state) => {
 
 					if(state.value != null && !isNaN(state.value))
 					{
@@ -227,7 +230,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this, (state) => {
 
 					if(state.hue != null && !isNaN(state.hue))
 					{
@@ -269,7 +272,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this, (state) => {
 
 					if(state.saturation != null && !isNaN(state.saturation))
 					{
@@ -311,7 +314,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this.id, (state) => {
+				this.DeviceManager.getDevice(this, (state) => {
 
 					if(state.brightness != null && !isNaN(state.brightness))
 					{
@@ -414,6 +417,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(converted != null)
 					{
+						converted = this.setChannels(converted);
+						
 						this.setColor(converted[0], converted[1], converted[2]).then((offline) => {
 
 							this.running = false;
@@ -524,5 +529,39 @@ module.exports = class LightBulb extends ColoredBulbService
 					() => resolve(this.offline), true);
 			});
 		});
+	}
+
+	setChannels(converted)
+	{
+		var convertedNew = [ ...converted ];
+					
+		if(this.pins[0] == 'g')
+		{
+			convertedNew[0] = converted[1];
+		}
+		else if(this.pins[0] == 'b')
+		{
+			convertedNew[0] = converted[2];
+		}
+
+		if(this.pins[1] == 'r')
+		{
+			convertedNew[1] = converted[0];
+		}
+		else if(this.pins[1] == 'b')
+		{
+			convertedNew[1] = converted[2];
+		}
+
+		if(this.pins[2] == 'r')
+		{
+			convertedNew[2] = converted[0];
+		}
+		else if(this.pins[2] == 'g')
+		{
+			convertedNew[2] = converted[1];
+		}
+
+		return convertedNew;
 	}
 }

@@ -18,6 +18,7 @@
 					"services": [
 						{
 							"type": "rgb",
+							"pins": "rgb",
 							"function": "light",
 							"ip": "DC4F22C5D4E1"
 						}
@@ -29,6 +30,7 @@
 					"services": [
 						{
 							"type": "rgbw",
+							"pins": "grb",
 							"function": "light",
 							"ip": "192.168.1.112"
 						}

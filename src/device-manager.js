@@ -7,9 +7,9 @@ module.exports = class DeviceManager
 		this.logger = logger;
 	}
 
-	getDevice(ip, callback)
+	getDevice(service, callback)
 	{
-		this.executeCommand(ip, '-i', (error, stdout) => {
+		this.executeCommand(service.ip, '-i', (error, stdout) => {
 
 			var state = {};
 
@@ -23,8 +23,10 @@ module.exports = class DeviceManager
 				var str = colors.toString().substring(0, colors.toString().length - 1);
 				str = str.substring(1, str.length);
 
-				const rgbColors = str.split(',').map((item) => { return item.trim() });
+				var rgbColors = str.split(',').map((item) => { return item.trim() });
 
+				rgbColors = service.setChannels(rgbColors);
+				
 				var converted = convert.rgb.hsv(rgbColors);
 
 				state.hue = converted[0];
@@ -50,7 +52,7 @@ module.exports = class DeviceManager
 				{
 					if(accessory[1].services[i].type == 'rgb' || accessory[1].services[i].type == 'rgbw')
 					{
-						this.getDevice(accessory[1].services[i].ip, (state) => {
+						this.getDevice(accessory[1].service[parseInt(i) + 1], (state) => {
 							
 							accessory[1].service[parseInt(i) + 1].setConnectionState(state.connection,
 								() => accessory[1].service[parseInt(i) + 1].updateState(state), true);
@@ -62,7 +64,7 @@ module.exports = class DeviceManager
 			{
 				if(accessory[1].services.type == 'rgb' || accessory[1].services.type == 'rgbw')
 				{
-					this.getDevice(accessory[1].services.ip, (state) => {
+					this.getDevice(accessory[1].service[1], (state) => {
 						
 						accessory[1].service[1].setConnectionState(state.connection,
 							() => accessory[1].service[1].updateState(state), true);
