@@ -8,6 +8,8 @@ module.exports = class SceneSwitch extends SwitchService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
+		super.setState(false, () => {});
+
 		this.DeviceManager = manager.DeviceManager;
 
 		this.ips = serviceConfig.ips;
