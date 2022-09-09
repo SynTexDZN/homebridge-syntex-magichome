@@ -1,6 +1,6 @@
 const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
-const convert = require('color-convert'), emitter = require('../emitter');
+const convert = require('color-convert');
 
 module.exports = class LightBulb extends ColoredBulbService
 {
@@ -20,6 +20,7 @@ module.exports = class LightBulb extends ColoredBulbService
 		};
 
 		this.DeviceManager = manager.DeviceManager;
+		this.EventManager = manager.EventManager;
 
 		this.ip = serviceConfig.ip;
 		this.setup = serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
@@ -448,6 +449,8 @@ module.exports = class LightBulb extends ColoredBulbService
 							{
 								callback(offline);
 							}
+
+							this.EventManager.setOutputStream('resetSwitch', { sender : this }, [ this.ip ]);
 						});
 					}
 					else
@@ -471,8 +474,6 @@ module.exports = class LightBulb extends ColoredBulbService
 						callback(this.offline);
 					}
 				}
-
-				emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, [ this.ip ]);
 			}
 			else if(callback != null)
 			{

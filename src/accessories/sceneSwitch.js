@@ -1,7 +1,5 @@
 const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
-const emitter = require('../emitter');
-
 module.exports = class SceneSwitch extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
@@ -11,6 +9,7 @@ module.exports = class SceneSwitch extends SwitchService
 		super.setState(false, () => {});
 
 		this.DeviceManager = manager.DeviceManager;
+		this.EventManager = manager.EventManager;
 
 		this.ips = serviceConfig.ips;
 		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
@@ -58,7 +57,7 @@ module.exports = class SceneSwitch extends SwitchService
 
 		}).then(() => setTimeout(() => this.service.getCharacteristic(this.Characteristic.On).updateValue(false), 2000));
 	
-		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
+		this.EventManager.setOutputStream('resetSwitch', { sender : this }, Object.keys(this.ips));
 
 		this.AutomationSystem.LogikEngine.runAutomation(this, { value });
 	}

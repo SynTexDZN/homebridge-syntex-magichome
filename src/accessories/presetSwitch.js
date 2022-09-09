@@ -1,6 +1,6 @@
 const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
-const preset = require('../presets'), custom = require('../custom'), emitter = require('../emitter');
+const preset = require('../presets'), custom = require('../custom');
 
 module.exports = class PresetSwitch extends SwitchService
 {
@@ -9,6 +9,7 @@ module.exports = class PresetSwitch extends SwitchService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
 		this.DeviceManager = manager.DeviceManager;
+		this.EventManager = manager.EventManager;
 
 		this.ips = serviceConfig.ips;
 		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
@@ -107,7 +108,7 @@ module.exports = class PresetSwitch extends SwitchService
 			});
 		}
 
-		emitter.emit('SynTexMagicHomePresetTurnedOn', this.name, Object.keys(this.ips));
+		this.EventManager.setOutputStream('resetSwitch', { sender : this }, Object.keys(this.ips));
 
 		this.AutomationSystem.LogikEngine.runAutomation(this, { value });
 	}
@@ -127,24 +128,21 @@ module.exports = class PresetSwitch extends SwitchService
 
 	bindEmitter()
 	{
-		emitter.on('SynTexMagicHomePresetTurnedOn', (presetName, ips) => {
+		this.EventManager.setInputStream('resetSwitch', { source : this, destination : this.id }, (ips) => {
 
-			if(presetName != this.name)
+			var updateState = false;
+
+			for(const ip of ips)
 			{
-				var updateState = false;
-
-				for(const ip of ips)
+				if(Object.keys(this.ips).includes(ip))
 				{
-					if(Object.keys(this.ips).includes(ip))
-					{
-						updateState = true;
-					}
+					updateState = true;
 				}
+			}
 
-				if(updateState)
-				{
-					this.updateState({ value : false });
-				}
+			if(updateState)
+			{
+				this.updateState({ value : false });
 			}
 		});
 	}
