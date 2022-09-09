@@ -20,7 +20,7 @@ module.exports = class LightBulb extends ColoredBulbService
 		};
 
 		this.DeviceManager = manager.DeviceManager;
-		this.EventManager = manager.EventManager;
+		this.EventManager = manager.platform.EventManager;
 
 		this.ip = serviceConfig.ip;
 		this.setup = serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';

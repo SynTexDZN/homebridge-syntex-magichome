@@ -9,7 +9,7 @@ module.exports = class PresetSwitch extends SwitchService
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
 		this.DeviceManager = manager.DeviceManager;
-		this.EventManager = manager.EventManager;
+		this.EventManager = manager.platform.EventManager;
 
 		this.ips = serviceConfig.ips;
 		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;

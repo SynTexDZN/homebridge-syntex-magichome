@@ -9,7 +9,7 @@ module.exports = class SceneSwitch extends SwitchService
 		super.setState(false, () => {});
 
 		this.DeviceManager = manager.DeviceManager;
-		this.EventManager = manager.EventManager;
+		this.EventManager = manager.platform.EventManager;
 
 		this.ips = serviceConfig.ips;
 		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
