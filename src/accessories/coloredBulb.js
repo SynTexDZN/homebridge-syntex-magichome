@@ -505,7 +505,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
 
-				this.setConnectionState(!output.includes('Unable to connect to bulb'),
+				this.setConnectionState(!this.offline,
 					() => resolve(this.offline), true);
 			});
 		});
@@ -545,7 +545,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
 
-				this.setConnectionState(!output.includes('Unable to connect to bulb'),
+				this.setConnectionState(!this.offline,
 					() => resolve(this.offline), true);
 			});
 		});
