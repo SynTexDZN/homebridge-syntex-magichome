@@ -494,9 +494,9 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		return new Promise((resolve) => {
 
-			this.DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', (error, output) => {
+			this.DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', (offline, output) => {
 
-				this.offline = error || output.includes('Unable to connect to bulb');
+				this.offline = offline;
 
 				if(!this.offline)
 				{
@@ -515,9 +515,9 @@ module.exports = class LightBulb extends ColoredBulbService
 	{
 		return new Promise((resolve) => {
 
-			this.DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (error, output) => {
+			this.DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (offline, output) => {
 
-				this.offline = error || output.includes('Unable to connect to bulb');
+				this.offline = offline;
 
 				if(!this.offline)
 				{

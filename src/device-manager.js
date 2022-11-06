@@ -9,7 +9,7 @@ module.exports = class DeviceManager
 
 	getDevice(service, callback)
 	{
-		this.executeCommand(service.ip, '-i', (error, stdout) => {
+		this.executeCommand(service.ip, '-i', (offline, stdout) => {
 
 			var state = {};
 
@@ -83,7 +83,7 @@ module.exports = class DeviceManager
 			
 			if(callback)
 			{
-				callback(err != null || (stdOut != null && stdOut.includes('Errno 113')), stdOut);
+				callback(err != null || (stdOut != null && (stdOut.includes('Errno 113') || stdOut.includes('Unable to connect to bulb'))), stdOut);
 			}
 
 			this.logger.debug(stdOut);
