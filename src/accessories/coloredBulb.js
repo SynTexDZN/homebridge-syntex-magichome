@@ -127,7 +127,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					changed = true;
 				}
 
-				this.tempState.value = this.value = state.value;
+				this.value = state.value;
 
 				super.setState(state.value,
 					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
@@ -140,7 +140,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					changed = true;
 				}
 
-				this.tempState.hue = this.hue = state.hue;
+				this.hue = state.hue;
 
 				super.setHue(state.hue,
 					() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue));
@@ -153,7 +153,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					changed = true;
 				}
 
-				this.tempState.saturation = this.saturation = state.saturation;
+				this.saturation = state.saturation;
 
 				super.setSaturation(state.saturation,
 					() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation));
@@ -166,7 +166,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					changed = true;
 				}
 
-				this.tempState.brightness = this.brightness = state.brightness;
+				this.brightness = state.brightness;
 
 				super.setBrightness(state.brightness,
 					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
