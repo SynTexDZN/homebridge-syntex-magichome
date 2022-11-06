@@ -530,6 +530,8 @@ module.exports = class LightBulb extends ColoredBulbService
 
 					if(rgb != null && Array.isArray(rgb) && rgb.length == 3)
 					{
+						rgb = this.setChannels(rgb);
+
 						hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
 					}
 
