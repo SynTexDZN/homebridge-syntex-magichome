@@ -130,17 +130,17 @@ module.exports = class PresetSwitch extends SwitchService
 	{
 		this.EventManager.setInputStream('resetSwitch', { source : this, destination : this.id }, (ips) => {
 
-			var updateState = false;
+			var changed = false;
 
 			for(const ip of ips)
 			{
 				if(Object.keys(this.ips).includes(ip))
 				{
-					updateState = true;
+					changed = true;
 				}
 			}
 
-			if(updateState)
+			if(changed)
 			{
 				this.updateState({ value : false });
 			}
