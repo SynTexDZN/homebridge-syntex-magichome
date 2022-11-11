@@ -6,8 +6,6 @@ module.exports = class SceneSwitch extends SwitchService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
-		super.setState(false, () => {});
-
 		this.DeviceManager = manager.DeviceManager;
 		this.EventManager = manager.platform.EventManager;
 
@@ -37,28 +35,60 @@ module.exports = class SceneSwitch extends SwitchService
 
 			promiseArray.push(new Promise((resolve) => {
 				
-				this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
+				// OPTIMIZE: Remove Timeout When LED is Already On
+
+				this.DeviceManager.executeCommand(ip, '--on', (offline, output) => {
+
+					var failed = offline || !output.includes('Turning on');
+
+					if(!failed)
+					{
+						setTimeout(() => this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], (offline, output) => {
+						
+							var failed = offline || !output.includes('Setting color');
+	
+							if(!failed && this.shouldTurnOff)
+							{
+								setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', (offline, output) => {
+	
+									var failed = offline || !output.includes('Turning off');
+	
+									resolve(!failed);
+	
+								}), 1500);
+							}
+							else
+							{
+								resolve(!failed);
+							}
+							
+						}), 1500);
+					}
+					else
+					{
+						resolve(!failed);
+					}
+				});
 			}));
 		});
 
-		Promise.all(promiseArray).then(() => {
+		Promise.all(promiseArray).then((result) => {
 
-			callback();
-
-			if(this.shouldTurnOff)
+			if(result.includes(true))
 			{
-				Object.keys(this.ips).forEach((ip) => {
-					
-					setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
-				});
+				callback();
+
+				this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [triggered] ( ' + this.id + ' )');
+				
+				this.EventManager.setOutputStream('resetSwitch', { sender : this }, Object.keys(this.ips));
+
+				this.AutomationSystem.LogikEngine.runAutomation(this, { value });
+			}
+			else
+			{
+				callback(new Error('Offline'));
 			}
 
-			this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [triggered] ( ' + this.id + ' )');
-
-		}).then(() => setTimeout(() => this.service.getCharacteristic(this.Characteristic.On).updateValue(false), 2000));
-	
-		this.EventManager.setOutputStream('resetSwitch', { sender : this }, Object.keys(this.ips));
-
-		this.AutomationSystem.LogikEngine.runAutomation(this, { value });
+		}).then(() => setTimeout(() => this.service.getCharacteristic(this.Characteristic.On).updateValue(false), 3000));
 	}
 }

@@ -12,16 +12,13 @@ module.exports = class PresetSwitch extends SwitchService
 		this.EventManager = manager.platform.EventManager;
 
 		this.ips = serviceConfig.ips;
-		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
 		this.preset = serviceConfig.preset || 'seven_color_cross_fade';
-		this.speed = serviceConfig.speed || 40;
-		this.sceneValue = preset[this.preset] || custom[this.preset];
+		this.speed = serviceConfig.speed || 100;
+		this.shouldTurnOff = serviceConfig.shouldTurnOff || false;
 
-		if(this.sceneValue == null)
+		if(preset[this.preset] == null && custom[this.preset] == null)
 		{
-			this.sceneValue = 37;
-
-			this.logger.log('warn', this.id, this.letters, '%preset_not_found[0]% [' + this.preset + '] %preset_not_found[1]% [seven_color_cross_fade] %preset_not_found[2]%!');
+			this.logger.log('warn', this.id, this.letters, '%preset_not_found[0]% [' + this.preset + '] %preset_not_found[1]%!');
 		}
 
 		this.bindEmitter();
@@ -53,64 +50,89 @@ module.exports = class PresetSwitch extends SwitchService
 
 		this.value = value;
 
-		if(value == true)
-		{
-			Object.keys(this.ips).forEach((ip) => {
-
-				promiseArray.push(new Promise((resolve) => {
-					
-					this.DeviceManager.executeCommand(ip, '--on', () => resolve());
-				}));
-
-				// OPTIMIZE: Remove Timeout When LED is Already On
-
-				if(preset[this.preset] != null)
+		Object.keys(this.ips).forEach((ip) => {
+			
+			promiseArray.push(new Promise((resolve) => {
+			
+				if(value == true)
 				{
-					promiseArray.push(new Promise((resolve) => {
-						
-						setTimeout(() => this.DeviceManager.executeCommand(ip, '-p ' + this.sceneValue + ' ' + this.speed, () => resolve()), 1500);
-					}));
-				}
-				else if(custom[this.preset] != null)
-				{
-					promiseArray.push(new Promise((resolve) => {
-						
-						setTimeout(() => this.DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"', () => resolve()), 1500);
-					}));
-				}
-			});
+					// OPTIMIZE: Remove Timeout When LED is Already On
 
-			Promise.all(promiseArray).then(() => super.setState(true, () => callback(), true));
-		}
-		else
-		{
-			Object.keys(this.ips).forEach((ip) => {
+					this.DeviceManager.executeCommand(ip, '--on', (offline, output) => {
+							
+						var failed = offline || !output.includes('Turning on');
 
-				promiseArray.push(new Promise((resolve) => {
-					
-					this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], () => resolve());
-				}));
-			});
+						if(!failed && preset[this.preset] != null)
+						{
+							setTimeout(() => this.DeviceManager.executeCommand(ip, '-p ' + preset[this.preset] + ' ' + this.speed, (offline, output) => {
+								
+								var failed = offline || !output.includes('Setting preset pattern');
 
-			Promise.all(promiseArray).then(() => {
+								resolve(!failed);
+								
+							}), 1500);
+						}
+						else if(!failed && custom[this.preset] != null)
+						{
+							setTimeout(() => this.DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"', (offline, output) => {
+								
+								var failed = offline || !output.includes('Setting custom pattern');
 
-				callback();
+								resolve(!failed);
+								
+							}), 1500);
+						}
+						else
+						{
+							if(!failed)
+							{
+								this.logger.log('error', this.id, this.letters, '%preset_not_found[0]% [' + this.preset + '] %preset_not_found[1]%!');
+							}
 
-				if(this.shouldTurnOff)
-				{
-					Object.keys(this.ips).forEach((ip) => {
-
-						setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', () => {}), 1500);
+							resolve(false);
+						}
 					});
 				}
+				else
+				{
+					this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], (offline, output) => {
+						
+						var failed = offline || !output.includes('Setting color');
 
-				super.setState(false, () => {}, true);
-			});
-		}
+						if(!failed && this.shouldTurnOff)
+						{
+							setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', (offline, output) => {
 
-		this.EventManager.setOutputStream('resetSwitch', { sender : this }, Object.keys(this.ips));
+								var failed = offline || !output.includes('Turning off');
 
-		this.AutomationSystem.LogikEngine.runAutomation(this, { value });
+								resolve(!failed);
+
+							}), 1500);
+						}
+						else
+						{
+							resolve(!failed);
+						}
+					});
+				}
+			}));
+		});
+
+		Promise.all(promiseArray).then((result) => {
+				
+			if(result.includes(true))
+			{
+				super.setState(value, () => callback(), true);
+
+				this.EventManager.setOutputStream('resetSwitch', { sender : this }, Object.keys(this.ips));
+
+				this.AutomationSystem.LogikEngine.runAutomation(this, { value });
+			}
+			else
+			{
+				callback(new Error('Offline'));
+			}
+		});
 	}
 
 	updateState(state)

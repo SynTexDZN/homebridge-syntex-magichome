@@ -9,32 +9,32 @@ module.exports = class DeviceManager
 
 	getDevice(service, callback)
 	{
-		this.executeCommand(service.ip, '-i', (offline, stdout) => {
+		this.executeCommand(service.ip, '-i', (offline, output) => {
 
 			var state = {};
 
-			var colors = stdout.match(/\(.*,.*,.*\)/g);
-			var power = stdout.match(/\] ON /g);
+			var power = output.match(/\] ON /g),
+				colors = output.match(/\(.*,.*,.*\)/g);
 
-			state.value = (power != null && power.length > 0);
+			state.value = (Array.isArray(power) && power.length > 0);
 
-			if(colors && colors.length > 0)
+			if(Array.isArray(colors) && colors.length > 0)
 			{
-				var str = colors.toString().substring(0, colors.toString().length - 1);
-				str = str.substring(1, str.length);
+				var converted = colors[0].slice(1).slice(0, -1).split(',').map((item) => item.trim());
 
-				var rgbColors = str.split(',').map((item) => { return item.trim() });
-
-				rgbColors = service.setChannels(rgbColors);
+				converted = service.setChannels(converted);
 				
-				var converted = convert.rgb.hsv(rgbColors);
+				converted = convert.rgb.hsv(converted);
 
-				state.hue = converted[0];
-				state.saturation = converted[1];
-				state.brightness = converted[2];
+				if(converted != null)
+				{
+					state.hue = converted[0];
+					state.saturation = converted[1];
+					state.brightness = converted[2];
+				}
 			}
 
-			state.connection = !stdout.includes('Unable to connect to bulb');
+			state.connection = !offline;
 
 			callback(state);
 		});
