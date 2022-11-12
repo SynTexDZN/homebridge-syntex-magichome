@@ -6,7 +6,7 @@ module.exports = class LightBulb extends ColoredBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
-		var specialConfig = serviceConfig;
+		var specialConfig = { ...serviceConfig };
 
 		specialConfig.type = 'rgb';
 
@@ -515,11 +515,11 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				if(!failed)
 				{
-					var color = output.match(/\(.*,.*,.*\)/g);
+					var color = output.match(/\[\(.*,.*,.*\)\]/g);
 
 					if(Array.isArray(color) && color.length > 0)
 					{
-						var rgb = this.setChannels(color[0].slice(1).slice(0, -1).split(',').map((item) => item.trim())),
+						var rgb = this.setChannels(color[0].slice(2).slice(0, -2).split(',').map((item) => item.trim())),
 							hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
 
 						if(hsl != null)
