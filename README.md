@@ -166,7 +166,7 @@ It also offers some tweaks and improvements to the original devices.
 
 ### Accessory Config
 - Every accessory needs these parameters: `id`, `name` and `services` *( required )*
-- `id` has to be a `random unique text` *( no duplicates! )*
+- `id` has to be either a `real mac address` or another `random unique text` *( no duplicates! )*
 - `name` could be anything.
 - `services` choose a device config from below.
 
@@ -209,14 +209,14 @@ https://github.com/SynTexDZN/homebridge-syntex
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&value=`  **New Value**
 2. Insert the `Bridge IP` and `Device ID`
 3. For the `New Value` you can type this pattern:
-- For all devices: `true` / `false` *( colored light, preset switch, reset switch )*
+- For boolean devices: `true` / `false` *( colored light, preset switch, reset switch )*
 - For colored lights add `&hue=`  **New Hue**  or `&saturation=`  **New Saturation**  or `&brightness=`  **New Brightness** *( have to be numbers )*
 - For accessories with multiple service types add `&type=`  **SERVICETYPE**
 - For accessories with multiple services with more than one of the same service type add `&counter=`  **SERVICENUMBER**\
 *( First of that type = 0, second = 1 .. )*
 
-**Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&value=true&hue=4&saturation=100&brightness=100`\
-*( Updates the value and hue, saturation and brightness of `ABCDEF1234567890` to `turned on, orange color, 100% saturation, 100% brightness` for example )*
+**Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890&type=rgb&counter=0&value=true&hue=4&saturation=100&brightness=100`\
+*( Updates the value, hue, saturation and brightness of `ABCDEF1234567890` to `turned on, orange color, 100% saturation, 100% brightness` for example )*
 
 
 ## Read MagicHome Device Values
@@ -227,7 +227,7 @@ https://github.com/SynTexDZN/homebridge-syntex
 *( First of that type = 0, second = 1 .. )*
 
 **Example:**  `http://homebridge.local:1712/devices?id=ABCDEF1234567890`\
-*( Reads the value of `ABCDEF1234567890` for example )*
+*( Reads the state of `ABCDEF1234567890` for example )*
 
 
 ## Remove MagicHome Device
@@ -343,7 +343,7 @@ To enable the automation module you have to create a file named `automation.json
                     "delay": 1000
                 },
                 {
-                    "url": "http://192.168.1.100:1712/devices?id=58747407d8cfc108d0dc&value=true&brightness=100"
+                    "url": "http://192.168.1.100:1712/devices?id=ABCDEF1234567890&value=true&brightness=100"
                 }
             ]
         }
