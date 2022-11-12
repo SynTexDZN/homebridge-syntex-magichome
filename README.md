@@ -219,7 +219,7 @@ https://github.com/SynTexDZN/homebridge-syntex
 *( Updates the value, hue, saturation and brightness of `ABCDEF1234567890` to `turned on, orange color, 100% saturation, 100% brightness` for example )*
 
 
-## Read MagicHome Device Values
+## Read MagicHome Device
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**
 2. Insert the `Bridge IP` and `Device ID`
 - For accessories with multiple service types add `&type=`  **SERVICETYPE**
