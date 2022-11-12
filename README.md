@@ -171,24 +171,24 @@ It also offers some tweaks and improvements to the original devices.
 - `services` choose a device config from below.
 
 ### Light Config
+- `name` could be anything.
 - `type` must be either `rgb` / `rgbw` *( based on your device: look below )*
 - `pins` can change the order of your pin setup `rgb` / `grb` / `brg` *( every possible combination )*
 - `function` is always `light`
-- `name` could be anything.
 - `ip` use a normal ip or a mac address.
 
 ### Preset Switch Config
+- `name` could be anything.
 - `type` must be a `switch` *( for preset and reset switches )*
 - `function` is always `preset-switch`
-- `name` could be anything.
 - `ips` must be a key-value object where `key` is MagicHome LED IP Address `192.168.1.100` or `DC4F22C5XXXX` MAC Address and `value` is the default rgb color of the light `"255,255,255" ( white )`
 - `preset` is the name of the preset you want to use for the effect *( see `Available Presets Scenes` below )*
 - `speed` defines the speed of the effect *( from 0 to 100 )*
 
 ### Scene Switch Config
+- `name` could be anything.
 - `type` must be a `switch` *( for preset and reset switches )*
 - `function` is always `scene-switch`
-- `name` could be anything.
 - `ips` must be a key-value object where `key` is MagicHome LED IP Address `192.168.1.100` or `DC4F22C5XXXX` MAC Address and `value` is the default rgb color of the light `"255,255,255" ( white )`
 
 You can use MAC Address instead of IP Address as well. Please format the MAC Address. It should be in capital letters and `:` should not be present `DC4F22C5XXXX`
