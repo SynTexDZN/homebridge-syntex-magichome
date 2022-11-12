@@ -297,7 +297,7 @@ To enable the automation module you have to create a file named `automation.json
                                 }
                             },
                             {
-							    "operation": "=",
+                                "operation": "=",
                                 "days": [
                                     1,
                                     2,
