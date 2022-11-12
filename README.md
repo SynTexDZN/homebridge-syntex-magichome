@@ -205,7 +205,7 @@ Check out the GitHub page for more information:<br>
 https://github.com/SynTexDZN/homebridge-syntex
 
 
-## Update MagicHome Devices
+## Update MagicHome Device
 1. Open `http://`  **Bridge IP**  `/devices?id=`  **Device ID**  `&value=`  **New Value**
 2. Insert the `Bridge IP` and `Device ID`
 3. For the `New Value` you can type this pattern:
