@@ -221,7 +221,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				callback(new Error('Offline'));
+				callback(new Error('Failed'));
 			}
 		});
 	}
@@ -263,7 +263,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				callback(new Error('Offline'));
+				callback(new Error('Failed'));
 			}
 		});
 	}
@@ -305,7 +305,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				callback(new Error('Offline'));
+				callback(new Error('Failed'));
 			}
 		});
 	}
@@ -347,7 +347,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				callback(new Error('Offline'));
+				callback(new Error('Failed'));
 			}
 		});
 	}
