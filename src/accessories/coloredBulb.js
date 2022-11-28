@@ -33,49 +33,16 @@ module.exports = class LightBulb extends ColoredBulbService
 
 			if(!this.running && (this.value != this.tempState.value || this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness))
 			{
-				this.running = true;
+				this.setToCurrentColor({ ...this.tempState }, (failed) => {
 
-				if(this.value != this.tempState.value)
-				{
-					this.setPower(this.tempState.value).then((failed) => {
-
-						if(!failed)
-						{
-							this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
-						}
-
-						this.running = false;
-					});
-				}
-				else if(this.hue != this.tempState.hue || this.saturation != this.tempState.saturation || this.brightness != this.tempState.brightness)
-				{
-					var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
-
-					if(converted != null)
+					if(!failed)
 					{
-						converted = this.setChannels(converted);
-
-						this.setColor(converted[0], converted[1], converted[2]).then((failed) => {
-
-							if(!failed)
-							{
-								this.service.getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
-								this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
-								this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
-							}
-
-							this.running = false;
-						});
+						this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
+						this.service.getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
+						this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
+						this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
 					}
-					else
-					{
-						this.running = false;
-					}
-				}
-				else
-				{
-					this.running = false;
-				}
+				});
 			}
 
 		}, 1000);
@@ -86,25 +53,10 @@ module.exports = class LightBulb extends ColoredBulbService
 
 				if(!failed)
 				{
-					if(state.value != null)
-					{
-						this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value);
-					}
-
-					if(state.hue != null)
-					{
-						this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue);
-					}
-
-					if(state.saturation != null)
-					{
-						this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation);
-					}
-
-					if(state.brightness != null)
-					{
-						this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness);
-					}
+					this.service.getCharacteristic(this.Characteristic.On).updateValue(this.value);
+					this.service.getCharacteristic(this.Characteristic.Hue).updateValue(this.hue);
+					this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(this.saturation);
+					this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(this.brightness);
 				}
 			});
 		};
@@ -177,7 +129,7 @@ module.exports = class LightBulb extends ColoredBulbService
 				this.logger.log('debug', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[2]%! ( ' + this.id + ' )');
 			}
 
-			this.AutomationSystem.LogikEngine.runAutomation(this, state);
+			this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
 		}
 	}
 
@@ -359,116 +311,114 @@ module.exports = class LightBulb extends ColoredBulbService
 	*/
 	setToCurrentColor(state, callback)
 	{
-		if(state.value != null)
-		{
-			this.tempState.value = state.value;
+		const setPower = (resolve) => {
 
-			if(this.value != state.value)
-			{
-				this.changedPower = true;
-			}
-		}
+			this.DeviceManager.executeCommand(this.ip, this.tempState.value ? '--on' : '--off', (offline, output) => {
 
-		if(state.hue != null)
-		{
-			this.tempState.hue = state.hue;
+				var failed = offline || (this.tempState.value && !output.includes('Turning on')) || (!this.tempState.value && !output.includes('Turning off'));
 
-			if(this.hue != state.hue)
-			{
-				this.changedColor = true;
-			}
-		}
+				this.offline = offline;
 
-		if(state.saturation != null)
-		{
-			this.tempState.saturation = state.saturation;
-
-			if(this.saturation != state.saturation)
-			{
-				this.changedColor = true;
-			}
-		}
-
-		if(state.brightness != null)
-		{
-			this.tempState.brightness = state.brightness;
-
-			if(this.brightness != state.brightness)
-			{
-				this.changedColor = true;
-			}
-		}
-
-		setTimeout(() => {
-
-			if(!this.running)
-			{
-				this.running = true;
-
-				if(this.changedPower)
+				if(!failed)
 				{
-					this.setPower(this.tempState.value).then((failed) => {
+					this.value = this.tempState.value;
 
-						this.running = false;
+					super.setState(this.value, () => {});
 
-						this.changedPower = false;
-
-						if(callback != null)
-						{
-							callback(failed);
-						}
-					});
+					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
-				else if(this.changedColor)
+
+				if(callback)
 				{
-					var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
+					callback(failed);
+				}
 
-					if(converted != null)
+				this.setConnectionState(!this.offline,
+					() => resolve(), true);
+
+				this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
+			});
+		};
+
+		const setColor = (resolve) => {
+
+			var converted = convert.hsv.rgb([this.tempState.hue, this.tempState.saturation, this.tempState.brightness]);
+
+			if(converted != null)
+			{
+				converted = this.setChannels(converted);
+				
+				this.DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (offline, output) => {
+
+					var failed = offline || !output.includes('Setting color');
+	
+					this.offline = offline;
+
+					if(!failed)
 					{
-						converted = this.setChannels(converted);
-						
-						this.setColor(converted[0], converted[1], converted[2]).then((failed) => {
-
-							this.running = false;
-		
-							this.changedColor = false;
-		
-							if(callback != null)
+						var color = output.match(/\[\(.*,.*,.*\)\]/g);
+	
+						if(Array.isArray(color) && color.length > 0)
+						{
+							var rgb = this.setChannels(color[0].slice(2).slice(0, -2).split(',').map((item) => item.trim())),
+								hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
+	
+							if(hsl != null)
 							{
-								callback(failed);
+								this.hue = hsl[0];
+								this.saturation = hsl[1];
+								this.brightness = hsl[2];
+
+								super.setHue(this.hue, () => {});
+								super.setSaturation(this.saturation, () => {});
+								super.setBrightness(this.brightness, () => {});
+
+								this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 							}
-
-							this.EventManager.setOutputStream('resetSwitch', { sender : this }, [ this.ip ]);
-						});
-					}
-					else
-					{
-						this.running = false;
-
-						this.changedColor = false;
-		
-						if(callback != null)
-						{
-							callback(this.offline);
 						}
+
+						this.EventManager.setOutputStream('resetSwitch', { sender : this }, [ this.ip ]);
 					}
-				}
-				else
-				{
-					this.running = false;
-					
-					if(callback != null)
+
+					if(callback)
 					{
-						callback(this.offline);
+						callback(failed);
 					}
-				}
+
+					this.setConnectionState(!this.offline,
+						() => resolve(), true);
+
+					this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
+				});
 			}
-			else if(callback != null)
+			else
+			{
+				if(callback != null)
+				{
+					callback(this.offline);
+				}
+
+				resolve();
+			}
+		};
+
+		super.setToCurrentColor(state, (resolve) => {
+
+			setPower(resolve);
+
+		}, (resolve) => {
+
+			setColor(resolve);
+
+		}, (resolve) => {
+			
+			if(callback != null)
 			{
 				callback(this.offline);
 			}
 
-		}, 10);
+			resolve();
+		});
 		/*
 		if(this.saturation === 0 && this.hue === 0 && this.purewhite)
 		{
@@ -476,73 +426,6 @@ module.exports = class LightBulb extends ColoredBulbService
 			return;
 		}
 		*/
-	}
-
-	setPower(value)
-	{
-		return new Promise((resolve) => {
-
-			this.DeviceManager.executeCommand(this.ip, value ? '--on' : '--off', (offline, output) => {
-
-				var failed = offline || (value && !output.includes('Turning on')) || (!value && !output.includes('Turning off'));
-
-				this.offline = offline;
-
-				if(!failed)
-				{
-					this.value = value;
-
-					super.setState(this.value, () => {}, true);
-
-					this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
-				}
-
-				this.setConnectionState(!this.offline,
-					() => resolve(failed), true);
-			});
-		});
-	}
-
-	setColor(red, green, blue)
-	{
-		return new Promise((resolve) => {
-
-			this.DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + red + ',' + green + ',' + blue, (offline, output) => {
-
-				var failed = offline || !output.includes('Setting color');
-
-				this.offline = offline;
-
-				if(!failed)
-				{
-					var color = output.match(/\[\(.*,.*,.*\)\]/g);
-
-					if(Array.isArray(color) && color.length > 0)
-					{
-						var rgb = this.setChannels(color[0].slice(2).slice(0, -2).split(',').map((item) => item.trim())),
-							hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
-
-						if(hsl != null)
-						{
-							this.hue = hsl[0];
-							this.saturation = hsl[1];
-							this.brightness = hsl[2];
-	
-							super.setHue(this.hue, () => {});
-							super.setSaturation(this.saturation, () => {});
-							super.setBrightness(this.brightness, () => {});
-						}
-					}
-
-					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
-
-					this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
-				}
-
-				this.setConnectionState(!this.offline,
-					() => resolve(failed), true);
-			});
-		});
 	}
 
 	setChannels(color)
