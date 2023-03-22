@@ -13,24 +13,27 @@ module.exports = class DeviceManager
 
 			var state = {};
 
-			var power = output.match(/\] ON /g),
-				colors = output.match(/\(.*,.*,.*\)/g);
-
-			state.value = (Array.isArray(power) && power.length > 0);
-
-			if(Array.isArray(colors) && colors.length > 0)
+			if(!offline)
 			{
-				var converted = colors[0].slice(1).slice(0, -1).split(',').map((item) => item.trim());
+				var power = output.match(/\] ON /g),
+					colors = output.match(/\(.*,.*,.*\)/g);
 
-				converted = service.setChannels(converted);
-				
-				converted = convert.rgb.hsv(converted);
+				state.value = (Array.isArray(power) && power.length > 0);
 
-				if(converted != null)
+				if(Array.isArray(colors) && colors.length > 0)
 				{
-					state.hue = converted[0];
-					state.saturation = converted[1];
-					state.brightness = converted[2];
+					var converted = colors[0].slice(1).slice(0, -1).split(',').map((item) => item.trim());
+
+					converted = service.setChannels(converted);
+					
+					converted = convert.rgb.hsv(converted);
+
+					if(converted != null)
+					{
+						state.hue = converted[0];
+						state.saturation = converted[1];
+						state.brightness = converted[2];
+					}
 				}
 			}
 
@@ -50,7 +53,7 @@ module.exports = class DeviceManager
 			{
 				for(const i in accessory[1].services)
 				{
-					if(accessory[1].services[i].type == 'rgb' || accessory[1].services[i].type == 'rgbw')
+					if(accessory[1].services[i].type.startsWith('rgb'))
 					{
 						this.getDevice(accessory[1].service[parseInt(i) + 1], (state) => {
 							
@@ -62,7 +65,7 @@ module.exports = class DeviceManager
 			}
 			else if(accessory[1].services instanceof Object)
 			{
-				if(accessory[1].services.type == 'rgb' || accessory[1].services.type == 'rgbw')
+				if(accessory[1].services.type.startsWith('rgb'))
 				{
 					this.getDevice(accessory[1].service[1], (state) => {
 						
