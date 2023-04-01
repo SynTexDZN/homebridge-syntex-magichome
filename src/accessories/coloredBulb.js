@@ -411,7 +411,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			setColor(resolve);
 
 		}, (resolve) => {
-			
+
 			if(callback != null)
 			{
 				callback(this.offline);
