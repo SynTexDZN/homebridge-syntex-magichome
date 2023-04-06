@@ -57,8 +57,12 @@ module.exports = class DeviceManager
 					{
 						this.getDevice(accessory[1].service[parseInt(i) + 1], (state) => {
 							
-							accessory[1].service[parseInt(i) + 1].setConnectionState(state.connection,
-								() => accessory[1].service[parseInt(i) + 1].updateState(state), true);
+							if(accessory[1].service[parseInt(i) + 1].setConnectionState != null
+							&& accessory[1].service[parseInt(i) + 1].updateState != null)
+							{
+								accessory[1].service[parseInt(i) + 1].setConnectionState(state.connection,
+									() => accessory[1].service[parseInt(i) + 1].updateState(state), true);
+							}
 						});
 					}
 				}
@@ -69,8 +73,12 @@ module.exports = class DeviceManager
 				{
 					this.getDevice(accessory[1].service[1], (state) => {
 						
-						accessory[1].service[1].setConnectionState(state.connection,
-							() => accessory[1].service[1].updateState(state), true);
+						if(accessory[1].service[1].setConnectionState != null
+						&& accessory[1].service[1].updateState != null)
+						{
+							accessory[1].service[1].setConnectionState(state.connection,
+								() => accessory[1].service[1].updateState(state), true);
+						}
 					});
 				}
 			}

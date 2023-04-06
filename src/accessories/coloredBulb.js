@@ -68,56 +68,44 @@ module.exports = class LightBulb extends ColoredBulbService
 		{
 			var changed = false;
 
-			if(state.value != null && !isNaN(state.value))
+			if(state.value != null && !isNaN(state.value) && (!super.hasState('value') || this.value != state.value))
 			{
-				if(!super.hasState('value') || this.value != state.value)
-				{
-					changed = true;
-				}
-
 				this.value = this.tempState.value = state.value;
 
 				super.setState(state.value,
 					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
-			}
 
-			if(state.hue != null && !isNaN(state.hue))
-			{
-				if(!super.hasState('hue') || this.hue != state.hue)
-				{
 					changed = true;
 				}
 
+			if(state.hue != null && !isNaN(state.hue) && (!super.hasState('hue') || this.hue != state.hue))
+			{
 				this.hue = this.tempState.hue = state.hue;
 
 				super.setHue(state.hue,
 					() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue));
-			}
 
-			if(state.saturation != null && !isNaN(state.saturation))
-			{
-				if(!super.hasState('saturation') || this.saturation != state.saturation)
-				{
 					changed = true;
 				}
 
+			if(state.saturation != null && !isNaN(state.saturation) && (!super.hasState('saturation') || this.saturation != state.saturation))
+			{
 				this.saturation = this.tempState.saturation = state.saturation;
 
 				super.setSaturation(state.saturation,
 					() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation));
-			}
 
-			if(state.brightness != null && !isNaN(state.brightness))
-			{
-				if(!super.hasState('brightness') || this.brightness != state.brightness)
-				{
 					changed = true;
 				}
 
+			if(state.brightness != null && !isNaN(state.brightness) && (!super.hasState('brightness') || this.brightness != state.brightness))
+			{
 				this.brightness = this.tempState.brightness = state.brightness;
 
 				super.setBrightness(state.brightness,
 					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness));
+
+				changed = true;
 			}
 			
 			if(changed)
