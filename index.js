@@ -41,7 +41,7 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 			
 			this.api.on('didFinishLaunching', () => {
 
-				DeviceManager = new DeviceManager(this.logger);
+				DeviceManager = new DeviceManager(this);
 
 				this.loadAccessories();
 

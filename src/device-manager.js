@@ -2,9 +2,9 @@ const cp = require('child_process'), path = require('path'), convert = require('
 
 module.exports = class DeviceManager
 {
-	constructor(logger)
+	constructor(platform)
 	{
-		this.logger = logger;
+		this.logger = platform.logger;
 	}
 
 	getDevice(service, callback)
