@@ -57,7 +57,7 @@ module.exports = class DeviceManager
 
 			for(const i in data)
 			{
-				var ip = data[i].match(/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*|(([0-9]|[a-f])*:([0-9]|[a-f])*:([0-9]|[a-f])*:([0-9]|[a-f])*:([0-9]|[a-f])*:([0-9]|[a-f])*:([0-9]|[a-f])*:([0-9]|[a-f])*)/g);
+				var ip = data[i].match(/([0-9]*\.){3}[0-9]*|([A-F]|[0-9]){12}|(([0-9]|[a-f])*:){7}([0-9]|[a-f])*/g);
 
 				if(Array.isArray(ip) && ip.length > 0)
 				{

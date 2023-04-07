@@ -175,7 +175,7 @@ It also offers some tweaks and improvements to the original devices.
 - `type` must be either `rgb` / `rgbw` *( based on your device: look below )*
 - `pins` can change the order of your pin setup `rgb` / `grb` / `brg` *( every possible combination )*
 - `function` is always `light`
-- `ip` use a normal ip or a mac address.
+- `ip` use a normal IP or a MAC address.
 
 ### Preset Switch Config
 - `name` could be anything.
