@@ -2,7 +2,7 @@ const { ColoredBulbService } = require('homebridge-syntex-dynamic-platform');
 
 const convert = require('color-convert');
 
-module.exports = class LightBulb extends ColoredBulbService
+module.exports = class SynTexColoredBulbService extends ColoredBulbService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
@@ -126,7 +126,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this, (state) => {
+				this.DeviceManager.getState(this, (state) => {
 
 					if(state.value != null && !isNaN(state.value))
 					{
@@ -169,7 +169,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this, (state) => {
+				this.DeviceManager.getState(this, (state) => {
 
 					if(state.hue != null && !isNaN(state.hue))
 					{
@@ -211,7 +211,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this, (state) => {
+				this.DeviceManager.getState(this, (state) => {
 
 					if(state.saturation != null && !isNaN(state.saturation))
 					{
@@ -253,7 +253,7 @@ module.exports = class LightBulb extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getDevice(this, (state) => {
+				this.DeviceManager.getState(this, (state) => {
 
 					if(state.brightness != null && !isNaN(state.brightness))
 					{

@@ -1,6 +1,6 @@
 const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
-module.exports = class SceneSwitch extends SwitchService
+module.exports = class SynTexSceneSwitchService extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{

@@ -2,7 +2,7 @@ const { SwitchService } = require('homebridge-syntex-dynamic-platform');
 
 const preset = require('../presets'), custom = require('../custom');
 
-module.exports = class PresetSwitch extends SwitchService
+module.exports = class SynTexPresetSwitchService extends SwitchService
 {
 	constructor(homebridgeAccessory, deviceConfig, serviceConfig, manager)
 	{
