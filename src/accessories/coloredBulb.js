@@ -12,13 +12,6 @@ module.exports = class LightBulb extends ColoredBulbService
 
 		super(homebridgeAccessory, deviceConfig, specialConfig, manager);
 
-		this.tempState = {
-			value : this.value,
-			hue : this.hue,
-			saturation : this.saturation,
-			brightness : this.brightness
-		};
-
 		this.DeviceManager = manager.DeviceManager;
 		this.EventManager = manager.platform.EventManager;
 
@@ -26,8 +19,6 @@ module.exports = class LightBulb extends ColoredBulbService
 		this.setup = serviceConfig.type == 'rgbw' ? 'RGBWW' : 'RGBW';
 		this.pins = serviceConfig.pins || 'rgb';
 		//this.purewhite = serviceConfig.purewhite || false;
-
-		this.running = false;
 
 		setInterval(() => {
 
