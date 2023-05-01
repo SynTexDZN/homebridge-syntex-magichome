@@ -316,7 +316,7 @@ module.exports = class LightBulb extends ColoredBulbService
 					this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [value: ' + this.value + ', hue: ' + this.hue +  ', saturation: ' + this.saturation + ', brightness: ' + this.brightness + '] ( ' + this.id + ' )');
 				}
 
-				if(callback)
+				if(callback != null)
 				{
 					callback(failed);
 				}
@@ -368,7 +368,7 @@ module.exports = class LightBulb extends ColoredBulbService
 						this.EventManager.setOutputStream('resetSwitch', { sender : this }, [ this.ip ]);
 					}
 
-					if(callback)
+					if(callback != null)
 					{
 						callback(failed);
 					}
