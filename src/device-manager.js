@@ -9,7 +9,7 @@ module.exports = class DeviceManager
 		this.TypeManager = platform.TypeManager;
 	}
 
-	getDevice(service, callback)
+	getState(service, callback)
 	{
 		this.executeCommand(service.ip, '-i', (offline, output) => {
 
@@ -45,7 +45,7 @@ module.exports = class DeviceManager
 		});
 	}
 
-	getDevices(ips, callback)
+	getStates(ips, callback)
 	{
 		this.executeCommand(ips, '-i', (error, output) => {
 			
@@ -110,7 +110,7 @@ module.exports = class DeviceManager
 			}
 		}
 
-		this.getDevices(ips.join(' '), (states) => {
+		this.getStates(ips.join(' '), (states) => {
 
 			for(const ip in states)
 			{
