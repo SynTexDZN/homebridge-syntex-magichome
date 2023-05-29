@@ -1,10 +1,10 @@
-let DeviceManager = require('./src/device-manager');
-
 const fs = require('fs'), path = require('path');
 
 const { DynamicPlatform } = require('homebridge-syntex-dynamic-platform');
 
 const SynTexUniversalAccessory = require('./src/universal');
+
+const DeviceManager = require('./src/device-manager');
 
 const pluginID = 'homebridge-syntex-magichome';
 const pluginName = 'SynTexMagicHome';
@@ -41,15 +41,15 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 			
 			this.api.on('didFinishLaunching', () => {
 
-				DeviceManager = new DeviceManager(this);
+				this.DeviceManager = new DeviceManager(this);
 
 				this.loadAccessories();
 
-				DeviceManager.refreshAccessories(this.accessories);
+				this.DeviceManager.refreshAccessories(this.accessories);
 
 				if(this.pollingInterval > 0)
 				{
-					this.refreshInterval = setInterval(() => DeviceManager.refreshAccessories(this.accessories), this.pollingInterval * 1000);
+					this.refreshInterval = setInterval(() => this.DeviceManager.refreshAccessories(this.accessories), this.pollingInterval * 1000);
 				}
 			});
 		}
@@ -65,9 +65,9 @@ class SynTexMagicHomePlatform extends DynamicPlatform
 		{
 			const homebridgeAccessory = this.getAccessory(device.id);
 
-			device.manufacturer = pluginName;
+			device.manufacturer = this.pluginName;
 
-			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, DeviceManager }));
+			this.addAccessory(new SynTexUniversalAccessory(homebridgeAccessory, device, { platform : this, DeviceManager : this.DeviceManager }));
 		}
 	}
 }
