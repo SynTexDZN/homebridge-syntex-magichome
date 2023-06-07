@@ -126,7 +126,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getState(this, (state) => {
+				this.DeviceManager.getState(this).then((state) => {
 
 					if(state.value != null && !isNaN(state.value))
 					{
@@ -169,7 +169,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getState(this, (state) => {
+				this.DeviceManager.getState(this).then((state) => {
 
 					if(state.hue != null && !isNaN(state.hue))
 					{
@@ -211,7 +211,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getState(this, (state) => {
+				this.DeviceManager.getState(this).then((state) => {
 
 					if(state.saturation != null && !isNaN(state.saturation))
 					{
@@ -253,7 +253,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 			}
 			else
 			{
-				this.DeviceManager.getState(this, (state) => {
+				this.DeviceManager.getState(this).then((state) => {
 
 					if(state.brightness != null && !isNaN(state.brightness))
 					{
