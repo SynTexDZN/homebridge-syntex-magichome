@@ -122,23 +122,28 @@ module.exports = class DeviceManager
 						{
 							if(service.setConnectionState != null && service.updateState != null)
 							{
-								var converted = service.setChannels([states[ip].red, states[ip].green, states[ip].blue]);
+								var state = { ...states[ip] };
 
-								converted = convert.rgb.hsv(converted);
-
-								if(converted != null)
+								if(state.red != null && state.green != null && state.blue != null)
 								{
-									delete states[ip].red;
-									delete states[ip].green;
-									delete states[ip].blue;
+									var converted = service.setChannels([state.red, state.green, state.blue]);
 
-									states[ip].hue = converted[0];
-									states[ip].saturation = converted[1];
-									states[ip].brightness = converted[2];
+									converted = convert.rgb.hsv(converted);
+
+									if(converted != null)
+									{
+										delete state.red;
+										delete state.green;
+										delete state.blue;
+
+										state.hue = converted[0];
+										state.saturation = converted[1];
+										state.brightness = converted[2];
+									}
 								}
 
-								service.setConnectionState(states[ip].connection,
-									() => service.updateState(states[ip]), true);
+								service.setConnectionState(state.connection,
+									() => service.updateState(state), true);
 							}
 						}
 					}
