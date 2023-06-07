@@ -121,22 +121,22 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 				this.DeviceManager.getState(this).then((state) => {
 
 					this.updateState(state);
-
+					
 					callback(null, this.value);
 				});
 			}
 			else
 			{
 				callback(null, this.value);
-					}
-					
+			}
+
 		}, super.hasState('value'));
 	}
 
 	setState(value, callback)
 	{
 		this.setToCurrentColor({ value }, (failed) => {
-			
+
 			if(!failed)
 			{
 				callback();
@@ -193,15 +193,15 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 				this.DeviceManager.getState(this).then((state) => {
 
 					this.updateState(state);
-
+					
 					callback(null, this.saturation);
 				});
 			}
 			else
 			{
 				callback(null, this.saturation);
-					}
-					
+			}
+
 		}, super.hasState('saturation'));
 	}
 
