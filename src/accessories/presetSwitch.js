@@ -33,22 +33,9 @@ module.exports = class SynTexPresetSwitchService extends SwitchService
 		};
 	}
 
-	getState(callback)
-	{
-		super.getState((value) => {
-
-			this.value = value;
-
-			callback(null, value);
-
-		}, true);
-	}
-
 	setState(value, callback)
 	{
 		var promiseArray = [];
-
-		this.value = value;
 
 		Object.keys(this.ips).forEach((ip) => {
 			
@@ -122,7 +109,7 @@ module.exports = class SynTexPresetSwitchService extends SwitchService
 				
 			if(result.includes(true))
 			{
-				super.setState(value, () => callback(), true);
+				super.setState(value, () => callback());
 
 				this.EventManager.setOutputStream('resetSwitch', { sender : this }, Object.keys(this.ips));
 
@@ -139,10 +126,8 @@ module.exports = class SynTexPresetSwitchService extends SwitchService
 	{
 		if(state.value != null && !isNaN(state.value) && (!super.hasState('value') || this.value != state.value))
 		{
-			this.value = state.value;
-
-			super.setState(state.value,
-				() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), true);
+			super.setState(state.value, 
+				() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
 		}
 
 		this.AutomationSystem.LogikEngine.runAutomation(this, state);

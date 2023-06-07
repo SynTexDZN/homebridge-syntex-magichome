@@ -6,6 +6,8 @@ module.exports = class SynTexSceneSwitchService extends SwitchService
 	{
 		super(homebridgeAccessory, deviceConfig, serviceConfig, manager);
 
+		super.setState(false, null, false);
+
 		this.DeviceManager = manager.DeviceManager;
 		this.EventManager = manager.platform.EventManager;
 
@@ -20,11 +22,6 @@ module.exports = class SynTexSceneSwitchService extends SwitchService
 					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value));
 			}
 		};
-	}
-
-	getState(callback)
-	{
-		callback(null, false);
 	}
 
 	setState(value, callback)
