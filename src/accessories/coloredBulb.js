@@ -130,7 +130,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 				callback(null, this.value);
 			}
 
-		}, super.hasState('value'));
+		}, super.hasState('value') || super.hasState('hue') || super.hasState('saturation') || super.hasState('brightness'));
 	}
 
 	setState(value, callback)
@@ -166,7 +166,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 				callback(null, this.hue);
 			}
 
-		}, super.hasState('hue'));
+		}, false);
 	}
 
 	setHue(hue, callback)
@@ -202,7 +202,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 				callback(null, this.saturation);
 			}
 
-		}, super.hasState('saturation'));
+		}, false);
 	}
 
 	setSaturation(saturation, callback)
@@ -238,7 +238,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 				callback(null, this.brightness);
 			}
 
-		}, super.hasState('brightness'));
+		}, false);
 	}
 
 	setBrightness(brightness, callback)
