@@ -36,7 +36,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 				});
 			}
 
-		}, 1000);
+		}, 100);
 
 		this.changeHandler = (state) => {
 
@@ -201,12 +201,14 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 	*/
 	updateState(state)
 	{
-		if(!this.running)
+		if(!this.running && this.value == this.tempState.value && this.hue == this.tempState.hue && this.saturation == this.tempState.saturation && this.brightness == this.tempState.brightness)
 		{
 			var changed = false;
 
 			if(state.value != null && !isNaN(state.value) && (!super.hasState('value') || this.value != state.value))
 			{
+				this.tempState.value = state.value;
+
 				super.setState(state.value,
 					() => this.service.getCharacteristic(this.Characteristic.On).updateValue(state.value), false);
 
@@ -215,6 +217,8 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 
 			if(state.hue != null && !isNaN(state.hue) && (!super.hasState('hue') || this.hue != state.hue))
 			{
+				this.tempState.hue = state.hue;
+
 				super.setHue(state.hue,
 					() => this.service.getCharacteristic(this.Characteristic.Hue).updateValue(state.hue), false);
 
@@ -223,6 +227,8 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 
 			if(state.saturation != null && !isNaN(state.saturation) && (!super.hasState('saturation') || this.saturation != state.saturation))
 			{
+				this.tempState.saturation = state.saturation;
+
 				super.setSaturation(state.saturation,
 					() => this.service.getCharacteristic(this.Characteristic.Saturation).updateValue(state.saturation), false);
 
@@ -231,6 +237,8 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 
 			if(state.brightness != null && !isNaN(state.brightness) && (!super.hasState('brightness') || this.brightness != state.brightness))
 			{
+				this.tempState.brightness = state.brightness;
+
 				super.setBrightness(state.brightness,
 					() => this.service.getCharacteristic(this.Characteristic.Brightness).updateValue(state.brightness), false);
 
@@ -262,18 +270,22 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 
 				if(!failed)
 				{
-					super.setState(this.tempState.value);
+					setTimeout(() => this.DeviceManager.getState(this).then((state) => {
+
+						super.setState(state.value);
+
+						if(callback != null)
+						{
+							callback(failed);
+						}
+		
+						this.setConnectionState(!this.offline,
+							() => resolve(), true);
+
+						this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
+							
+					}), 650);
 				}
-
-				if(callback != null)
-				{
-					callback(failed);
-				}
-
-				this.setConnectionState(!this.offline,
-					() => resolve(), true);
-
-				this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
 			});
 		};
 
@@ -293,35 +305,28 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 
 					if(!failed)
 					{
-						var color = output.match(/\[\(.*,.*,.*\)\]/g);
-	
-						if(Array.isArray(color) && color.length > 0)
-						{
-							var rgb = this.setChannels(color[0].slice(2).slice(0, -2).split(',').map((item) => item.trim())),
-								hsl = convert.rgb.hsv([rgb[0], rgb[1], rgb[2]]);
-	
-							if(hsl != null)
-							{
-								super.setHue(hsl[0]);
-								super.setSaturation(hsl[1]);
-								super.setBrightness(hsl[2]);
+						setTimeout(() => this.DeviceManager.getState(this).then((state) => {
 
-								this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
+							super.setHue(state.hue);
+							super.setSaturation(state.saturation);
+							super.setBrightness(state.brightness);
+
+							this.logger.log('update', this.id, this.letters, '%update_state[0]% [' + this.name + '] %update_state[1]% [' + this.getStateText() + '] ( ' + this.id + ' )');
+						
+							if(callback != null)
+							{
+								callback(failed);
 							}
-						}
+
+							this.setConnectionState(!this.offline,
+								() => resolve(), true);
+
+							this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
+
+						}), 650);
 
 						this.EventManager.setOutputStream('resetSwitch', { sender : this }, [ this.ip ]);
 					}
-
-					if(callback != null)
-					{
-						callback(failed);
-					}
-
-					this.setConnectionState(!this.offline,
-						() => resolve(), true);
-
-					this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
 				});
 			}
 			else
