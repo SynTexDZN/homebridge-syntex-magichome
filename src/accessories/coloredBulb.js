@@ -205,6 +205,13 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 		{
 			var changed = false;
 
+			if(state.connection != null)
+			{
+				this.offline = !state.connection;
+
+				this.setConnectionState(state.connection, null, true);
+			}
+
 			if(state.value != null && !isNaN(state.value) && (!super.hasState('value') || this.value != state.value))
 			{
 				this.tempState.value = state.value;
@@ -268,6 +275,8 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 
 				this.offline = offline;
 
+				this.setConnectionState(!offline, null, true);
+
 				if(!failed)
 				{
 					setTimeout(() => this.DeviceManager.getState(this).then((state) => {
@@ -279,8 +288,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 							callback(failed);
 						}
 		
-						this.setConnectionState(!this.offline,
-							() => resolve(), true);
+						resolve();
 
 						this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
 							
@@ -303,6 +311,8 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 	
 					this.offline = offline;
 
+					this.setConnectionState(!offline, null, true);
+
 					if(!failed)
 					{
 						setTimeout(() => this.DeviceManager.getState(this).then((state) => {
@@ -318,8 +328,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 								callback(failed);
 							}
 
-							this.setConnectionState(!this.offline,
-								() => resolve(), true);
+							resolve();
 
 							this.AutomationSystem.LogikEngine.runAutomation(this, { value : this.value, hue : this.hue, saturation : this.saturation, brightness : this.brightness });
 

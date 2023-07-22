@@ -123,7 +123,7 @@ module.exports = class DeviceManager
 					{
 						if(this.TypeManager.letterToType(service.letters) == 'rgb' && service.ip == ip)
 						{
-							if(service.setConnectionState != null && service.updateState != null)
+							if(service.updateState != null)
 							{
 								var state = { ...states[ip] };
 
@@ -145,8 +145,7 @@ module.exports = class DeviceManager
 									}
 								}
 
-								service.setConnectionState(state.connection,
-									() => service.updateState(state), true);
+								service.updateState(state);
 							}
 						}
 					}
