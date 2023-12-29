@@ -119,7 +119,7 @@ class utils:
 
 	@staticmethod
 	def dump_bytes(bytes):
-		print ''.join('{:02x} '.format(x) for x in bytearray(bytes))
+		print(''.join('{:02x} '.format(x) for x in bytearray(bytes)))
 
 	max_delay = 0x1f
 
