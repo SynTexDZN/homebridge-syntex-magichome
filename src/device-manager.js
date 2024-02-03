@@ -156,24 +156,32 @@ module.exports = class DeviceManager
 
 	executeCommand(address, command, callback, verbose = true)
 	{
-		const exec = cp.exec;
-		const cmd = path.join(__dirname, './flux_led.py ' + address + ' ' + command);
+		const spawn = cp.spawn, proc = spawn('python', [path.join(__dirname, './flux_led.py'), address, command]);
 
-		exec(cmd, (err, stdOut) => {
-			
+		proc.stdout.on('data', (data) => {
+
+			data = data.toString();
+
 			if(verbose)
 			{
-				this.logger.debug(stdOut);
-			}
-			
-			if(err)
-			{
-				this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py]', err);
+				this.logger.debug(data);
 			}
 
 			if(callback != null)
 			{
-				callback(err != null || (stdOut != null && (stdOut.includes('Errno 113') || stdOut.includes('Unable to connect to bulb'))), stdOut);
+				callback(data != null && (data.includes('Errno 113') || data.includes('Unable to connect to bulb')), data);
+			}
+		});
+
+		proc.stderr.on('data', (err) => {
+
+			err = err.toString();
+
+			this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py]', err);
+
+			if(callback != null)
+			{
+				callback(true, err);
 			}
 		});
 	}
