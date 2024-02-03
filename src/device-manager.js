@@ -184,7 +184,37 @@ module.exports = class DeviceManager
 
 	executeCommand(address, command, callback, verbose = true)
 	{
-		const proc = spawn('python', [path.join(__dirname, './flux_led.py'), address, command]);
+		var args = [path.join(__dirname, './flux_led.py')];
+		
+		if(address.includes(' '))
+		{
+			address = address.split(' ');
+
+			for(const i in address)
+			{
+				args.push(address[i]);
+			}
+		}
+		else
+		{
+			args.push(address);
+		}
+
+		if(command.includes(' '))
+		{
+			command = command.split(' ');
+
+			for(const i in command)
+			{
+				args.push(command[i]);
+			}
+		}
+		else
+		{
+			args.push(command);
+		}
+
+		const proc = spawn('python', args);
 
 		proc.stdout.on('data', (data) => {
 
