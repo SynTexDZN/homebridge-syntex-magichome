@@ -1,4 +1,6 @@
-const cp = require('child_process'), path = require('path'), convert = require('color-convert');
+const path = require('path'), convert = require('color-convert');
+
+const { spawn } = require('child_process');
 
 module.exports = class DeviceManager
 {
@@ -7,6 +9,32 @@ module.exports = class DeviceManager
 		this.logger = platform.logger;
 
 		this.TypeManager = platform.TypeManager;
+
+		this.getDevices();
+	}
+
+	getDevices()
+	{
+		const proc = spawn('python', [path.join(__dirname, './flux_led.py'), '-s']);
+
+		proc.stdout.on('data', (data) => {
+
+			data = data.toString();
+
+			this.logger.debug(data);
+		});
+	
+		proc.stderr.on('data', (err) => {
+
+			err = err.toString();
+
+			this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py]', err);
+		});
+
+		proc.on('close', () => {
+
+			//this.updateDevices();
+		});
 	}
 
 	getState(service)
@@ -156,7 +184,7 @@ module.exports = class DeviceManager
 
 	executeCommand(address, command, callback, verbose = true)
 	{
-		const spawn = cp.spawn, proc = spawn('python', [path.join(__dirname, './flux_led.py'), address, command]);
+		const proc = spawn('python', [path.join(__dirname, './flux_led.py'), address, command]);
 
 		proc.stdout.on('data', (data) => {
 

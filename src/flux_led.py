@@ -744,13 +744,13 @@ class  BulbScanner():
 
 	def scan(self, timeout=10):
 
-		DISCOVERY_PORT = 48900
+		DISCOVERY_PORT = 48899
 
 		sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 		sock.bind(('', DISCOVERY_PORT))
 		sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
-		msg = "HF-A11ASSISTHREAD"
+		msg = str.encode("HF-A11ASSISTHREAD")
 
 		# set the time at which we will quit the search
 		quit_time = time.time() + timeout
@@ -776,6 +776,7 @@ class  BulbScanner():
 
 				if data is not None and data != msg:
 					# tuples of IDs and IP addresses
+					data = data.decode('utf-8')
 					item = dict()
 					item['ipaddr'] = data.split(',')[0]
 					item['id'] = data.split(',')[1]
