@@ -781,7 +781,7 @@ class  BulbScanner():
 					item['id'] = data.split(',')[1]
 					item['model'] = data.split(',')[2]
 					response_list.append(item)
-					
+
 		self.found_bulbs = response_list
 		return response_list
 #=========================================================================
@@ -1073,7 +1073,6 @@ def parseArgs():
 	info_group.add_option("--listcolors",
 					  action="store_true", dest="listcolors", default=False,
 					  help="List color names")
-
 	parser.add_option("-s", "--scan",
 					  action="store_true", dest="scan", default=False,
 					  help="Search for bulbs on local network")
