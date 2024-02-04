@@ -61,7 +61,7 @@ module.exports = class SynTexPresetSwitchService extends SwitchService
 						}
 						else if(!failed && custom[this.preset] != null)
 						{
-							setTimeout(() => this.DeviceManager.executeCommand([ip, '-C', custom[this.preset].transition, this.speed, '"' + custom[this.preset].preset + '"'], (offline, output) => {
+							setTimeout(() => this.DeviceManager.executeCommand([ip, '-C', custom[this.preset].transition, this.speed, custom[this.preset].preset], (offline, output) => {
 								
 								var failed = offline || !output.includes('Setting custom pattern');
 
