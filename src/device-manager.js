@@ -10,7 +10,7 @@ module.exports = class DeviceManager
 
 		this.TypeManager = platform.TypeManager;
 
-		this.getDevices();
+		this.RouteManager = new RouteManager(this, platform);
 	}
 
 	getDevices()
@@ -19,7 +19,17 @@ module.exports = class DeviceManager
 
 			if(!error)
 			{
-				//this.updateDevices(output);
+				var parts = output.split('\n'), connections = {};
+
+				parts.shift();
+				parts.pop();
+
+				for(const i of parts)
+				{
+					connections[i.split('=')[0]] = i.split('=')[1];
+				}
+
+				this.RouteManager.updateIPs(connections);
 			}
 		});
 	}
@@ -181,6 +191,11 @@ module.exports = class DeviceManager
 		{
 			args.push(command);
 		}
+
+		for(const x in args)
+		{
+			args[x] = this.RouteManager.resolveIP(args[x]);
+		}
 		
 		const proc = spawn('python', args);
 
@@ -210,5 +225,60 @@ module.exports = class DeviceManager
 				callback(true, err);
 			}
 		});
+	}
+}
+
+class RouteManager
+{
+	constructor(DeviceManager, platform)
+	{
+		this.connections = {};
+
+		this.logger = platform.logger;
+		this.files = platform.files;
+
+		this.files.readFile('homebridge-syntex-magichome.json').then((data) => {
+
+			if(data != null && data.connections != null)
+			{
+				this.connections = data.connections;
+			}
+
+			DeviceManager.getDevices();
+		});
+	}
+
+	updateIPs(connections)
+	{
+		var changed = false;
+
+		for(const x in connections)
+		{
+			if(this.connections[x] != connections[x])
+			{
+				if(this.connections[x] != null)
+				{
+					this.logger.debug('%ip_connection[0]% [' + x + '] %ip_connection[1]%! ( ' + this.connections[x] + ' --> ' + connections[x] + ' )');
+				}
+				else
+				{
+					this.logger.debug('%ip_connection[0]% [' + x + '] %ip_connection[2]%! ( ' + connections[x] + ' )');
+				}
+
+				changed = true;
+			}
+
+			this.connections[x] = connections[x];
+		}
+
+		if(changed)
+		{
+			this.files.writeFile('homebridge-syntex-magichome.json', { connections });
+		}
+	}
+
+	resolveIP(connection)
+	{
+		return this.connections[connection] || connection;
 	}
 }
