@@ -34,19 +34,19 @@ module.exports = class SynTexSceneSwitchService extends SwitchService
 				
 				// OPTIMIZE: Remove Timeout When LED is Already On
 
-				this.DeviceManager.executeCommand(ip, '--on', (offline, output) => {
+				this.DeviceManager.executeCommand([ip, '--on'], (offline, output) => {
 
 					var failed = offline || !output.includes('Turning on');
 
 					if(!failed)
 					{
-						setTimeout(() => this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], (offline, output) => {
+						setTimeout(() => this.DeviceManager.executeCommand([ip, '-c', this.ips[ip]], (offline, output) => {
 						
 							var failed = offline || !output.includes('Setting color');
 	
 							if(!failed && this.shouldTurnOff)
 							{
-								setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', (offline, output) => {
+								setTimeout(() => this.DeviceManager.executeCommand([ip, '--off'], (offline, output) => {
 	
 									var failed = offline || !output.includes('Turning off');
 	

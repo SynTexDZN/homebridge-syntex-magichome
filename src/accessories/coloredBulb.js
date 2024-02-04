@@ -196,7 +196,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 	/*
 	setToWarmWhite()
 	{
-		DeviceManager.executeCommand(this.ip, '-w ' + this.brightness);
+		DeviceManager.executeCommand([this.ip, '-w', this.brightness]);
 	}
 	*/
 	updateState(state)
@@ -269,7 +269,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 	{
 		const setPower = (resolve) => {
 
-			this.DeviceManager.executeCommand(this.ip, this.tempState.value ? '--on' : '--off', (offline, output) => {
+			this.DeviceManager.executeCommand([this.ip, this.tempState.value ? '--on' : '--off'], (offline, output) => {
 
 				var failed = offline || (this.tempState.value && !output.includes('Turning on')) || (!this.tempState.value && !output.includes('Turning off'));
 
@@ -305,7 +305,7 @@ module.exports = class SynTexColoredBulbService extends ColoredBulbService
 			{
 				converted = this.setChannels(converted);
 				
-				this.DeviceManager.executeCommand(this.ip, '-x ' + this.setup + ' -c ' + converted[0] + ',' + converted[1] + ',' + converted[2], (offline, output) => {
+				this.DeviceManager.executeCommand([this.ip, '-x', this.setup, '-c', converted[0] + ',' + converted[1] + ',' + converted[2]], (offline, output) => {
 
 					var failed = offline || !output.includes('Setting color');
 	

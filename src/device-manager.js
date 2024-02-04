@@ -15,25 +15,12 @@ module.exports = class DeviceManager
 
 	getDevices()
 	{
-		const proc = spawn('python', [path.join(__dirname, './flux_led.py'), '-s']);
+		this.executeCommand('-s', (error, output) => {
 
-		proc.stdout.on('data', (data) => {
-
-			data = data.toString();
-
-			this.logger.debug(data);
-		});
-	
-		proc.stderr.on('data', (err) => {
-
-			err = err.toString();
-
-			this.logger.log('error', 'bridge', 'Bridge', '%execution_error% [flux_led.py]', err);
-		});
-
-		proc.on('close', () => {
-
-			//this.updateDevices();
+			if(!error)
+			{
+				//this.updateDevices(output);
+			}
 		});
 	}
 
@@ -41,7 +28,7 @@ module.exports = class DeviceManager
 	{
 		return new Promise((callback) => {
 
-			this.executeCommand(service.ip, '-i', (offline, output) => {
+			this.executeCommand([service.ip, '-i'], (offline, output) => {
 
 				var state = {};
 	
@@ -78,7 +65,7 @@ module.exports = class DeviceManager
 
 	getStates(ips, callback)
 	{
-		this.executeCommand(ips, '-i', (error, output) => {
+		this.executeCommand([...ips, '-i'], (error, output) => {
 			
 			var data = output.split('\n'), states = {};
 
@@ -141,7 +128,7 @@ module.exports = class DeviceManager
 			}
 		}
 
-		this.getStates(ips.join(' '), (states) => {
+		this.getStates(ips, (states) => {
 
 			for(const ip in states)
 			{
@@ -182,38 +169,19 @@ module.exports = class DeviceManager
 		});
 	}
 
-	executeCommand(address, command, callback, verbose = true)
+	executeCommand(command, callback, verbose = true)
 	{
 		var args = [path.join(__dirname, './flux_led.py')];
-		
-		if(address.includes(' '))
-		{
-			address = address.split(' ');
 
-			for(const i in address)
-			{
-				args.push(address[i]);
-			}
-		}
-		else
+		if(Array.isArray(command))
 		{
-			args.push(address);
-		}
-
-		if(command.includes(' '))
-		{
-			command = command.split(' ');
-
-			for(const i in command)
-			{
-				args.push(command[i]);
-			}
+			args.push(...command);
 		}
 		else
 		{
 			args.push(command);
 		}
-
+		
 		const proc = spawn('python', args);
 
 		proc.stdout.on('data', (data) => {

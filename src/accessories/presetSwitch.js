@@ -45,13 +45,13 @@ module.exports = class SynTexPresetSwitchService extends SwitchService
 				{
 					// OPTIMIZE: Remove Timeout When LED is Already On
 
-					this.DeviceManager.executeCommand(ip, '--on', (offline, output) => {
+					this.DeviceManager.executeCommand([ip, '--on'], (offline, output) => {
 							
 						var failed = offline || !output.includes('Turning on');
 
 						if(!failed && preset[this.preset] != null)
 						{
-							setTimeout(() => this.DeviceManager.executeCommand(ip, '-p ' + preset[this.preset] + ' ' + this.speed, (offline, output) => {
+							setTimeout(() => this.DeviceManager.executeCommand([ip, '-p', preset[this.preset], this.speed], (offline, output) => {
 								
 								var failed = offline || !output.includes('Setting preset pattern');
 
@@ -61,7 +61,7 @@ module.exports = class SynTexPresetSwitchService extends SwitchService
 						}
 						else if(!failed && custom[this.preset] != null)
 						{
-							setTimeout(() => this.DeviceManager.executeCommand(ip, '-C ' + custom[this.preset].transition + ' ' + this.speed + ' "' + custom[this.preset].preset + '"', (offline, output) => {
+							setTimeout(() => this.DeviceManager.executeCommand([ip, '-C', custom[this.preset].transition, this.speed, '"' + custom[this.preset].preset + '"'], (offline, output) => {
 								
 								var failed = offline || !output.includes('Setting custom pattern');
 
@@ -82,13 +82,13 @@ module.exports = class SynTexPresetSwitchService extends SwitchService
 				}
 				else
 				{
-					this.DeviceManager.executeCommand(ip, ' -c ' + this.ips[ip], (offline, output) => {
+					this.DeviceManager.executeCommand([ip, '-c', this.ips[ip]], (offline, output) => {
 						
 						var failed = offline || !output.includes('Setting color');
 
 						if(!failed && this.shouldTurnOff)
 						{
-							setTimeout(() => this.DeviceManager.executeCommand(ip, '--off', (offline, output) => {
+							setTimeout(() => this.DeviceManager.executeCommand([ip, '--off'], (offline, output) => {
 
 								var failed = offline || !output.includes('Turning off');
 
