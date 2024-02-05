@@ -31,7 +31,8 @@ module.exports = class DeviceManager
 
 				this.RouteManager.updateIPs(connections);
 			}
-		});
+
+		}, false);
 	}
 
 	getState(service)
@@ -258,14 +259,18 @@ class RouteManager
 			{
 				if(this.connections[x] != null)
 				{
-					this.logger.debug('%ip_connection[0]% [' + x + '] %ip_connection[1]%! ( ' + this.connections[x] + ' --> ' + connections[x] + ' )');
+					this.logger.log('update', 'bridge', 'Bridge', '%ip_connection[0]% [' + x + '] %ip_connection[1]%! ( ' + this.connections[x] + ' --> ' + connections[x] + ' )');
 				}
 				else
 				{
-					this.logger.debug('%ip_connection[0]% [' + x + '] %ip_connection[2]%! ( ' + connections[x] + ' )');
+					this.logger.log('update', 'bridge', 'Bridge', '%ip_connection[0]% [' + x + '] %ip_connection[2]%! ( ' + connections[x] + ' )');
 				}
 
 				changed = true;
+			}
+			else
+			{
+				this.logger.debug('%ip_connection[0]% [' + x + '] %update_state[2]%! ( ' + connections[x] + ' )');
 			}
 
 			this.connections[x] = connections[x];
