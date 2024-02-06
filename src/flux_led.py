@@ -195,7 +195,7 @@ class PresetPattern:
 
 	@staticmethod
 	def valtostr(pattern):
-		for key, value in PresetPattern.__dict__.iteritems():
+		for key, value in PresetPattern.__dict__.items():
 			if type(value) is int and value == pattern:
 				return key.replace("_", " ").title()
 		return None
@@ -216,7 +216,7 @@ class LedTimer():
 
 	@staticmethod
 	def dayMaskToStr(mask):
-		for key, value in LedTimer.__dict__.iteritems():
+		for key, value in LedTimer.__dict__.items():
 			if type(value) is int and value == mask:
 				return key
 		return None
